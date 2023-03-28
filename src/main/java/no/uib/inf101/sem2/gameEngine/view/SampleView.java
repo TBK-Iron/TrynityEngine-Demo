@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.view;
+package no.uib.inf101.sem2.gameEngine.view;
 
 // Denne klassen er bare et eksempel, og bør slettes når du begynner å
 // komme i gang med ditt eget program.

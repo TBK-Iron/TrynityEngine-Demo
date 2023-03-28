@@ -1,6 +1,6 @@
-package no.uib.inf101.sem2;
+package no.uib.inf101.sem2.game;
 
-import no.uib.inf101.sem2.view.SampleView;
+import no.uib.inf101.sem2.gameEngine.view.SampleView;
 
 import javax.swing.JFrame;
 
