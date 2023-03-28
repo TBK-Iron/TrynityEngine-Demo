@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.raycaster;
+package no.uib.inf101.sem2.gameEngine.view.raycaster;
 
 import java.util.ArrayList;
 import java.util.Vector;
@@ -12,19 +12,23 @@ public class Camera implements ICamera {
     GridPosision centerPos;
     GridPosision pos;
     Rotation rotation;
-    int width;
-    int height;
+    double aspectRatio;
     double focalLength;
+    double verticalFOV;
+    double horizontalFOV;
     Double[] cosVals;
     Double[] sinVals;
+    ArrayList<Double[]> normalizedCorners;
 
     public Camera(int width, int height, double fov){
         setPos(new GridPosision(0, 0, 0));
         setRotation(new Rotation(0, 0, 0));
-        this.width = width;
-        this.height = height;
-        this.focalLength = width/(2*Math.tan(fov));
+        this.aspectRatio = (double) width/height;
+        this.focalLength = height/(2*Math.tan(fov));
+        this.verticalFOV = fov;
+        this.horizontalFOV = Math.atan(width / (2 * focalLength));
         this.pos = calcCenterToPos();
+        this.normalizedCorners = calcCorners();
     }
 
     private GridPosision calcCenterToPos(){
@@ -44,6 +48,11 @@ public class Camera implements ICamera {
 
     }
 
+    private ArrayList<Double[]> calcCorners(){
+        ArrayList<Double[]> corners = new ArrayList<>();
+        Double[] upperLeft = {this.centerPos.x() };
+    }
+
     @Override
     public void setPos(GridPosision pos){
         this.centerPos = pos;
@@ -57,6 +66,17 @@ public class Camera implements ICamera {
 
     }
 
+    public boolean isRendered(GridPosision vertex){
+       
 
+        
+    }
+
+
+    private double[] normalize(double[] vector){
+        double vectorMagnitude = Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2) + Math.pow(vector[2], 2));
+        double[] normalizedVector = {vector[0] / vectorMagnitude, vector[1] / vectorMagnitude, vector[2] / vectorMagnitude};
+        return normalizedVector;
+    }
 
 }

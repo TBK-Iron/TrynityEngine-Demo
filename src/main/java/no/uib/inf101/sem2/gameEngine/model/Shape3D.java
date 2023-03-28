@@ -9,7 +9,7 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.grid3D.GridPosision;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
-public class Shape3D {
+public class Shape3D implements IShape {
     ArrayList<ArrayList<GridPosision>> unchangedFaces;
     ArrayList<ArrayList<GridPosision>> faces;
     GridPosision anchoredPos;
@@ -94,7 +94,7 @@ public class Shape3D {
         return this.anchoredPos;
     }
 
-    public ArrayList<ArrayList<GridPosision>> getShape(){
+    public ArrayList<ArrayList<GridPosision>> getFaces(){
         return this.faces;
     }
 }

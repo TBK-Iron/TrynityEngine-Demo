@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import no.uib.inf101.sem2.gameEngine.grid3D.GridPosision;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
-public class Entity<E> extends Shape3D {
+public class Entity extends Shape3D {
 
     public Entity(GridPosision pos, Rotation rotation, File file) {
         super(pos, rotation, file);
