@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.model;
+package no.uib.inf101.sem2.game.model;
 
 public interface Enemy {
     
