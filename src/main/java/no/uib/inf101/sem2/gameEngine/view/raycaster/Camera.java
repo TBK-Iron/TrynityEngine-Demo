@@ -6,11 +6,11 @@ import java.util.Vector;
 import javax.swing.text.Position;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosision;
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 
 public class Camera implements ICamera {
-    GridPosision centerPos;
-    GridPosision pos;
+    GridPosition centerPos;
+    GridPosition pos;
     Rotation absoluteRot;
     RelativeRotation relativeRot;
     double aspectRatio;
@@ -19,11 +19,11 @@ public class Camera implements ICamera {
     double horizontalFOV;
     Double[] cosVals;
     Double[] sinVals;
-    ArrayList<RelativeRotation> cornerRotations;
+    ViewportCorners cornerRotations;
 
-    public Camera(int width, int height, double fov, GridPosision pos, RelativeRotation rot){
-        setPos(pos);
-        setRotation(rot);
+    public Camera(int width, int height, double fov, GridPosition pos, RelativeRotation rot){
+        updatePos(pos);
+        updateRotation(rot);
         this.aspectRatio = (double) width/height;
         this.focalLength = height/(2*Math.tan(fov));
         this.verticalFOV = fov;
@@ -32,8 +32,8 @@ public class Camera implements ICamera {
         this.cornerRotations = calcCornerRotations();
     }
 
-    private GridPosision calcCenterToPos(){
-        GridPosision negFacingVector = new GridPosision(
+    private GridPosition calcCenterToPos(){
+        GridPosition negFacingVector = new GridPosition(
             -cosVals[2] - sinVals[1],
             -cosVals[0] - sinVals[2],
             -cosVals[1] - sinVals[0]
@@ -45,29 +45,25 @@ public class Camera implements ICamera {
         double y = scalor * negFacingVector.y() + this.centerPos.y();
         double z = scalor * negFacingVector.z() + this.centerPos.z();
 
-        return new GridPosision(x, y, z);
+        return new GridPosition(x, y, z);
 
     }
 
-    private ArrayList<RelativeRotation> calcCornerRotations(){
-        ArrayList<RelativeRotation> corners = new ArrayList<>();
+    private ViewportCorners calcCornerRotations(){
         RelativeRotation upperLeft = relativeRot.add(new RelativeRotation(verticalFOV/2, -horizontalFOV/2));
         RelativeRotation lowerRight = relativeRot.add(new RelativeRotation(-verticalFOV/2, horizontalFOV/2));
-    
-        corners.add(upperLeft);
-        corners.add(lowerRight);
 
-        return corners;
+        return new ViewportCorners(upperLeft, lowerRight);
     
     }
 
     @Override
-    public void setPos(GridPosision pos){
+    public void updatePos(GridPosition pos){
         this.centerPos = pos;
     }
 
     @Override
-    public void setRotation(RelativeRotation rotation){
+    public void updateRotation(RelativeRotation rotation){
         this.relativeRot = rotation;
         this.absoluteRot = rotation.getAbsolute();
         cosVals = new Double[] {Math.cos(this.absoluteRot.getxAxis()), Math.cos(this.absoluteRot.getyAxis()), Math.cos(this.absoluteRot.getzAxis())};
@@ -76,30 +72,30 @@ public class Camera implements ICamera {
     }
 
     @Override
-    public boolean isRendered(GridPosision vertex){
+    public boolean isRendered(GridPosition vertex){
         double dx = vertex.x() - this.pos.x();
         double dy = vertex.y() - this.pos.y();
         double dz = vertex.z() - this.pos.z();
         
         RelativeRotation vectorRot = getVectorRotation(new double[] {dx, dy, dz});
 
-        if(vectorRot.getUpDown() > this.cornerRotations.get(0).getUpDown()){
+        if(vectorRot.getUpDown() > this.cornerRotations.upperLeft().getUpDown()){
             return false;
-        } else if(vectorRot.getUpDown() < this.cornerRotations.get(1).getUpDown()){
+        } else if(vectorRot.getUpDown() < this.cornerRotations.lowerRight().getUpDown()){
             return false;
         //Check if rotation crosses 0 radian spot
-        } else if(this.cornerRotations.get(0).getLeftRight() > this.cornerRotations.get(1).getLeftRight()){
-            if(vectorRot.getLeftRight() > this.cornerRotations.get(0).getLeftRight()){
+        } else if(this.cornerRotations.upperLeft().getLeftRight() > this.cornerRotations.lowerRight().getLeftRight()){
+            if(vectorRot.getLeftRight() > this.cornerRotations.upperLeft().getLeftRight()){
                 return true;
-            } else if(vectorRot.getLeftRight() < this.cornerRotations.get(1).getLeftRight()){
+            } else if(vectorRot.getLeftRight() < this.cornerRotations.lowerRight().getLeftRight()){
                 return true;
             } else {
                 return false;
             }
         } else {
-            if(vectorRot.getLeftRight() < this.cornerRotations.get(0).getLeftRight()){
+            if(vectorRot.getLeftRight() < this.cornerRotations.upperLeft().getLeftRight()){
                 return false;
-            } else if(vectorRot.getLeftRight() > this.cornerRotations.get(1).getLeftRight()){
+            } else if(vectorRot.getLeftRight() > this.cornerRotations.lowerRight().getLeftRight()){
                 return false;
             }
         }
@@ -107,21 +103,31 @@ public class Camera implements ICamera {
         return true;
     }
 
-    private RelativeRotation getVectorRotation(double[] vector){
+    public static RelativeRotation getVectorRotation(double[] vector){
         vector = normalize(vector);
-        Double upDown = Math.asin(vector[1]);
-        Double leftRight = Math.atan2(vector[2], vector[0]) + Math.PI;
+        double upDown = Math.asin(vector[1]);
+        double leftRight = Math.atan2(vector[2], vector[0]) + Math.PI;
 
         return new RelativeRotation(upDown, leftRight);
     }
 
-    private double[] normalize(double[] vector){
+    private static double[] normalize(double[] vector){
         double vectorMagnitude = magnitude(vector);
         double[] normalizedVector = {vector[0] / vectorMagnitude, vector[1] / vectorMagnitude, vector[2] / vectorMagnitude};
         return normalizedVector;
     }
 
-    private double magnitude(double[] vector){
+    private static double magnitude(double[] vector){
         return Math.sqrt(Math.pow(vector[0], 2) + Math.pow(vector[1], 2) + Math.pow(vector[2], 2));
+    }
+
+    @Override
+    public GridPosition getCastPos(){
+        return this.pos;
+    }
+
+    @Override
+    public ViewportCorners getCornerRotations(){
+        return this.cornerRotations;
     }
 }

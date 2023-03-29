@@ -3,6 +3,8 @@ package no.uib.inf101.sem2.gameEngine.grid3D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+
 public class Grid<E> implements IGrid<E> {
     ArrayList<GridValue<E>> shapes;
 
@@ -11,7 +13,7 @@ public class Grid<E> implements IGrid<E> {
     }
 
     @Override
-    public void addShape(E value, GridPosision pos){
+    public void addShape(E value, GridPosition pos){
         shapes.add(new GridValue<E>(value, pos));
     }
 

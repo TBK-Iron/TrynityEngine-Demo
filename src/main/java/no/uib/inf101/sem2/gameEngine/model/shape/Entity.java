@@ -7,7 +7,7 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
 public class Entity extends Shape3D {
 
-    public Entity(GridPosision pos, Rotation rotation, File file) {
+    public Entity(GridPosition pos, Rotation rotation, File file) {
         super(pos, rotation, file);
     }
     
@@ -16,9 +16,9 @@ public class Entity extends Shape3D {
         this.updateRotation();
     }
 
-    public void setPosision(GridPosision newPos){
+    public void setPosision(GridPosition newPos){
         this.anchoredPos = newPos;
-        this.updatePosision();
+        this.updatePosition();
         
     }
 }

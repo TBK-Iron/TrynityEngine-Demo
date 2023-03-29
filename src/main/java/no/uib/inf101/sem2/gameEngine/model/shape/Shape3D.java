@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
+import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -11,38 +12,48 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 public class Shape3D implements IShape {
     ArrayList<Face> unchangedFaces;
     ArrayList<Face> faces;
-    GridPosision anchoredPos;
+    GridPosition anchoredPos;
     Rotation rotation;
 
-    public Shape3D(GridPosision pos, Rotation rotation,File file){
+    public Shape3D(GridPosition pos, Rotation rotation,File file){
         this.faces = new ArrayList<>();
         this.unchangedFaces = new ArrayList<>();
         this.anchoredPos = pos;
         this.rotation = rotation;
-        readFile(file);
+        parseTrymFile(file);
         updateRotation();
-        updatePosision();
+        updatePosition();
         
     }
-    private void readFile(File file){
+    private void parseTrymFile(File file){
+        String fileName = file.getName();
+        String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
+        if(!fileType.equals("trym")){
+            throw new UnsupportedOperationException("Files of filetype " + fileType + " are not supported. Only .trym files are parsable");
+        }
         try{
             Scanner myReader = new Scanner(file, "UTF-8");
            
             while(myReader.hasNextLine()){
-                String face = myReader.nextLine();
-                if(face != ""){
-                    String[] points = face.split(";"); 
-                    ArrayList<GridPosision> posisions = new ArrayList<>();
+                String[] face = myReader.nextLine().split(":");
+                if(face.length != 0){
+                    String[] points = face[0].split(";"); 
+                    //Parse color value
+                    String[] sColors = face[2].replace("(", "").replace(")", "").split(",");
+                    Color faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]));
+
+                    //Parse points
+                    ArrayList<GridPosition> posisions = new ArrayList<>();
                     for(String point : points){
-                        Double[] dPoint = {0.0, 0.0, 0.0};
+                        double[] dPoint = {0.0, 0.0, 0.0};
                         String[] sPoint = point.replace("(", "").replace(")", "").split(",");
                         for(int j = 0; j < 3; j++){
                             dPoint[j] = Double.parseDouble(sPoint[j]);
                         }
-                        posisions.add(new GridPosision(dPoint[0], dPoint[1], dPoint[2]));
+                        posisions.add(new GridPosition(dPoint[0], dPoint[1], dPoint[2]));
                     }
-                    faces.add(new Face(posisions, null));
-                    unchangedFaces.add(new Face(posisions, null));
+                    faces.add(new Face(posisions, faceColor));
+                    unchangedFaces.add(new Face(posisions, faceColor));
                 }
             }
             myReader.close();
@@ -51,14 +62,17 @@ public class Shape3D implements IShape {
         }
     }
 
-    protected void updatePosision(){
+
+
+
+    protected void updatePosition(){
         for(int i = 0; i < this.faces.size(); i++){
             for(int j = 0; j < this.faces.get(i).size(); j++){
                 double x = unchangedFaces.get(i).get(j).x() + anchoredPos.x();
                 double y = unchangedFaces.get(i).get(j).y() + anchoredPos.y();
                 double z = unchangedFaces.get(i).get(j).z() + anchoredPos.z();
 
-                this.faces.get(i).set(j, new GridPosision(x, y, z));
+                this.faces.get(i).set(j, new GridPosition(x, y, z));
             }
         }
     }
@@ -68,7 +82,7 @@ public class Shape3D implements IShape {
         double[] sinVals = {Math.sin(this.rotation.getxAxis()), Math.sin(this.rotation.getyAxis()), Math.sin(this.rotation.getzAxis())};
         for(int i = 0; i < this.faces.size(); i++){
             for(int j = 0; j < this.faces.get(i).size(); j++){
-                GridPosision point = this.unchangedFaces.get(i).get(j);
+                GridPosition point = this.unchangedFaces.get(i).get(j);
                 Double[] newPoint = new Double[3];
 
                 //Rotation z-axis
@@ -83,12 +97,12 @@ public class Shape3D implements IShape {
                 newPoint[2] = newPoint[2]*cosVals[0] - newPoint[1]*sinVals[0];
                 newPoint[1] = helper*sinVals[0] + newPoint[1]*cosVals[0];
 
-                this.faces.get(i).set(j, new GridPosision(newPoint[0], newPoint[1], newPoint[2]));
+                this.faces.get(i).set(j, new GridPosition(newPoint[0], newPoint[1], newPoint[2]));
             }
         }
     }
 
-    public GridPosision getPos(){
+    public GridPosition getPos(){
         return this.anchoredPos;
     }
 

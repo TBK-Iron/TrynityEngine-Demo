@@ -5,8 +5,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.GridPosision;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
+import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
+import no.uib.inf101.sem2.gameEngine.model.shape.Face;
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 
 public class Model implements ViewableGameModel {
@@ -17,17 +20,17 @@ public class Model implements ViewableGameModel {
     public Model(){
 
     }
-    public void createShape(GridPosision pos, Rotation rotation, String filename){
+    public void createShape(GridPosition pos, Rotation rotation, String filename){
         File shapeFile = new File(filename);
         shapes.add(new Shape3D(pos, rotation, shapeFile));
     }
 
-    public void createEntity(GridPosision pos, Rotation rotation, String filename){
+    public void createEntity(GridPosition pos, Rotation rotation, String filename){
         File shapeFile = new File(filename);
         entities.add(new Entity(pos, rotation, shapeFile));
     }
 
-    public ArrayList<Face> getSortedFaces(GridPosision viewPos){
+    public ArrayList<Face> getSortedFaces(GridPosition viewPos){
         ArrayList<Face> faces = new ArrayList<>();
         ArrayList<Double> distances = new ArrayList<>();
 
@@ -55,9 +58,9 @@ public class Model implements ViewableGameModel {
 
         return faces;
     }
-    public double maxDistFromPointToFace(GridPosision pos1, Face face){
+    public double maxDistFromPointToFace(GridPosition pos1, Face face){
         Double maxDistance = 0.0;
-        for(GridPosision pos2 : face.getPoints()){
+        for(GridPosition pos2 : face.getPoints()){
             Double dist = Math.sqrt(Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2));
             if(dist > maxDistance){
                 maxDistance = dist;

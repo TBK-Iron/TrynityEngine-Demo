@@ -1,7 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosision;
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 
 public class RelativeRotation {
     Double upDown;

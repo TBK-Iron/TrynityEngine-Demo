@@ -5,31 +5,31 @@ import java.util.Iterator;
 import java.awt.Color;
 
 public class Face {
-    ArrayList<GridPosision> points;
-    ArrayList<Color> colors;
+    ArrayList<GridPosition> points;
+    Color color;
 
-    public Face(ArrayList<GridPosision> points, ArrayList<Color> colors){
+    public Face(ArrayList<GridPosition> points, Color color){
         this.points = points;
-        this.colors = colors;
+        this.color = color;
     }
 
-    public GridPosision get(int i){
+    public GridPosition get(int i){
         return this.points.get(i);
     }
 
-    public Iterable<GridPosision> getPoints(){
+    public Iterable<GridPosition> getPoints(){
         return this.points;
     }
 
-    public Color getColor(int i){
-        return this.colors.get(i);
+    public Color getColor(){
+        return this.color;
     } 
 
     public int size(){
         return this.points.size();
     }
 
-    public void set(int i, GridPosision newPos){
+    public void set(int i, GridPosition newPos){
         points.set(i, newPos);
     }
 }

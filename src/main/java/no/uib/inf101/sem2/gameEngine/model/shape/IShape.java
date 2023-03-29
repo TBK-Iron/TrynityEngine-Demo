@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public interface IShape {
     
-    public GridPosision getPos();
+    public GridPosition getPos();
 
     public ArrayList<Face> getFaces();
 }

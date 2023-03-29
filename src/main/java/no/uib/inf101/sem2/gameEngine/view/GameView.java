@@ -11,6 +11,7 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
@@ -36,6 +37,8 @@ public class GameView extends JPanel{
     }
 
     private void drawGame(Graphics2D g2){
-        raycaster.cast();
+        ArrayList<ArrayList<int[]>> castedFaces = raycaster.castTo2D(this.model.getSortedFaces(null));
+        BufferedImage nextScene = raycaster.getSceneImage(castedFaces);
+        g2.drawImage(nextScene, 0, 0, null);
     }
 }
