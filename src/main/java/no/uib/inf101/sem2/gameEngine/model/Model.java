@@ -27,27 +27,27 @@ public class Model implements ViewableGameModel {
         entities.add(new Entity(pos, rotation, shapeFile));
     }
 
-    public ArrayList<ArrayList<GridPosision>> getSortedFaces(GridPosision viewPos){
-        ArrayList<ArrayList<GridPosision>> faces = new ArrayList<>();
+    public ArrayList<Face> getSortedFaces(GridPosision viewPos){
+        ArrayList<Face> faces = new ArrayList<>();
         ArrayList<Double> distances = new ArrayList<>();
 
         for(Shape3D shape : shapes){
-            for(ArrayList<GridPosision> face : shape.getFaces()){
+            for(Face face : shape.getFaces()){
                 faces.add(face);
                 distances.add(maxDistFromPointToFace(viewPos, face));
             }
         }
         for(Entity entity : entities){
-            for(ArrayList<GridPosision> face : entity.getFaces()){
+            for(Face face : entity.getFaces()){
                 faces.add(face);
                 distances.add(maxDistFromPointToFace(viewPos, face));
             }
         }
-        Collections.sort(faces, new Comparator<ArrayList<GridPosision>>() {
+        Collections.sort(faces, new Comparator<Face>() {
             @Override
-            public int compare(ArrayList<GridPosision> o1, ArrayList<GridPosision> o2){
-                Double value1 = distances.get(faces.indexOf(o1));
-                Double value2 = distances.get(faces.indexOf(o2));
+            public int compare(Face f1, Face f2){
+                Double value1 = distances.get(faces.indexOf(f1));
+                Double value2 = distances.get(faces.indexOf(f2));
 
                 return Double.compare(distances.indexOf(value1), distances.indexOf(value2));
             }
@@ -55,10 +55,9 @@ public class Model implements ViewableGameModel {
 
         return faces;
     }
-    @Override
-    public double maxDistFromPointToFace(GridPosision pos1, ArrayList<GridPosision> face){
+    public double maxDistFromPointToFace(GridPosision pos1, Face face){
         Double maxDistance = 0.0;
-        for(GridPosision pos2 : face){
+        for(GridPosision pos2 : face.getPoints()){
             Double dist = Math.sqrt(Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2));
             if(dist > maxDistance){
                 maxDistance = dist;

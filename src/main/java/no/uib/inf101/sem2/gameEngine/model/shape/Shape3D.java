@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.model;
+package no.uib.inf101.sem2.gameEngine.model.shape;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -6,12 +6,11 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
-import no.uib.inf101.sem2.gameEngine.grid3D.GridPosision;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
 public class Shape3D implements IShape {
-    ArrayList<ArrayList<GridPosision>> unchangedFaces;
-    ArrayList<ArrayList<GridPosision>> faces;
+    ArrayList<Face> unchangedFaces;
+    ArrayList<Face> faces;
     GridPosision anchoredPos;
     Rotation rotation;
 
@@ -28,24 +27,23 @@ public class Shape3D implements IShape {
     private void readFile(File file){
         try{
             Scanner myReader = new Scanner(file, "UTF-8");
-            int i = 0;
+           
             while(myReader.hasNextLine()){
                 String face = myReader.nextLine();
                 if(face != ""){
                     String[] points = face.split(";"); 
-                    faces.add(new ArrayList<>());
+                    ArrayList<GridPosision> posisions = new ArrayList<>();
                     for(String point : points){
                         Double[] dPoint = {0.0, 0.0, 0.0};
                         String[] sPoint = point.replace("(", "").replace(")", "").split(",");
                         for(int j = 0; j < 3; j++){
                             dPoint[j] = Double.parseDouble(sPoint[j]);
                         }
-
-                        faces.get(i).add(new GridPosision(dPoint[0], dPoint[1], dPoint[2]));
-                        unchangedFaces.get(i).add(new GridPosision(dPoint[0], dPoint[1], dPoint[2]));
+                        posisions.add(new GridPosision(dPoint[0], dPoint[1], dPoint[2]));
                     }
+                    faces.add(new Face(posisions, null));
+                    unchangedFaces.add(new Face(posisions, null));
                 }
-                i++;
             }
             myReader.close();
         } catch(FileNotFoundException e){
@@ -94,7 +92,7 @@ public class Shape3D implements IShape {
         return this.anchoredPos;
     }
 
-    public ArrayList<ArrayList<GridPosision>> getFaces(){
+    public ArrayList<Face> getFaces(){
         return this.faces;
     }
 }
