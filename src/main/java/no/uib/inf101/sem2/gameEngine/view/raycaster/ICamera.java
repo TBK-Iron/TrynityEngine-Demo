@@ -13,5 +13,7 @@ public interface ICamera {
 
     public GridPosition getCastPos();
 
-    public ViewportCorners getCornerRotations();
+    public RelativeRotation getRotation();
+
+    public double getFocalLength();
 }

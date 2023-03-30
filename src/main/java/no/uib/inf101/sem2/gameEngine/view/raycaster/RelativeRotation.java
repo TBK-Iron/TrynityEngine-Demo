@@ -6,6 +6,7 @@ import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 public class RelativeRotation {
     Double upDown;
     Double leftRight;
+    Rotation absoluteRotation;
 
     public RelativeRotation(Double upDown, Double leftRight){
         this.upDown = upDown;
@@ -24,11 +25,15 @@ public class RelativeRotation {
     }
 
     public Rotation getAbsolute(){
-        Double xAxis = Math.cos(this.leftRight) * this.upDown;
-        Double yAxis = this.leftRight;
-        Double zAxis = Math.sin(this.leftRight) * this.upDown;
+        if(this.absoluteRotation == null){
+            Double xAxis = Math.cos(this.leftRight) * this.upDown;
+            Double yAxis = this.leftRight;
+            Double zAxis = Math.sin(this.leftRight) * this.upDown;
 
-        return new Rotation(xAxis, yAxis, zAxis);
+            this.absoluteRotation = new Rotation(xAxis, yAxis, zAxis);
+        }
+        
+        return this.absoluteRotation;
     }
 
     public RelativeRotation add(RelativeRotation rotation2){
@@ -52,5 +57,23 @@ public class RelativeRotation {
 
     protected double getUpDown(){
         return this.upDown;
+    }
+
+    @Override
+    public String toString(){
+        String result = "RelativeRotation[leftRight=" + leftRight + ", upDown=" + upDown + "]";
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object o2){
+        RelativeRotation r2 = (RelativeRotation) o2;
+
+        //Check if all rotations are equal up to four decimals
+        if(Math.round(this.upDown*10000) == Math.round(r2.upDown*10000) && Math.round(this.leftRight*10000) == Math.round(r2.leftRight*10000)){
+            return true;
+        } else {
+            return false;
+        }
     }
 }

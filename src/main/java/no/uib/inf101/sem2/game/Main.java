@@ -14,7 +14,7 @@ public class Main {
   public static void main(String[] args) {
 
     Model model = new Model();
-    model.createShape(new Position3D(0, 0, 0), new Rotation(0, 0, 0), "src/main/resources/triangle.trym");
+    model.createShape(new Position3D(0, 0, 0), new Rotation(0, 0, 0), "src/main/resources/tunnel.trym");
     GameView view = new GameView((ViewableGameModel) model);
 
     JFrame frame = new JFrame();
