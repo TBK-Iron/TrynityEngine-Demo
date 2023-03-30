@@ -15,6 +15,7 @@ import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.Raycaster;
 
 public class GameView extends JPanel{
@@ -26,6 +27,7 @@ public class GameView extends JPanel{
 
     public GameView(ViewableGameModel model){
         this.setPreferredSize(new Dimension(GameView.WIDTH, GameView.HEIGHT));
+        this.setBackground(Color.WHITE);
         raycaster = new Raycaster(GameView.WIDTH, GameView.HEIGHT);
         this.model = model;
     }
@@ -37,7 +39,7 @@ public class GameView extends JPanel{
     }
 
     private void drawGame(Graphics2D g2){
-        ArrayList<ArrayList<int[]>> castedFaces = raycaster.castTo2D(this.model.getSortedFaces(null));
+        ArrayList<Face> castedFaces = raycaster.castTo2D(this.model.getSortedFaces(this.raycaster.getCamPos()));
         BufferedImage nextScene = raycaster.getSceneImage(castedFaces);
         g2.drawImage(nextScene, 0, 0, null);
     }

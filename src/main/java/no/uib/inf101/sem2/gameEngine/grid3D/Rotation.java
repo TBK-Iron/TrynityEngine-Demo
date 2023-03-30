@@ -23,4 +23,13 @@ public class Rotation {
     public double getzAxis(){
         return this.zAxis % (2*Math.PI);
     }
+
+    @Override
+    public String toString() {
+        return "Rotation{" +
+                "xAxis=" + (xAxis % (2*Math.PI)) +
+                ", yAxis=" + (yAxis % (2*Math.PI)) +
+                ", zAxis=" + (zAxis % (2*Math.PI)) +
+                '}';
+    }
 }

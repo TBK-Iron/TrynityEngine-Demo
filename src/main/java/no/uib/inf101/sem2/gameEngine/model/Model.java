@@ -18,7 +18,8 @@ public class Model implements ViewableGameModel {
     ArrayList<Entity> entities;
     
     public Model(){
-
+        shapes = new ArrayList<>();
+        entities = new ArrayList<>();
     }
     public void createShape(GridPosition pos, Rotation rotation, String filename){
         File shapeFile = new File(filename);

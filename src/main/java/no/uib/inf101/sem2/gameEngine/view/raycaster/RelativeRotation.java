@@ -18,30 +18,36 @@ public class RelativeRotation {
     private static boolean isValidRotation(Double upDown, Double leftRight){
         if(upDown > Math.PI/2 || upDown < -Math.PI/2){
             return false;
-        } else if(leftRight < 0 || leftRight > 2*Math.PI){
-            return false;
         } else {
             return true;
         }
     }
 
     public Rotation getAbsolute(){
-        Double xAxis = Math.sin(this.leftRight) * this.upDown;
+        Double xAxis = Math.cos(this.leftRight) * this.upDown;
         Double yAxis = this.leftRight;
-        Double zAxis = Math.cos(this.leftRight) * this.upDown;
+        Double zAxis = Math.sin(this.leftRight) * this.upDown;
 
         return new Rotation(xAxis, yAxis, zAxis);
     }
 
     public RelativeRotation add(RelativeRotation rotation2){
-        Double newLeftRight = this.leftRight + rotation2.leftRight;
-        Double newUpDown = this.upDown + rotation2.upDown;
+        Double newLeftRight = (this.leftRight + rotation2.leftRight) % (2*Math.PI);
+        Double newUpDown;
+        if(this.upDown + rotation2.upDown > Math.PI/2){
+            newUpDown = Math.PI/2 - (this.upDown + rotation2.upDown - Math.PI/2);
+        } else if(this.upDown + rotation2.upDown < -Math.PI/2){
+            newUpDown = -Math.PI/2 - (this.upDown + rotation2.upDown + Math.PI/2);
+        } else {
+            newUpDown = this.upDown + rotation2.upDown;
+        }
+        
 
         return new RelativeRotation(newUpDown, newLeftRight);
     }
 
     protected double getLeftRight(){
-        return this.leftRight;
+        return this.leftRight % (2*Math.PI);
     }
 
     protected double getUpDown(){

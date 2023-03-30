@@ -20,12 +20,13 @@ public class Shape3D implements IShape {
         this.unchangedFaces = new ArrayList<>();
         this.anchoredPos = pos;
         this.rotation = rotation;
-        parseTrymFile(file);
+        this.faces = parseTrymFile(file);
+        this.unchangedFaces = faces;
         updateRotation();
         updatePosition();
         
     }
-    private void parseTrymFile(File file){
+    private static ArrayList<Face> parseTrymFile(File file){
         String fileName = file.getName();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
         if(!fileType.equals("trym")){
@@ -33,7 +34,8 @@ public class Shape3D implements IShape {
         }
         try{
             Scanner myReader = new Scanner(file, "UTF-8");
-           
+            
+            ArrayList<Face> faces = new ArrayList<>();
             while(myReader.hasNextLine()){
                 String[] face = myReader.nextLine().split(":");
                 if(face.length != 0){
@@ -50,16 +52,17 @@ public class Shape3D implements IShape {
                         for(int j = 0; j < 3; j++){
                             dPoint[j] = Double.parseDouble(sPoint[j]);
                         }
-                        posisions.add(new GridPosition(dPoint[0], dPoint[1], dPoint[2]));
+                        posisions.add(new Position3D(dPoint[0], dPoint[1], dPoint[2]));
                     }
                     faces.add(new Face(posisions, faceColor));
-                    unchangedFaces.add(new Face(posisions, faceColor));
                 }
             }
             myReader.close();
+            return faces;
         } catch(FileNotFoundException e){
             System.out.println("file not found: " + e.getMessage());
         }
+        return null;
     }
 
 
@@ -72,7 +75,7 @@ public class Shape3D implements IShape {
                 double y = unchangedFaces.get(i).get(j).y() + anchoredPos.y();
                 double z = unchangedFaces.get(i).get(j).z() + anchoredPos.z();
 
-                this.faces.get(i).set(j, new GridPosition(x, y, z));
+                this.faces.get(i).set(j, new Position3D(x, y, z));
             }
         }
     }
@@ -97,7 +100,7 @@ public class Shape3D implements IShape {
                 newPoint[2] = newPoint[2]*cosVals[0] - newPoint[1]*sinVals[0];
                 newPoint[1] = helper*sinVals[0] + newPoint[1]*cosVals[0];
 
-                this.faces.get(i).set(j, new GridPosition(newPoint[0], newPoint[1], newPoint[2]));
+                this.faces.get(i).set(j, new Position3D(newPoint[0], newPoint[1], newPoint[2]));
             }
         }
     }

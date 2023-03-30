@@ -10,6 +10,8 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.GameView;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 
 public class Raycaster {
     ICamera viewport;
@@ -20,16 +22,19 @@ public class Raycaster {
     public Raycaster(int width, int height){
         this.width = width;
         this.height = height;
-        this.viewport = new Camera(width, height, Math.PI/2, new GridPosition(0, 0, 0), new RelativeRotation(0.0, 0.0));
+        
+        this.viewport = new Camera(width, height, Math.PI/2, new Position3D(0, 0, 0), new RelativeRotation(Math.PI/2, Math.PI/2));
     }
 
 
-    public ArrayList<ArrayList<int[]>> castTo2D(ArrayList<Face> sortedFaces){
-        ArrayList<ArrayList<int[]>> castedFaces = new ArrayList<>();
-        for(Face face : sortedFaces){
+    public ArrayList<Face> castTo2D(ArrayList<Face> faces){
+        
+        ArrayList<Face> castedFaces = new ArrayList<>();
+        for(Face face : faces){
+            
             if(faceIsRendered(face)){
 
-                ArrayList<int[]> castedFace = new ArrayList<>();
+                ArrayList<GridPosition> castedPoints = new ArrayList<>();
                 for(GridPosition point : face.getPoints()){
                     double dx = point.x() - this.viewport.getCastPos().x();
                     double dy = point.y() - this.viewport.getCastPos().y();
@@ -47,9 +52,9 @@ public class Raycaster {
                     int x = (int) (xRatio * this.width);
                     int y = (int) (yRatio * this.height);
 
-                    castedFace.add(new int[] {x, y});
+                    castedPoints.add(new Position2D(x, y));
                 }
-                castedFaces.add(castedFace);
+                castedFaces.add(new Face(castedPoints, face.getColor()));
             }
         }
 
@@ -65,24 +70,30 @@ public class Raycaster {
         return false;
     }
 
-    public BufferedImage getSceneImage(ArrayList<ArrayList<int[]>> castedFaces){
+    public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
         BufferedImage buffer = new BufferedImage(GameView.WIDTH, GameView.HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics2D bufferGraphics = buffer.createGraphics();
 
-        for(ArrayList<int[]> face : castedFaces){
-            int[] xVals = new int[face.size()];
-            int[] yVals = new int[face.size()];
+        for(Face face : castedFaces){
+            //System.out.println(face);
+            int[] xVals = new int[face.getPoints().size()];
+            int[] yVals = new int[face.getPoints().size()];
 
-            for(int i = 0; i < face.size(); i++){
-                xVals[i] = face.get(i)[0];
-                yVals[i] = face.get(i)[1];
+            for(int i = 0; i < face.getPoints().size(); i++){
+                xVals[i] = (int) face.getPoints().get(i).x();
+                yVals[i] = (int) face.getPoints().get(i).y();
             }
-
+            
+            bufferGraphics.setColor(face.getColor());
             Polygon face2D = new Polygon(xVals, yVals, xVals.length);
             bufferGraphics.fillPolygon(face2D);
         }
 
         return buffer;
+    }
+
+    public GridPosition getCamPos(){
+        return viewport.getCastPos();
     }
 
 }

@@ -7,46 +7,84 @@ import javax.swing.text.Position;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 
 public class Camera implements ICamera {
     GridPosition centerPos;
     GridPosition pos;
     Rotation absoluteRot;
     RelativeRotation relativeRot;
-    double aspectRatio;
     double focalLength;
     double verticalFOV;
     double horizontalFOV;
-    Double[] cosVals;
-    Double[] sinVals;
     ViewportCorners cornerRotations;
 
-    public Camera(int width, int height, double fov, GridPosition pos, RelativeRotation rot){
+    public Camera(double width, double height, double fov, GridPosition pos, RelativeRotation rot){
         updatePos(pos);
         updateRotation(rot);
-        this.aspectRatio = (double) width/height;
-        this.focalLength = height/(2*Math.tan(fov));
+        System.out.println(height/width + " " + fov + " " + Math.tan(fov/2));
+        this.focalLength = (height/width)/(2*Math.tan(fov/2));
         this.verticalFOV = fov;
         this.horizontalFOV = Math.atan(width / (2 * focalLength));
         this.pos = calcCenterToPos();
         this.cornerRotations = calcCornerRotations();
+        System.out.println(this.focalLength);
+        System.out.println(rot.getAbsolute());
+        System.out.println(this.pos);
     }
 
     private GridPosition calcCenterToPos(){
-        GridPosition negFacingVector = new GridPosition(
-            -cosVals[2] - sinVals[1],
-            -cosVals[0] - sinVals[2],
-            -cosVals[1] - sinVals[0]
-        );
-        Double scalor = this.focalLength / (Math.sqrt(Math.pow(negFacingVector.x(), 2) + 
-        Math.pow(negFacingVector.y(), 2) + Math.pow(negFacingVector.z(), 2)));
+        double rotX = absoluteRot.getxAxis();
+        double rotY = absoluteRot.getxAxis();
+        double rotZ = absoluteRot.getxAxis();
 
-        double x = scalor * negFacingVector.x() + this.centerPos.x();
-        double y = scalor * negFacingVector.y() + this.centerPos.y();
-        double z = scalor * negFacingVector.z() + this.centerPos.z();
+        double[] rotatedVector = getRotatedVector(rotX, rotY, rotZ);
+        System.out.println("Rotvector: "+ rotatedVector[0] + " " + rotatedVector[1] + " " + rotatedVector[2]);
+        double[] normalizedVector = normalizeVector(rotatedVector);
 
-        return new GridPosition(x, y, z);
+        return new Position3D(normalizedVector[0], normalizedVector[1], normalizedVector[2]);
 
+    }
+
+    private static double[] getRotatedVector(double rotX, double rotY, double rotZ){
+        double[] vector = {0, 0, -1};
+
+        double[][] matrixX = {
+            {1, 0, 0},
+            {0, Math.cos(rotX), -Math.sin(rotX)},
+            {0, Math.sin(rotX), Math.cos(rotX)}
+        };
+
+        double[][] matrixY = {
+            {Math.cos(rotY), 0, Math.sin(rotY)},
+            {0, 1, 0},
+            {-Math.sin(rotY), 0, Math.cos(rotY)}
+        };
+
+        double[][] matrixZ = {
+            {Math.cos(rotZ), -Math.sin(rotZ), 0},
+            {Math.sin(rotZ), Math.cos(rotZ), 0},
+            {0, 0, 1}
+        };
+
+        double[] v_rot_z = multiplyMatrixByVector(matrixZ, vector);
+        double[] v_rot_y = multiplyMatrixByVector(matrixY, v_rot_z);
+        double[] v_rot_x = multiplyMatrixByVector(matrixX, v_rot_y);
+
+        return v_rot_x;
+    }
+
+    private static double[] multiplyMatrixByVector(double[][] matrix, double[] vector) {
+        double[] result = new double[vector.length];
+
+        for (int i = 0; i < matrix.length; i++) {
+            result[i] = 0;
+            for (int j = 0; j < matrix[0].length; j++) {
+                result[i] += matrix[i][j] * vector[j];
+            }
+        }
+
+        return result;
     }
 
     private ViewportCorners calcCornerRotations(){
@@ -66,9 +104,6 @@ public class Camera implements ICamera {
     public void updateRotation(RelativeRotation rotation){
         this.relativeRot = rotation;
         this.absoluteRot = rotation.getAbsolute();
-        cosVals = new Double[] {Math.cos(this.absoluteRot.getxAxis()), Math.cos(this.absoluteRot.getyAxis()), Math.cos(this.absoluteRot.getzAxis())};
-        sinVals = new Double[] {Math.sin(this.absoluteRot.getxAxis()), Math.sin(this.absoluteRot.getyAxis()), Math.sin(this.absoluteRot.getzAxis())};
-
     }
 
     @Override
@@ -102,16 +137,17 @@ public class Camera implements ICamera {
 
         return true;
     }
-
+    //TODO: fix broken method.
     public static RelativeRotation getVectorRotation(double[] vector){
-        vector = normalize(vector);
+        vector = normalizeVector(vector);
         double upDown = Math.asin(vector[1]);
-        double leftRight = Math.atan2(vector[2], vector[0]) + Math.PI;
-
+        double leftRight = (Math.atan2(vector[2], vector[0]) - Math.PI/2) % (Math.PI/2);
+        System.out.println((Math.atan2(-1, 0) - Math.PI/2) % (Math.PI/2));
         return new RelativeRotation(upDown, leftRight);
     }
 
-    private static double[] normalize(double[] vector){
+
+    private static double[] normalizeVector(double[] vector){
         double vectorMagnitude = magnitude(vector);
         double[] normalizedVector = {vector[0] / vectorMagnitude, vector[1] / vectorMagnitude, vector[2] / vectorMagnitude};
         return normalizedVector;

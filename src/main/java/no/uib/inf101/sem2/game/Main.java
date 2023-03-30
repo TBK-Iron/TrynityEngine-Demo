@@ -6,6 +6,7 @@ import no.uib.inf101.sem2.gameEngine.view.SampleView;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 
 import javax.swing.JFrame;
 
@@ -13,7 +14,7 @@ public class Main {
   public static void main(String[] args) {
 
     Model model = new Model();
-    model.createShape(new GridPosition(0, 0, 0), new Rotation(0, 0, 0), "src/main/resources/tunnel.trym");
+    model.createShape(new Position3D(0, 0, 0), new Rotation(0, 0, 0), "src/main/resources/triangle.trym");
     GameView view = new GameView((ViewableGameModel) model);
 
     JFrame frame = new JFrame();

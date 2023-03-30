@@ -17,7 +17,7 @@ public class Face {
         return this.points.get(i);
     }
 
-    public Iterable<GridPosition> getPoints(){
+    public ArrayList<GridPosition> getPoints(){
         return this.points;
     }
 
@@ -32,4 +32,27 @@ public class Face {
     public void set(int i, GridPosition newPos){
         points.set(i, newPos);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder("Face[points: ");
+        
+        Iterator<GridPosition> iterator = points.iterator();
+        while (iterator.hasNext()) {
+            GridPosition point = iterator.next();
+            sb.append(point);
+            if (iterator.hasNext()) {
+                sb.append(", ");
+            }
+        }
+        
+        sb.append(", color: ");
+        sb.append(color.toString());
+        sb.append("]");
+        
+        return sb.toString();
+    }
+
+
+
 }
