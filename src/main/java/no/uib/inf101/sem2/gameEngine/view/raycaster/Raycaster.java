@@ -27,8 +27,11 @@ public class Raycaster {
         this.width = width;
         this.height = height;
         this.fov = Math.PI/2;
+
+        double leftRightRot = 0; //Degrees
+        double upDownRot = -20; //Degrees
         
-        this.viewport = new Camera(width, height, fov, new Position3D(0, 0, 0), new RelativeRotation(0.0, 0.0));
+        this.viewport = new Camera(width, height, fov, new Position3D(0, 0, 0), new RelativeRotation(Math.toRadians(upDownRot), Math.toRadians(leftRightRot)));
     }
 
 
@@ -65,8 +68,21 @@ public class Raycaster {
                     double xRatio = (leftRight + horizontalFOV/2)/horizontalFOV;
                     double yRatio = 1-(fov + 2*upDown)/(2*fov);*/
 
-                    double xRatio = (rotatedRay.get(0) * 2 * this.height + this.width)/(2*this.width) ;
-                    double yRatio = 0.5 - rotatedRay.get(1);
+                    double xRatio;
+                    double yRatio;
+
+                    double Vx = rotatedRay.get(0);
+                    double Vy = rotatedRay.get(1);
+                    double Vz = rotatedRay.get(2);
+
+                    if(rotatedRay.get(2) > 0){
+                        xRatio = (Vx * 2 * this.height + this.width)/(2*this.width) ;
+                        yRatio = 0.5 - Vy;
+                    } else {
+                        xRatio = 0.5 - (this.viewport.getFocalLength()*this.height*Vx)/(this.width*Vz);
+                        yRatio = 0.5 + viewport.getFocalLength() * Vy / Vz;
+                    }
+                    
 
                     GridPosition finalPos = new Position2D(xRatio*this.width, yRatio*this.height);
 

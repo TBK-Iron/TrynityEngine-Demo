@@ -1,5 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
 
+import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
+
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
 
@@ -72,11 +74,11 @@ public class Vector {
 
     @Override
     public String toString(){
-        String result = "Points:[" + this.value[0] + ", " + this.value[1] + ", " + this.value[2] + "]";
+        String[] sPoints = new String[getDims()];
         for(int i = 0; i < getDims(); i++){
-            result += this.value[i] + ", ";
+            sPoints[i] = this.value[i] + "";
         }
-        result += "]";
+        String result = "Points:[" + String.join(", ", sPoints) + "]";
 
         return result;
     }

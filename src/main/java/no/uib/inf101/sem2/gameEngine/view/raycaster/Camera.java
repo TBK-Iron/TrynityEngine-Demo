@@ -17,6 +17,7 @@ public class Camera implements ICamera {
     double focalLength;
     double verticalFOV;
     double horizontalFOV;
+    double coordinateHeight = 0.3;
 
     public Camera(double width, double height, double fov, GridPosition pos, RelativeRotation rot){
         updatePos(pos);
@@ -36,8 +37,11 @@ public class Camera implements ICamera {
         double rotY = rotation.getAbsolute().getyAxis();
         double rotZ = rotation.getAbsolute().getzAxis();
 
+
         Matrix rotationMatrix = Matrix.getRotationMatrix(new Rotation(rotX, rotY, rotZ));
+        System.out.println(rotationMatrix);
         Vector rotatedVector = rotationMatrix.multiply(new Vector(new double[] {0, 0, -1}));
+        System.out.println(rotatedVector);
         Vector scaledVector = rotatedVector.scaledBy(this.focalLength);
 
         return scaledVector.getPoint();

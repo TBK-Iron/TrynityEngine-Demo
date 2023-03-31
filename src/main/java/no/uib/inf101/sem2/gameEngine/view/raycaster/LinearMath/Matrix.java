@@ -12,20 +12,19 @@ public class Matrix {
         this.value = value;
     }
 
-    public static Matrix multiply(Matrix m1, Matrix m2){
+    public static Matrix multiply(Matrix m1, Matrix m2) {
         //Matrix multiplication
-        if(m1.getCols() != m2.getRows()){
+        if (m1.value[0].length != m2.value.length) {
             throw new IllegalArgumentException("Matrices can't be multiplied");
         } else {
-            double[][] newMatrix = new double[m1.getRows()][m2.getCols()];
-            for(int i = 0; i < m2.getCols(); i++){
-                double[] v = new double[m1.getRows()];
-                for(int j = 0; j < m1.getRows(); j++){
-                    v[j] = m1.value[j][i];
-                }
-                Vector mulVector = m1.multiply(new Vector(v));
-                for(int j = 0; j < mulVector.getDims(); j++){
-                    newMatrix[j][i] = mulVector.get(j);
+            double[][] newMatrix = new double[m1.value.length][m2.value[0].length];
+            for (int i = 0; i < m1.value.length; i++) {
+                for (int j = 0; j < m2.value[0].length; j++) {
+                    double sum = 0;
+                    for (int k = 0; k < m1.value[0].length; k++) {
+                        sum += m1.value[i][k] * m2.value[k][j];
+                    }
+                    newMatrix[i][j] = sum;
                 }
             }
             return new Matrix(newMatrix);
@@ -81,9 +80,59 @@ public class Matrix {
             {0, 0, 1}
         });
 
+        System.out.println("\n" + matrixX);
+        System.out.println("\n" + matrixY);
+        System.out.println("\n" + matrixZ);
+
         Matrix rotationMatrix = multiply(multiply(matrixX, matrixY), matrixZ);
 
         return rotationMatrix;
     }
     
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+
+        for (int i = 0; i < value.length; i++) {
+            for (int j = 0; j < value[i].length; j++) {
+                sb.append(value[i][j]);
+                if (j < value[i].length - 1) {
+                    sb.append(", ");
+                }
+            }
+            if (i < value.length - 1) {
+                sb.append("\n");
+            }
+        }
+
+        return sb.toString();
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+
+        Matrix other = (Matrix) obj;
+        if (value.length != other.value.length) {
+            return false;
+        }
+
+        for (int i = 0; i < value.length; i++) {
+            if (value[i].length != other.value[i].length) {
+                return false;
+            }
+            for (int j = 0; j < value[i].length; j++) {
+                if (Math.round(value[i][j] * 10000) != Math.round(other.value[i][j] * 10000)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 }
