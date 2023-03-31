@@ -7,5 +7,5 @@ import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 
 public interface ViewableGameModel {
     
-    public ArrayList<Face> getSortedFaces(GridPosition viewPos);
+    public ArrayList<Face> getAllFaces();
 }

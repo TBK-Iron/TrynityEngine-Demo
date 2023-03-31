@@ -2,14 +2,17 @@ package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
 
 import java.util.ArrayList;
 
+import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 
 public class Frustum {
-    Vector[] planes;
+    Plane[] planes;
 
     public Frustum(Matrix viewProjectionMatrix){
-        planes = new Vector[6];
+
+        planes = new Plane[6];
 
         extractPlanes(viewProjectionMatrix);
         normalizePlanes();
@@ -18,18 +21,18 @@ public class Frustum {
     private void extractPlanes(Matrix viewProjMatrix){
         double[][] m = viewProjMatrix.value;
 
-        planes[0] = new Vector(new double[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0], m[3][3] + m[3][0]}); // Left
-        planes[1] = new Vector(new double[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0], m[3][3] - m[3][0]}); // Right
-        planes[2] = new Vector(new double[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1], m[3][3] + m[3][1]}); // Bottom
-        planes[3] = new Vector(new double[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1], m[3][3] - m[3][1]}); // Top
-        planes[4] = new Vector(new double[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2], m[3][3] + m[3][2]}); // Near
-        planes[5] = new Vector(new double[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2], m[3][3] - m[3][2]}); // Far
+        planes[0] = new Plane(new Vector(new double[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), m[3][3] + m[3][0]); // Left
+        planes[1] = new Plane(new Vector(new double[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), m[3][3] - m[3][0]); // Right
+        planes[2] = new Plane(new Vector(new double[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), m[3][3] + m[3][1]); // Bottom
+        planes[3] = new Plane(new Vector(new double[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), m[3][3] - m[3][1]); // Top
+        planes[4] = new Plane(new Vector(new double[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), m[3][3] + m[3][2]); // Near
+        planes[5] = new Plane(new Vector(new double[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), m[3][3] - m[3][2]); // Far
 
     }
 
     private void normalizePlanes() {
         for(int i = 0; i < planes.length; i++){
-            planes[i] = planes[i].scaledBy(1/planes[i].magnitude());
+            planes[i] = new Plane(planes[i].normal().scaledBy(1/planes[i].normal().magnitude()), planes[i].dist());
         }
     }
 
@@ -40,19 +43,19 @@ public class Frustum {
 
         for(int i = 0; i < 6; i++){
             double[] p = new double[3];
-            if (planes[i].value[0] >= 0) {
+            if (this.planes[i].normal().get(0) >= 0) {
                 p[0] = min.value[0];
             } else {
                 p[0] = max.value[0];
             }
             
-            if (planes[i].value[1] >= 0) {
+            if (this.planes[i].normal().get(1) >= 0) {
                 p[1] = min.value[1];
             } else {
                 p[1] = max.value[1];
             }
             
-            if (planes[i].value[2] >= 0) {
+            if (this.planes[i].normal().get(2) >= 0) {
                 p[2] = min.value[2];
             } else {
                 p[2] = max.value[2];
@@ -67,39 +70,61 @@ public class Frustum {
         return false;
     }
 
-    //TODO: create method for clipping faces with the frustum
+    //TODO: fix method for clipping faces with the frustum
     public Face clipFace(Face face) {
-        ArrayList<Vector> clippedVertices = new ArrayList<Vector>();
-        ArrayList<Vector> clippedTexCoords = new ArrayList<Vector>();
-        ArrayList<Vector> clippedNormals = new ArrayList<Vector>();
-    
-        double[] distances = getMinDistances(face);
+        Face clippedFace = face;
 
-        for(int i = 1; i < face.getPoints().size() + 1; i++){
-            double d1 = distances[i - 1];
-            double d2 = distances[i % face.getPoints().size()];
-            if((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)){
-                
-            }
+        for(Plane plane : this.planes){
+            clippedFace = clipFaceAgainstPlane(clippedFace, plane);
         }
-    
-       
+        return clippedFace;
     } 
     
-    private double[] getMinDistances(Face face){
-        double[] distances = new double[face.getPoints().size()];
-        for (int i = 0; i < face.getPoints().size(); i++) {
-            double minDist = 999999999;
-            for(int j = 0; j < planes.length; j++){
-                Vector v = new Vector(face.get(i));
-                double dist = Vector.dotProduct(v, planes[i]) + v.magnitude();
-                if(dist < minDist){
-                    minDist = dist;
+    private Face clipFaceAgainstPlane(Face face, Plane plane){
+        ArrayList<GridPosition> inputVertices = face.getPoints();
+        ArrayList<GridPosition> outputVertices = new ArrayList<>();
+
+        for(int i = 0; i < inputVertices.size(); i++){
+            GridPosition currentPoint = inputVertices.get(i);
+            GridPosition nextPoint = inputVertices.get((i+1) % inputVertices.size());
+
+            boolean isCurrentInside = isVertexWithinPlane(currentPoint, plane);
+            boolean isNextInside = isVertexWithinPlane(nextPoint, plane);
+
+            if(isCurrentInside){
+                System.out.println("test");
+                outputVertices.add(currentPoint);
+            }
+            if(isCurrentInside != isNextInside){
+                GridPosition intersectionPoint = intersectEdgePlane(currentPoint, nextPoint, plane);
+                if(intersectionPoint != null){
+                    outputVertices.add(intersectionPoint);
                 }
             }
-            distances[i] = minDist;
-        }  
-        return distances;      
+        }
+
+        Face clippedFace = new Face(outputVertices, face.getColor());
+        return clippedFace;
     }
+
+    private static boolean isVertexWithinPlane(GridPosition point, Plane plane){
+        double distance = point.x() * plane.normal().get(0) + point.y() * plane.normal().get(1) + point.z() * plane.normal().get(2) + plane.dist(); 
+        System.out.println("distance");
+        return distance >= 0;
+    }
+
+    private static GridPosition intersectEdgePlane(GridPosition p1, GridPosition p2, Plane plane) {
+        double d1 = p1.x() * plane.normal().get(0) + p1.y() * plane.normal().get(1) + p1.z() * plane.normal().get(2) + plane.dist();
+        double d2 = p2.x() * plane.normal().get(0) + p2.y() * plane.normal().get(1) + p2.z() * plane.normal().get(2) + plane.dist();
+
+        double t = d1 / (d1 - d2);
+
+        double x = p1.x() + t * (p2.x() - p1.x());
+        double y = p1.y() + t * (p2.y() - p1.y());
+        double z = p1.z() + t * (p2.z() - p1.z());
+
+        return new Position3D(x, y, z);
+    }
+    
     
 }

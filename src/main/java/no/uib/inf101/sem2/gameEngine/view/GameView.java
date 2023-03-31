@@ -39,9 +39,14 @@ public class GameView extends JPanel{
     }
 
     private void drawGame(Graphics2D g2){
-        ArrayList<Face> culledFaces = raycaster.cull(this.model.getSortedFaces(this.raycaster.getCamPos()));
+        ArrayList<Face> culledFaces = raycaster.cull(this.model.getAllFaces());
         ArrayList<Face> clippedFaces = raycaster.clip(culledFaces);
-        ArrayList<Face> castedFaces = raycaster.castTo2D(culledFaces);
+        ArrayList<Face> cameraSpaceFaces = raycaster.cameraTransform(clippedFaces);
+        ArrayList<Face> sortedFaces = raycaster.sortFacesByZ(cameraSpaceFaces);
+        ArrayList<Face> castedFaces = raycaster.castTo2D(sortedFaces);
+        for(Face face : clippedFaces){
+            System.out.println(face);
+        }
         BufferedImage nextScene = raycaster.getSceneImage(castedFaces);
         g2.drawImage(nextScene, 0, 0, null);
     }

@@ -31,31 +31,19 @@ public class Model implements ViewableGameModel {
         entities.add(new Entity(pos, rotation, shapeFile));
     }
 
-    public ArrayList<Face> getSortedFaces(GridPosition viewPos){
+    public ArrayList<Face> getAllFaces(){
         ArrayList<Face> faces = new ArrayList<>();
-        ArrayList<Double> distances = new ArrayList<>();
 
         for(Shape3D shape : shapes){
             for(Face face : shape.getFaces()){
                 faces.add(face);
-                distances.add(maxDistFromPointToFace(viewPos, face));
             }
         }
         for(Entity entity : entities){
             for(Face face : entity.getFaces()){
                 faces.add(face);
-                distances.add(maxDistFromPointToFace(viewPos, face));
             }
         }
-        Collections.sort(faces, new Comparator<Face>() {
-            @Override
-            public int compare(Face f1, Face f2){
-                Double value1 = distances.get(faces.indexOf(f1));
-                Double value2 = distances.get(faces.indexOf(f2));
-
-                return Double.compare(distances.indexOf(value1), distances.indexOf(value2));
-            }
-        });
 
         return faces;
     }

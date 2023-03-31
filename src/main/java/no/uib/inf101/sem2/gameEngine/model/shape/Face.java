@@ -101,7 +101,38 @@ public class Face {
         
         return sb.toString();
     }
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Face otherFace = (Face) obj;
 
+        if (points.size() != otherFace.points.size()) {
+            return false;
+        }
 
+        if(!this.color.equals(otherFace.color)){
+            if(this.color != null && otherFace.color != null){
+                return false;
+            }
+        }
+
+        for (int i = 0; i < points.size(); i++) {
+            GridPosition thisPoint = points.get(i);
+            GridPosition otherPoint = otherFace.points.get(i);
+
+            if (Math.abs(thisPoint.x() - otherPoint.x()) > 0.0001 ||
+                Math.abs(thisPoint.y() - otherPoint.y()) > 0.0001 ||
+                Math.abs(thisPoint.z() - otherPoint.z()) > 0.0001) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 
 }
