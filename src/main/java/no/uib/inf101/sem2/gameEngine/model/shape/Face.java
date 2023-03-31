@@ -2,11 +2,15 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
+
 import java.awt.Color;
 
 public class Face {
     ArrayList<GridPosition> points;
     Color color;
+    Vector nVector;
 
     public Face(ArrayList<GridPosition> points, Color color){
         this.points = points;
@@ -32,6 +36,51 @@ public class Face {
     public void set(int i, GridPosition newPos){
         points.set(i, newPos);
     }
+
+    public Vector getNormalVector(){
+        if(nVector != null){
+            return nVector;
+        } else {
+            Vector v1 = new Vector(new double[] {points.get(1).x()-points.get(0).x(), points.get(1).y()-points.get(0).y(), points.get(1).z()-points.get(0).z()});
+            Vector v2 = new Vector(new double[] {points.get(2).x()-points.get(0).x(), points.get(2).y()-points.get(0).y(), points.get(2).z()-points.get(0).z()});
+            return Vector.crossProduct(v1, v2);
+        
+        }
+    }
+
+    public Vector[] getAABB(){
+        double[] minVals = new double[] {999999999, 999999999, 999999999};
+        double[] maxVals = new double[] {-999999999, -999999999, -999999999};
+
+        for(GridPosition point : this.points){
+            //X
+            if(point.x() < minVals[0]){
+                minVals[0] = point.x();
+            }
+            if (point.x() > maxVals[0]){
+                maxVals[0] = point.x();
+            }
+            //Y
+            if(point.y() < minVals[1]){
+                minVals[1] = point.y();
+            }
+            if (point.y() > maxVals[1]){
+                maxVals[1] = point.y();
+            }
+            //Y
+            if(point.z() < minVals[2]){
+                minVals[2] = point.z();
+            }
+            if (point.z() > maxVals[2]){
+                maxVals[2] = point.z();
+            }
+        }
+        Vector minVector = new Vector(minVals);
+        Vector maxVector = new Vector(maxVals);
+
+        return new Vector[] {minVector, maxVector};
+    }
+
 
     @Override
     public String toString() {

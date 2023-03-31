@@ -1,98 +1,83 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster;
 
+import java.awt.GridBagConstraints;
 import java.util.ArrayList;
 
 import javax.swing.text.Position;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.ViewProjectionMatrix;
 
 public class Camera implements ICamera {
-    GridPosition centerPos;
     GridPosition pos;
     RelativeRotation rotation;
     double focalLength;
     double verticalFOV;
     double horizontalFOV;
-    double coordinateHeight = 0.3;
+    double coordinateHeight;
+    double aspectRatio;
+    double renderDistance;
+    ViewProjectionMatrix viewProjectionMatrix;
+    Frustum cameraFrustum;
 
-    public Camera(double width, double height, double fov, GridPosition pos, RelativeRotation rot){
+    public Camera(double coordinateWidth, double coordinateHeight, double renderDistance, double fov, GridPosition pos, RelativeRotation rot){
         updatePos(pos);
         updateRotation(rot);
-        System.out.println(height/width + " " + fov + " " + Math.tan(fov/2));
-        this.focalLength = 1/(2*Math.tan(fov/2));
+        System.out.println( " " + fov + " " + Math.tan(fov/2));
+        this.aspectRatio = coordinateWidth/coordinateHeight;
+        this.renderDistance = renderDistance;
+        this.coordinateHeight = coordinateHeight;
+        this.focalLength = this.coordinateHeight/(2*Math.tan(fov/2));
         this.verticalFOV = fov;
-        this.horizontalFOV = Math.atan((width/height) / (2 * focalLength));
-        this.pos = calcCenterToPos();
+        this.horizontalFOV = Math.atan((this.aspectRatio) / (2 * focalLength));
+        this.pos = pos;
+        this.viewProjectionMatrix = new ViewProjectionMatrix(this.verticalFOV, this.aspectRatio, this.focalLength, this.renderDistance, this.rotation.getAbsolute());
+        this.cameraFrustum = new Frustum(this.viewProjectionMatrix.getViewProjectionMatrix());
 
+
+        System.out.println("focal:" + this.focalLength);
         System.out.println(this.pos);
         System.out.println(this.rotation);
-    }
-
-    private GridPosition calcCenterToPos(){
-        double rotX = rotation.getAbsolute().getxAxis();
-        double rotY = rotation.getAbsolute().getyAxis();
-        double rotZ = rotation.getAbsolute().getzAxis();
-
-
-        Matrix rotationMatrix = Matrix.getRotationMatrix(new Rotation(rotX, rotY, rotZ));
-        System.out.println(rotationMatrix);
-        Vector rotatedVector = rotationMatrix.multiply(new Vector(new double[] {0, 0, -1}));
-        System.out.println(rotatedVector);
-        Vector scaledVector = rotatedVector.scaledBy(this.focalLength);
-
-        return scaledVector.getPoint();
-
     }
 
 
     @Override
     public void updatePos(GridPosition pos){
-        this.centerPos = pos;
+        this.pos = pos;
     }
 
     @Override
     public void updateRotation(RelativeRotation rotation){
         this.rotation = rotation;
+        this.viewProjectionMatrix = new ViewProjectionMatrix(this.verticalFOV, this.aspectRatio, this.focalLength, this.renderDistance, this.rotation.getAbsolute());
+        this.cameraFrustum = new Frustum(this.viewProjectionMatrix.getViewProjectionMatrix());
     }
 
     //TODO: add support for rendering faces where all points are outside the viewport, but part of the face is still visible.
     @Override
-    public boolean isRendered(GridPosition vertex){
-        return true;
-        /*double dx = vertex.x() - this.pos.x();
-        double dy = vertex.y() - this.pos.y();
-        double dz = vertex.z() - this.pos.z();
-
-        Vector pointToCamera = new Vector(new double[] {dx, dy, dz});
-        
-        RelativeRotation vectorRot = Vector.getVectorRotation(pointToCamera);
-        System.out.println(vertex + " " + vectorRot);
-        if(vectorRot.getUpDown() > this.cornerRotations.upperLeft().getUpDown()){
+    public boolean isRendered(Vector rotatedRay, GridPosition castedPos){
+        if(rotatedRay.get(2) > this.focalLength){
+            return true;
+        } else if(castedPos.y() > -this.coordinateHeight/2 && castedPos.y() < this.coordinateHeight/2){
+            System.out.println("test1");
             return false;
-        } else if(vectorRot.getUpDown() < this.cornerRotations.lowerRight().getUpDown()){
+        } else if(castedPos.x() > -this.coordinateHeight*this.aspectRatio/2 && castedPos.x() < this.coordinateHeight*this.aspectRatio/2){
+            System.out.println("test3");
             return false;
-        //Check if rotation crosses 0 radian spot
-        } else if(this.cornerRotations.upperLeft().getLeftRight() > this.cornerRotations.lowerRight().getLeftRight()){
-            if(vectorRot.getLeftRight() > this.cornerRotations.upperLeft().getLeftRight()){
-                return true;
-            } else if(vectorRot.getLeftRight() < this.cornerRotations.lowerRight().getLeftRight()){
-                return true;
-            } else {
-                return false;
-            }
         } else {
-            if(vectorRot.getLeftRight() < this.cornerRotations.upperLeft().getLeftRight()){
-                return false;
-            } else if(vectorRot.getLeftRight() > this.cornerRotations.lowerRight().getLeftRight()){
-                return false;
-            }
+            return true;
         }
+    }
 
-        return true;*/
+    @Override
+    public ViewProjectionMatrix getViewProjectionMatrix(){
+        return this.viewProjectionMatrix;
     }
 
     @Override
@@ -109,6 +94,21 @@ public class Camera implements ICamera {
     @Override
     public double getFocalLength(){
         return this.focalLength;
+    }
+
+    @Override
+    public double getHeight(){
+        return this.coordinateHeight;
+    }
+
+    @Override
+    public double getWidth(){
+        return this.coordinateHeight*this.aspectRatio;
+    }
+
+    @Override
+    public Frustum getFrustum(){
+        return this.cameraFrustum;
     }
 }
 

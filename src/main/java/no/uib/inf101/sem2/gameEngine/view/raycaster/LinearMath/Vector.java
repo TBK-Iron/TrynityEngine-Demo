@@ -2,6 +2,8 @@ package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
 
 import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
 
+import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
 
@@ -9,6 +11,21 @@ public class Vector {
     double[] value;
     public Vector(double[] value){
         this.value = value;
+    }
+
+    public Vector(GridPosition value){
+        this.value = new double[3];
+        this.value[0] = value.x();
+        this.value[1] = value.y();
+        this.value[2] = value.z();
+    }
+
+    public static Vector getVector(GridPosition p1, GridPosition p2){
+        double x = p2.x() - p1.x();
+        double y = p2.y() - p1.y();
+        double z = p2.z() - p1.z();
+
+        return new Vector(new double[] {x, y, z});
     }
 
     public static Vector add(Vector v1, Vector v2){
@@ -20,6 +37,30 @@ public class Vector {
             result[i] = v1.get(i) + v2.get(i);
         }
         return new Vector(result);
+    }
+
+    //Made by chatGPT
+    public static Vector crossProduct(Vector v1, Vector v2) {
+        if (v1.getDims() != 3 || v2.getDims() != 3) {
+            throw new IllegalArgumentException("Cross product is only supported for 3-dimensional vectors.");
+        }
+        double[] result = new double[3];
+        result[0] = v1.get(1) * v2.get(2) - v1.get(2) * v2.get(1);
+        result[1] = v1.get(2) * v2.get(0) - v1.get(0) * v2.get(2);
+        result[2] = v1.get(0) * v2.get(1) - v1.get(1) * v2.get(0);
+        return new Vector(result);
+    }
+
+    //Made by chatGPT
+    public static double dotProduct(Vector v1, Vector v2) {
+        if (v1.getDims() != v2.getDims()) {
+            throw new IllegalArgumentException("Vectors must have the same dimensions for dot product.");
+        }
+        double result = 0;
+        for (int i = 0; i < v1.getDims(); i++) {
+            result += v1.get(i) * v2.get(i);
+        }
+        return result;
     }
 
     public double get(int i){
@@ -55,7 +96,7 @@ public class Vector {
         return new Vector(scaledVector);
     }
 
-    private double magnitude(){
+    public double magnitude(){
         double magnitude = 0;
         for(int i = 0; i < this.getDims(); i++){
             magnitude += Math.pow(this.value[i], 2);

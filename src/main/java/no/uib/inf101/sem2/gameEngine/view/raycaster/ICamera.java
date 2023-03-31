@@ -1,19 +1,33 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster;
 
+
 import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Frustum;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.ViewProjectionMatrix;
 
 public interface ICamera {
     public void updatePos(GridPosition pos);
 
     public void updateRotation(RelativeRotation rotation);
 
-    public boolean isRendered(GridPosition vertex);
+    public Frustum getFrustum();
+
+    public ViewProjectionMatrix getViewProjectionMatrix();
+
+    public boolean isRendered(Vector rotatedRay, GridPosition castedPos);
 
     public GridPosition getCastPos();
 
     public RelativeRotation getRotation();
 
     public double getFocalLength();
+
+    public double getWidth();
+
+    public double getHeight();
 }

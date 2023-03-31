@@ -12,6 +12,7 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.GameView;
+import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
@@ -28,75 +29,120 @@ public class Raycaster {
         this.height = height;
         this.fov = Math.PI/2;
 
-        double leftRightRot = 0; //Degrees
-        double upDownRot = -20; //Degrees
+        double leftRightRot = 20; //Degrees
+        double upDownRot = 0; //Degrees
+        double renderDistance = 10000;
         
-        this.viewport = new Camera(width, height, fov, new Position3D(0, 0, 0), new RelativeRotation(Math.toRadians(upDownRot), Math.toRadians(leftRightRot)));
+        this.viewport = new Camera(0.1*this.width/this.height, 0.1, renderDistance, fov, new Position3D(0, 0, 0), new RelativeRotation(Math.toRadians(upDownRot), Math.toRadians(leftRightRot)));
     }
 
+    public ArrayList<Face> cull(ArrayList<Face> faces){
+        faces = backfaceCull(faces, this.viewport.getCastPos());
+        faces = viewfrustrumCull(faces, this.viewport.getFrustum());
+
+        //TODO: Implement occlusion culling
+        //faces = occlusionCull(faces);
+
+        return faces;
+    }
+
+
+    private static ArrayList<Face> backfaceCull(ArrayList<Face> faces, GridPosition pos){
+        ArrayList<Face> culledFaces = new ArrayList<>();
+        for(Face face : faces){
+            double dotProduct = Vector.dotProduct(face.getNormalVector(), Vector.getVector(face.get(0), pos));
+            if(dotProduct > 0){
+                culledFaces.add(face);
+            }
+        }
+        return culledFaces;
+    }
+
+    private static ArrayList<Face> viewfrustrumCull(ArrayList<Face> faces, Frustum cameraFrustum){
+        ArrayList<Face> culledFaces = new ArrayList<>();
+        for(Face face : faces){
+            if(!cameraFrustum.isFaceCulled(face)){
+                culledFaces.add(face);
+            }
+        }
+        return culledFaces;
+    }
 
     public ArrayList<Face> castTo2D(ArrayList<Face> faces){
         
         ArrayList<Face> castedFaces = new ArrayList<>();
         for(Face face : faces){
             //System.out.println(face);
-            if(faceIsRendered(face)){
                 
-                ArrayList<GridPosition> castedPoints = new ArrayList<>();
-                for(GridPosition point : face.getPoints()){
-                    double dx = point.x() - this.viewport.getCastPos().x();
-                    double dy = point.y() - this.viewport.getCastPos().y();
-                    double dz = point.z() - this.viewport.getCastPos().z();
+            ArrayList<GridPosition> castedPoints = new ArrayList<>();
+            boolean faceIsRendered = true;
+            for(GridPosition point : face.getPoints()){
+                double dx = point.x() - this.viewport.getCastPos().x();
+                double dy = point.y() - this.viewport.getCastPos().y();
+                double dz = point.z() - this.viewport.getCastPos().z();
 
-                    Vector ray = new Vector(new double[] {dx, dy, dz});
+                Vector ray = new Vector(new double[] {dx, dy, dz});
 
-                    Matrix rotationMatrix = Matrix.getRotationMatrix(this.viewport.getRotation().getAbsolute().getNegRotation());
-                    Vector rotatedRay = rotationMatrix.multiply(ray).normalized().scaledBy(this.viewport.getFocalLength());
-                    
-                    /*RelativeRotation rayRotation = Vector.getVectorRotation(rotatedRay);
+                Vector cameraSpaceRay = viewport.getViewProjectionMatrix().viewMatrixTransform(ray);
+                Vector xyRatios = viewport.getViewProjectionMatrix().projectionMatrixTransform(cameraSpaceRay);
 
-                    double upDown = rayRotation.getUpDown();
-                    double leftRight;
-                    if(rayRotation.getLeftRight() > Math.PI){
-                        leftRight = rayRotation.getLeftRight() - 2*Math.PI;
-                    } else {
-                        leftRight = rayRotation.getLeftRight();
-                    }
+                //System.out.println("X-Y ratios: " + xyRatios);
 
-                    double horizontalFOV = this.fov * width/height;
+                double screenX = (this.width/2) * (xyRatios.get(0) + 1);
+                double screenY = this.height - (this.height/2) * (xyRatios.get(1) + 1);
 
-                    double xRatio = (leftRight + horizontalFOV/2)/horizontalFOV;
-                    double yRatio = 1-(fov + 2*upDown)/(2*fov);*/
-
-                    double xRatio;
-                    double yRatio;
-
-                    double Vx = rotatedRay.get(0);
-                    double Vy = rotatedRay.get(1);
-                    double Vz = rotatedRay.get(2);
-
-                    if(rotatedRay.get(2) > 0){
-                        xRatio = (Vx * 2 * this.height + this.width)/(2*this.width) ;
-                        yRatio = 0.5 - Vy;
-                    } else {
-                        xRatio = 0.5 - (this.viewport.getFocalLength()*this.height*Vx)/(this.width*Vz);
-                        yRatio = 0.5 + viewport.getFocalLength() * Vy / Vz;
-                    }
-                    
-
-                    GridPosition finalPos = new Position2D(xRatio*this.width, yRatio*this.height);
-
-                    castedPoints.add(finalPos);
+                if(cameraSpaceRay.get(2) > 0){
+                    screenX = this.width - screenX;
+                    screenY = this.height - screenY;
                 }
 
+                GridPosition finalPos = new Position2D(screenX, screenY);
+
+                castedPoints.add(finalPos);
+
+                /*Matrix viewMatrix = Matrix.getRotationMatrix(this.viewport.getRotation().getAbsolute().getNegRotation());
+                Vector rotatedRay = viewMatrix.multiply(ray);
+
+                double xRatio;
+                double yRatio;
+
+                double Vx = rotatedRay.get(0);
+                double Vy = rotatedRay.get(1);
+                double Vz = rotatedRay.get(2);
+
+                double cWidth = this.viewport.getWidth();
+                double cHeight = this.viewport.getHeight();
+
+                double focalL = this.viewport.getFocalLength();
+
+                if(rotatedRay.get(2) > 0){
+                    xRatio = 0.5 * (2*focalL*Vx+cWidth*Vz) / (cWidth* Vz);
+                    yRatio = (cHeight*Vz - 2*focalL*Vy)/(2*cHeight*Vz);
+                } else {
+                    xRatio = (0.5 * (cWidth*Vz - 2*focalL*Vx)) / (cWidth * Vz);
+                    yRatio = (cHeight*Vz + 2*focalL*Vy)/(2*cHeight*Vz);
+                }
+                
+
+                GridPosition finalPos = new Position2D(xRatio*this.width, yRatio*this.height);
+
+                if(!viewport.isRendered(rotatedRay, finalPos)){
+                    faceIsRendered = false;
+                    break;
+                }
+
+                castedPoints.add(finalPos);*/
+            }
+            if(faceIsRendered){
                 castedFaces.add(new Face(castedPoints, face.getColor()));
+                //System.out.println(new Face(castedPoints, face.getColor()));
             }
         }
 
         return castedFaces;
     }
 
-    private boolean faceIsRendered(Face face){
+    /*private boolean faceIsRendered(Face face){
         for(GridPosition point : face.getPoints()){
             //System.out.println(point + " = " + viewport.isRendered(point));
             if(viewport.isRendered(point)){
@@ -104,7 +150,7 @@ public class Raycaster {
             }
         }
         return false;
-    }
+    }*/
 
     public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
         BufferedImage buffer = new BufferedImage(GameView.WIDTH, GameView.HEIGHT, BufferedImage.TYPE_INT_RGB);

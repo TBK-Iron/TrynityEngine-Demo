@@ -9,7 +9,20 @@ public class Matrix {
     double[][] value;
 
     public Matrix(double[][] value){
+        if(!isValid(value)){
+            throw new IllegalArgumentException("Number of rows not consistent");
+        }
         this.value = value;
+    }
+
+    private static boolean isValid(double[][] matrix){
+        int cols = matrix[0].length;
+        for(double[] row : matrix){
+            if(row.length != cols){
+                return false;
+            }
+        }
+        return true;
     }
 
     public static Matrix multiply(Matrix m1, Matrix m2) {
@@ -35,7 +48,7 @@ public class Matrix {
         if(this.getCols() != vector.getDims()){
             throw new IllegalArgumentException("Vector can't be multiplied with matrix");
         } else {
-            double[] result = new double[vector.getDims()];
+            double[] result = new double[this.getRows()];
 
             for (int i = 0; i < this.value.length; i++) {
                 result[i] = 0;
@@ -79,10 +92,6 @@ public class Matrix {
             {Math.sin(rotZ), Math.cos(rotZ), 0},
             {0, 0, 1}
         });
-
-        System.out.println("\n" + matrixX);
-        System.out.println("\n" + matrixY);
-        System.out.println("\n" + matrixZ);
 
         Matrix rotationMatrix = multiply(multiply(matrixX, matrixY), matrixZ);
 
