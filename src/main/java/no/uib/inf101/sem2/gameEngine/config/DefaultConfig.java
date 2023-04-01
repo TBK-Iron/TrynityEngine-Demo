@@ -1,7 +1,5 @@
 package no.uib.inf101.sem2.gameEngine.config;
 
-import java.util.HashMap;
-import java.util.Map;
 
 public class DefaultConfig implements Config {
     final float verticalFOV = 90;

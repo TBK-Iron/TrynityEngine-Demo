@@ -1,7 +1,6 @@
-package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
 
 public class ViewProjectionMatrix {
     
@@ -30,8 +29,8 @@ public class ViewProjectionMatrix {
     }
 
     private void createViewMatrix(Rotation rot){
-        Matrix viewMatrix = Matrix.getRotationMatrix(rot.getNegRotation());
-        this.viewMatrix = viewMatrix;
+        //Matrix viewMatrix = Matrix.getRotationMatrix(rot.getNegRotation());
+        //this.viewMatrix = viewMatrix;
     }
 
     private void createViewProjectionMatrix(Matrix viewM, Matrix ProjM){

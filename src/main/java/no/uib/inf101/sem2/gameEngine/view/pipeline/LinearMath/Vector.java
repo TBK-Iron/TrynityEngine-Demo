@@ -1,11 +1,10 @@
-package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
-import javax.swing.text.html.HTMLDocument.HTMLReader.SpecialAction;
-
-import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position4D;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Vector {
     float[] value;
@@ -104,11 +103,15 @@ public class Vector {
         return (float) Math.sqrt(magnitude);
     }
 
-    public Position3D getPoint(){
-        if(getDims() != 3){
-            throw new UnsupportedOperationException("getPoint method is only supported for 3 dimensional vectors");
-        } else {
+    public GridPosition getPoint(){
+        if(getDims() == 2){
+            return new Position2D(this.value[0], this.value[1]);
+        } else if(getDims() == 3){
             return new Position3D(this.value[0], this.value[1], this.value[2]);
+        } else if (getDims() == 4){
+            return new Position4D(this.value[0], this.value[1], this.value[2], this.value[3]);
+        } else {
+            throw new UnsupportedOperationException("Vector must have 2, 3 or 4 dimensions to be converted to a point.");
         }
         
     }

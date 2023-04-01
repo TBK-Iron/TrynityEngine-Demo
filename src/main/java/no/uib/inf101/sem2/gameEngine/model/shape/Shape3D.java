@@ -6,7 +6,6 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
 public class Shape3D implements IShape {
@@ -26,6 +25,15 @@ public class Shape3D implements IShape {
         updatePosition();
         
     }
+
+    //Used for creating a shape that has already had all transformations applied
+    public Shape3D(ArrayList<Face> faces){
+        this.faces = faces;
+        this.unchangedFaces = faces;
+        this.anchoredPos = new Position3D(0, 0, 0);
+        this.rotation = new Rotation(0, 0, 0);
+    }
+
     private static ArrayList<Face> parseTrymFile(File file){
         String fileName = file.getName();
         String fileType = fileName.substring(fileName.lastIndexOf(".") + 1);
@@ -105,11 +113,45 @@ public class Shape3D implements IShape {
         }
     }
 
+    public BoundingSphere getBoundingSphere(){
+        float x = 0;
+        float y = 0;
+        float z = 0;
+
+        int pointCount = 0;
+        for(Face face : this.faces){
+            for(GridPosition point : face.getPoints()){
+                x += point.x();
+                y += point.y();
+                z += point.z();
+                pointCount++;
+            }
+        }
+        x /= pointCount;
+        y /= pointCount;
+        z /= pointCount;
+        GridPosition center = new Position3D(x, y, z);
+        float radius = 0;
+        for(Face face : this.faces){
+            for(GridPosition point : face.getPoints()){
+                float distance = (float) Math.sqrt(Math.pow(point.x() - center.x(), 2) + Math.pow(point.y() - center.y(), 2) + Math.pow(point.z() - center.z(), 2));
+                if(distance > radius){
+                    radius = distance;
+                }
+            }
+        }
+        return new BoundingSphere(center, radius);
+    }
+
     public GridPosition getPos(){
         return this.anchoredPos;
     }
 
     public ArrayList<Face> getFaces(){
         return this.faces;
+    }
+
+    public void setFaces(ArrayList<Face> faces){
+        this.faces = faces;
     }
 }

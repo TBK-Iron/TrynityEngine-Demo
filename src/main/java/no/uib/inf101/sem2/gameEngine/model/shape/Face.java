@@ -3,7 +3,7 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 import java.awt.Color;
 
@@ -133,6 +133,22 @@ public class Face {
         }
 
         return true;
+    }
+
+    public void removeDuplicatePoints(){
+        for(int i = 0; i < this.points.size(); i++){
+            GridPosition currentPos = this.points.get(i);
+            GridPosition nextPos = this.points.get((i + 1) % (this.points.size()));
+
+            if(Math.abs(currentPos.x() - nextPos.x()) < 0.0001){
+                if(Math.abs(currentPos.y() - nextPos.y()) < 0.0001){
+                    if(Math.abs(currentPos.z() - nextPos.z()) < 0.0001){
+                        this.points.remove(i);
+                        i--;
+                    }
+                }
+            }
+        }
     }
 
 }

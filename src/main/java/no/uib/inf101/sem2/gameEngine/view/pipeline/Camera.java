@@ -1,18 +1,12 @@
-package no.uib.inf101.sem2.gameEngine.view.raycaster;
+package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
-import java.awt.GridBagConstraints;
-import java.util.ArrayList;
-
-import javax.swing.text.Position;
-
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Frustum;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Matrix;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.ViewProjectionMatrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Projection;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.ViewProjection;
 
 public class Camera implements ICamera {
     GridPosition pos;
@@ -23,18 +17,22 @@ public class Camera implements ICamera {
     float coordinateHeight;
     float aspectRatio;
     float renderDistance;
-    ViewProjectionMatrix viewProjectionMatrix;
+    Transformation viewTransformation;
+    Transformation projectionTransformation;
+    Transformation viewProjectionTransformation;
     Frustum cameraFrustum;
 
     public Camera(int screenWidth, int screenHeight, float nearPlane, float farPlane, float verticalFOV){
-        updatePos(new Position3D(0, 0, 0));
-        updateRotation(new RelativeRotation(0, 0));
         this.aspectRatio = screenWidth/screenHeight;
         this.renderDistance = farPlane;
         this.focalLength = nearPlane;
         this.verticalFOV = verticalFOV;
         this.coordinateHeight = 2 * ((float) Math.tan(verticalFOV/2) * nearPlane);
         this.horizontalFOV = (float) Math.atan((this.coordinateHeight * this.aspectRatio) / (2 * nearPlane));
+        this.projectionTransformation = new Projection(verticalFOV, verticalFOV, nearPlane, farPlane);
+
+        updatePos(new Position3D(0, 0, 0));
+        updateRotation(new RelativeRotation(0, 0));
 
         System.out.println("focal:" + this.focalLength);
         System.out.println(this.pos);
@@ -50,13 +48,24 @@ public class Camera implements ICamera {
     @Override
     public void updateRotation(RelativeRotation rotation){
         this.rotation = rotation;
-        this.viewProjectionMatrix = new ViewProjectionMatrix(this.verticalFOV, this.aspectRatio, this.focalLength, this.renderDistance, this.rotation.getAbsolute());
-        this.cameraFrustum = new Frustum(this.viewProjectionMatrix.getViewProjectionMatrix());
+        this.viewTransformation = new View(rotation, pos);
+        this.viewProjectionTransformation = new ViewProjection(this.viewTransformation.getMatrix(), this.projectionTransformation.getMatrix());
+        this.cameraFrustum = new Frustum(this.viewProjectionTransformation.getMatrix());
     }
 
     @Override
-    public ViewProjectionMatrix getViewProjectionMatrix(){
-        return this.viewProjectionMatrix;
+    public Transformation getViewProjectionTransform(){
+        return this.viewProjectionTransformation;
+    }
+
+    @Override
+    public Transformation getViewTranform(){
+        return this.viewTransformation;
+    }
+
+    @Override
+    public Transformation getProjectionTransform(){
+        return this.projectionTransformation;
     }
 
     @Override

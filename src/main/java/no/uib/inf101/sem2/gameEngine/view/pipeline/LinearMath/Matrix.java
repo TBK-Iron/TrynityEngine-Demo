@@ -1,8 +1,5 @@
-package no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
-import java.util.ArrayList;
-
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
 public class Matrix {
     
@@ -23,6 +20,10 @@ public class Matrix {
             }
         }
         return true;
+    }
+
+    public float get(int row, int col){
+        return this.value[row][col];
     }
 
     public static Matrix multiply(Matrix m1, Matrix m2) {
@@ -68,34 +69,6 @@ public class Matrix {
 
     public int getCols(){
         return this.value[0].length;
-    }
-
-    public static Matrix getRotationMatrix(Rotation rot){
-        float rotX = rot.getxAxis();
-        float rotY = rot.getyAxis();
-        float rotZ = rot.getzAxis();
-
-        Matrix matrixX = new Matrix(new float[][] {
-            {1f, 0f, 0f},
-            {0f, (float) Math.cos(rotX), (float) -Math.sin(rotX)},
-            {0f, (float) Math.sin(rotX), (float) Math.cos(rotX)}
-        });
-
-        Matrix matrixY = new Matrix(new float[][] {
-            {(float) Math.cos(rotY), 0f, (float) Math.sin(rotY)},
-            {0f, 1f, 0f},
-            {(float) -Math.sin(rotY), 0f, (float) Math.cos(rotY)}
-        });
-
-        Matrix matrixZ = new Matrix(new float[][] {
-            {(float) Math.cos(rotZ), (float) -Math.sin(rotZ), 0f},
-            {(float) Math.sin(rotZ), (float) Math.cos(rotZ), 0f},
-            {0f, 0f, 1f}
-        });
-
-        Matrix rotationMatrix = multiply(multiply(matrixX, matrixY), matrixZ);
-
-        return rotationMatrix;
     }
     
     @Override

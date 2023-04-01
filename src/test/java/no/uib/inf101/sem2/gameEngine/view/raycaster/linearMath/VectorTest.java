@@ -1,8 +1,9 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster.linearMath;
 
+import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 import org.junit.jupiter.api.Test;
 
@@ -74,7 +75,7 @@ public class VectorTest {
     @Test
     public void testGetPoint() {
         Vector v = new Vector(new float[] {1, 2, 3});
-        Position3D p = v.getPoint();
+        GridPosition p = v.getPoint();
         assertEquals(new Position3D(1, 2, 3), p);
     }
 }

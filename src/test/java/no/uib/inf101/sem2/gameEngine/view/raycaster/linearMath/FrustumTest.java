@@ -4,9 +4,9 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Frustum;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.Matrix;
-import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.ViewProjectionMatrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.ViewProjectionMatrix;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

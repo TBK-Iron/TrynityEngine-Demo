@@ -1,6 +1,9 @@
 package no.uib.inf101.sem2.gameEngine.view.raycaster;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.Camera;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,7 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 

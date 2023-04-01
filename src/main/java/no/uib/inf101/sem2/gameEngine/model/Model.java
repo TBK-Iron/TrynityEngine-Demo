@@ -2,8 +2,6 @@ package no.uib.inf101.sem2.gameEngine.model;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
@@ -31,21 +29,17 @@ public class Model implements ViewableGameModel {
         entities.add(new Entity(pos, rotation, shapeFile));
     }
 
-    public ArrayList<Face> getAllFaces(){
-        ArrayList<Face> faces = new ArrayList<>();
+    public ArrayList<Shape3D> getShapes(){
+        ArrayList<Shape3D> shapes = new ArrayList<>();
 
         for(Shape3D shape : shapes){
-            for(Face face : shape.getFaces()){
-                faces.add(face);
-            }
+            shapes.add(shape);
         }
         for(Entity entity : entities){
-            for(Face face : entity.getFaces()){
-                faces.add(face);
-            }
+            shapes.add((Shape3D) entity);
         }
 
-        return faces;
+        return shapes;
     }
     public float maxDistFromPointToFace(GridPosition pos1, Face face){
         float maxDistance = 0.0f;
