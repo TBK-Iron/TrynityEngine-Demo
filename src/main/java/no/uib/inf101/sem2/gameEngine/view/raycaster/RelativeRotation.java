@@ -4,11 +4,11 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 
 public class RelativeRotation {
-    Double upDown;
-    Double leftRight;
+    float upDown;
+    float leftRight;
     Rotation absoluteRotation;
 
-    public RelativeRotation(Double upDown, Double leftRight){
+    public RelativeRotation(float upDown, float leftRight){
         this.upDown = upDown;
         this.leftRight = leftRight;
         if(!isValidRotation(upDown, leftRight)){
@@ -16,7 +16,7 @@ public class RelativeRotation {
         }
     }
 
-    private static boolean isValidRotation(Double upDown, Double leftRight){
+    private static boolean isValidRotation(float upDown, float leftRight){
         if(upDown > Math.PI/2 || upDown < -Math.PI/2){
             return false;
         } else {
@@ -26,9 +26,9 @@ public class RelativeRotation {
 
     public Rotation getAbsolute(){
         if(this.absoluteRotation == null){
-            Double xAxis = Math.cos(this.leftRight) * this.upDown;
-            Double yAxis = this.leftRight;
-            Double zAxis = Math.sin(this.leftRight) * this.upDown;
+            float xAxis = (float) Math.cos(this.leftRight) * this.upDown;
+            float yAxis = this.leftRight;
+            float zAxis = (float) Math.sin(this.leftRight) * this.upDown;
 
             this.absoluteRotation = new Rotation(xAxis, yAxis, zAxis);
         }
@@ -37,12 +37,12 @@ public class RelativeRotation {
     }
 
     public RelativeRotation add(RelativeRotation rotation2){
-        Double newLeftRight = (this.leftRight + rotation2.leftRight) % (2*Math.PI);
-        Double newUpDown;
+        float newLeftRight = (this.leftRight + rotation2.leftRight) % ((float) ( 2*Math.PI));
+        float newUpDown;
         if(this.upDown + rotation2.upDown > Math.PI/2){
-            newUpDown = Math.PI/2 - (this.upDown + rotation2.upDown - Math.PI/2);
+            newUpDown = (float) Math.PI/2 - (this.upDown + rotation2.upDown - (float) Math.PI/2);
         } else if(this.upDown + rotation2.upDown < -Math.PI/2){
-            newUpDown = -Math.PI/2 - (this.upDown + rotation2.upDown + Math.PI/2);
+            newUpDown = -(float) Math.PI/2 - (this.upDown + rotation2.upDown + (float) Math.PI/2);
         } else {
             newUpDown = this.upDown + rotation2.upDown;
         }
@@ -51,11 +51,11 @@ public class RelativeRotation {
         return new RelativeRotation(newUpDown, newLeftRight);
     }
 
-    protected double getLeftRight(){
-        return this.leftRight % (2*Math.PI);
+    protected float getLeftRight(){
+        return this.leftRight % ((float) (2*Math.PI));
     }
 
-    protected double getUpDown(){
+    protected float getUpDown(){
         return this.upDown;
     }
 

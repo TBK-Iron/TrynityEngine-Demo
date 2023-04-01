@@ -47,10 +47,10 @@ public class Model implements ViewableGameModel {
 
         return faces;
     }
-    public double maxDistFromPointToFace(GridPosition pos1, Face face){
-        Double maxDistance = 0.0;
+    public float maxDistFromPointToFace(GridPosition pos1, Face face){
+        float maxDistance = 0.0f;
         for(GridPosition pos2 : face.getPoints()){
-            Double dist = Math.sqrt(Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2));
+            float dist = (float) Math.sqrt(Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2) + Math.pow(pos2.x() - pos1.x(), 2));
             if(dist > maxDistance){
                 maxDistance = dist;
             }

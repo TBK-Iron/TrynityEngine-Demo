@@ -19,15 +19,13 @@ public interface ICamera {
 
     public ViewProjectionMatrix getViewProjectionMatrix();
 
-    public boolean isRendered(Vector rotatedRay, GridPosition castedPos);
-
     public GridPosition getCastPos();
 
     public RelativeRotation getRotation();
 
-    public double getFocalLength();
+    public float getFocalLength();
 
-    public double getWidth();
+    public float getWidth();
 
-    public double getHeight();
+    public float getHeight();
 }

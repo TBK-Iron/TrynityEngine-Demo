@@ -11,10 +11,13 @@ import java.awt.event.MouseMotionAdapter;
 import java.awt.event.MouseAdapter;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+
 import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import no.uib.inf101.sem2.gameEngine.config.Config;
+import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.Raycaster;
 
@@ -22,13 +25,13 @@ public class GameView extends JPanel{
     
     Raycaster raycaster;
     ViewableGameModel model;
-    public static final int WIDTH = 640;
-    public static final int HEIGHT = 360;
+
+    static final Config config = new DefaultConfig();
 
     public GameView(ViewableGameModel model){
         this.setPreferredSize(new Dimension(GameView.WIDTH, GameView.HEIGHT));
         this.setBackground(Color.WHITE);
-        raycaster = new Raycaster(GameView.WIDTH, GameView.HEIGHT);
+        raycaster = new Raycaster(config);
         this.model = model;
     }
 

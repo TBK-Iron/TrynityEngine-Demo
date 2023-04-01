@@ -17,29 +17,24 @@ import no.uib.inf101.sem2.gameEngine.view.raycaster.LinearMath.ViewProjectionMat
 public class Camera implements ICamera {
     GridPosition pos;
     RelativeRotation rotation;
-    double focalLength;
-    double verticalFOV;
-    double horizontalFOV;
-    double coordinateHeight;
-    double aspectRatio;
-    double renderDistance;
+    float focalLength;
+    float verticalFOV;
+    float horizontalFOV;
+    float coordinateHeight;
+    float aspectRatio;
+    float renderDistance;
     ViewProjectionMatrix viewProjectionMatrix;
     Frustum cameraFrustum;
 
-    public Camera(double coordinateWidth, double coordinateHeight, double renderDistance, double fov, GridPosition pos, RelativeRotation rot){
-        updatePos(pos);
-        updateRotation(rot);
-        System.out.println( " " + fov + " " + Math.tan(fov/2));
-        this.aspectRatio = coordinateWidth/coordinateHeight;
-        this.renderDistance = renderDistance;
-        this.coordinateHeight = coordinateHeight;
-        this.focalLength = this.coordinateHeight/(2*Math.tan(fov/2));
-        this.verticalFOV = fov;
-        this.horizontalFOV = Math.atan((this.aspectRatio) / (2 * focalLength));
-        this.pos = pos;
-        this.viewProjectionMatrix = new ViewProjectionMatrix(this.verticalFOV, this.aspectRatio, this.focalLength, this.renderDistance, this.rotation.getAbsolute());
-        this.cameraFrustum = new Frustum(this.viewProjectionMatrix.getViewProjectionMatrix());
-
+    public Camera(int screenWidth, int screenHeight, float nearPlane, float farPlane, float verticalFOV){
+        updatePos(new Position3D(0, 0, 0));
+        updateRotation(new RelativeRotation(0, 0));
+        this.aspectRatio = screenWidth/screenHeight;
+        this.renderDistance = farPlane;
+        this.focalLength = nearPlane;
+        this.verticalFOV = verticalFOV;
+        this.coordinateHeight = 2 * ((float) Math.tan(verticalFOV/2) * nearPlane);
+        this.horizontalFOV = (float) Math.atan((this.coordinateHeight * this.aspectRatio) / (2 * nearPlane));
 
         System.out.println("focal:" + this.focalLength);
         System.out.println(this.pos);
@@ -59,22 +54,6 @@ public class Camera implements ICamera {
         this.cameraFrustum = new Frustum(this.viewProjectionMatrix.getViewProjectionMatrix());
     }
 
-    //TODO: add support for rendering faces where all points are outside the viewport, but part of the face is still visible.
-    @Override
-    public boolean isRendered(Vector rotatedRay, GridPosition castedPos){
-        if(rotatedRay.get(2) > this.focalLength){
-            return true;
-        } else if(castedPos.y() > -this.coordinateHeight/2 && castedPos.y() < this.coordinateHeight/2){
-            System.out.println("test1");
-            return false;
-        } else if(castedPos.x() > -this.coordinateHeight*this.aspectRatio/2 && castedPos.x() < this.coordinateHeight*this.aspectRatio/2){
-            System.out.println("test3");
-            return false;
-        } else {
-            return true;
-        }
-    }
-
     @Override
     public ViewProjectionMatrix getViewProjectionMatrix(){
         return this.viewProjectionMatrix;
@@ -92,17 +71,17 @@ public class Camera implements ICamera {
     }
 
     @Override
-    public double getFocalLength(){
+    public float getFocalLength(){
         return this.focalLength;
     }
 
     @Override
-    public double getHeight(){
+    public float getHeight(){
         return this.coordinateHeight;
     }
 
     @Override
-    public double getWidth(){
+    public float getWidth(){
         return this.coordinateHeight*this.aspectRatio;
     }
 

@@ -47,10 +47,10 @@ public class Shape3D implements IShape {
                     //Parse points
                     ArrayList<GridPosition> posisions = new ArrayList<>();
                     for(String point : points){
-                        double[] dPoint = {0.0, 0.0, 0.0};
+                        float[] dPoint = new float[3];
                         String[] sPoint = point.replace("(", "").replace(")", "").split(",");
                         for(int j = 0; j < 3; j++){
-                            dPoint[j] = Double.parseDouble(sPoint[j]);
+                            dPoint[j] = Float.parseFloat(sPoint[j]);
                         }
                         posisions.add(new Position3D(dPoint[0], dPoint[1], dPoint[2]));
                     }
@@ -71,9 +71,9 @@ public class Shape3D implements IShape {
     protected void updatePosition(){
         for(int i = 0; i < this.faces.size(); i++){
             for(int j = 0; j < this.faces.get(i).size(); j++){
-                double x = unchangedFaces.get(i).get(j).x() + anchoredPos.x();
-                double y = unchangedFaces.get(i).get(j).y() + anchoredPos.y();
-                double z = unchangedFaces.get(i).get(j).z() + anchoredPos.z();
+                float x = unchangedFaces.get(i).get(j).x() + anchoredPos.x();
+                float y = unchangedFaces.get(i).get(j).y() + anchoredPos.y();
+                float z = unchangedFaces.get(i).get(j).z() + anchoredPos.z();
 
                 this.faces.get(i).set(j, new Position3D(x, y, z));
             }
@@ -81,18 +81,18 @@ public class Shape3D implements IShape {
     }
 
     protected void updateRotation(){
-        double[] cosVals = {Math.cos(this.rotation.getxAxis()), Math.cos(this.rotation.getyAxis()), Math.cos(this.rotation.getzAxis())};
-        double[] sinVals = {Math.sin(this.rotation.getxAxis()), Math.sin(this.rotation.getyAxis()), Math.sin(this.rotation.getzAxis())};
+        float[] cosVals = {(float) Math.cos((double) this.rotation.getxAxis()), (float) Math.cos((double) this.rotation.getyAxis()), (float) Math.cos((double) this.rotation.getzAxis())};
+        float[] sinVals = {(float) Math.sin((double) this.rotation.getxAxis()), (float) Math.sin((double) this.rotation.getyAxis()), (float) Math.sin((double) this.rotation.getzAxis())};
         for(int i = 0; i < this.faces.size(); i++){
             for(int j = 0; j < this.faces.get(i).size(); j++){
                 GridPosition point = this.unchangedFaces.get(i).get(j);
-                Double[] newPoint = new Double[3];
+                float[] newPoint = new float[3];
 
                 //Rotation z-axis
                 newPoint[0] = point.x()*cosVals[2] - point.y()*sinVals[2];
                 newPoint[1] = point.x()*sinVals[2] + point.y()*cosVals[2];
                 //Rotation y-axis
-                double helper = newPoint[0];
+                float helper = newPoint[0];
                 newPoint[0] = newPoint[0]*cosVals[1] - point.z()*sinVals[1];
                 newPoint[2] = helper*sinVals[1] + point.z()*cosVals[1];
                 //Rotation x-axis

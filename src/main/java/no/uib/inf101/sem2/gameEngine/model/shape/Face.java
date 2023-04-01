@@ -41,16 +41,16 @@ public class Face {
         if(nVector != null){
             return nVector;
         } else {
-            Vector v1 = new Vector(new double[] {points.get(1).x()-points.get(0).x(), points.get(1).y()-points.get(0).y(), points.get(1).z()-points.get(0).z()});
-            Vector v2 = new Vector(new double[] {points.get(2).x()-points.get(0).x(), points.get(2).y()-points.get(0).y(), points.get(2).z()-points.get(0).z()});
+            Vector v1 = new Vector(new float[] {points.get(1).x()-points.get(0).x(), points.get(1).y()-points.get(0).y(), points.get(1).z()-points.get(0).z()});
+            Vector v2 = new Vector(new float[] {points.get(2).x()-points.get(0).x(), points.get(2).y()-points.get(0).y(), points.get(2).z()-points.get(0).z()});
             return Vector.crossProduct(v1, v2);
         
         }
     }
 
     public Vector[] getAABB(){
-        double[] minVals = new double[] {999999999, 999999999, 999999999};
-        double[] maxVals = new double[] {-999999999, -999999999, -999999999};
+        float[] minVals = new float[] {999999999, 999999999, 999999999};
+        float[] maxVals = new float[] {-999999999, -999999999, -999999999};
 
         for(GridPosition point : this.points){
             //X

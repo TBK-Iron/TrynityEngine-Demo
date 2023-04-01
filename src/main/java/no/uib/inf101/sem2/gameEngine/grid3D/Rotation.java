@@ -2,25 +2,25 @@ package no.uib.inf101.sem2.gameEngine.grid3D;
 
 public class Rotation {
 
-    double xAxis;
-    double yAxis;
-    double zAxis;
+    float xAxis;
+    float yAxis;
+    float zAxis;
 
-    public Rotation(double xAxis, double yAxis, double zAxis){
-        this.xAxis = xAxis % (2*Math.PI);
-        this.yAxis = yAxis % (2*Math.PI);
-        this.zAxis = zAxis % (2*Math.PI);
+    public Rotation(float xAxis, float yAxis, float zAxis){
+        this.xAxis = xAxis % ((float) (2*Math.PI));
+        this.yAxis = yAxis % ((float) (2*Math.PI));
+        this.zAxis = zAxis % ((float) (2*Math.PI));
     }
 
-    public double getxAxis(){
+    public float getxAxis(){
         return this.xAxis;
     }
 
-    public double getyAxis(){
+    public float getyAxis(){
         return this.yAxis;
     }
 
-    public double getzAxis(){
+    public float getzAxis(){
         return this.zAxis;
     }
 

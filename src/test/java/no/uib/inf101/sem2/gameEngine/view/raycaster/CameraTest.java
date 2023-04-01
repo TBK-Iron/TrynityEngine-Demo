@@ -13,12 +13,13 @@ public class CameraTest {
     void setUp() {
         // Initialize the camera with appropriate parameters.
         Position3D pos = new Position3D(0, 0, 0);
-        RelativeRotation rot = new RelativeRotation(0.0, 0.0);
-        double width = 800;
-        double height = 600;
-        double fov = Math.toRadians(60);
+        RelativeRotation rot = new RelativeRotation(0, 0);
+        float width = 800;
+        float height = 600;
+        float fov = (float) Math.toRadians(60);
 
         //camera = new Camera(width, height, fov, pos, rot);
+        
     }
 
     @Test

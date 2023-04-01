@@ -19,14 +19,14 @@ public class Frustum {
     }
 
     private void extractPlanes(Matrix viewProjMatrix){
-        double[][] m = viewProjMatrix.value;
+        float[][] m = viewProjMatrix.value;
 
-        planes[0] = new Plane(new Vector(new double[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), m[3][3] + m[3][0]); // Left
-        planes[1] = new Plane(new Vector(new double[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), m[3][3] - m[3][0]); // Right
-        planes[2] = new Plane(new Vector(new double[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), m[3][3] + m[3][1]); // Bottom
-        planes[3] = new Plane(new Vector(new double[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), m[3][3] - m[3][1]); // Top
-        planes[4] = new Plane(new Vector(new double[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), m[3][3] + m[3][2]); // Near
-        planes[5] = new Plane(new Vector(new double[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), m[3][3] - m[3][2]); // Far
+        planes[0] = new Plane(new Vector(new float[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), m[3][3] + m[3][0]); // Left
+        planes[1] = new Plane(new Vector(new float[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), m[3][3] - m[3][0]); // Right
+        planes[2] = new Plane(new Vector(new float[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), m[3][3] + m[3][1]); // Bottom
+        planes[3] = new Plane(new Vector(new float[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), m[3][3] - m[3][1]); // Top
+        planes[4] = new Plane(new Vector(new float[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), m[3][3] + m[3][2]); // Near
+        planes[5] = new Plane(new Vector(new float[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), m[3][3] - m[3][2]); // Far
 
     }
 
@@ -42,7 +42,7 @@ public class Frustum {
         Vector max = AABB[1];
 
         for(int i = 0; i < 6; i++){
-            double[] p = new double[3];
+            float[] p = new float[3];
             if (this.planes[i].normal().get(0) >= 0) {
                 p[0] = min.value[0];
             } else {
@@ -61,7 +61,7 @@ public class Frustum {
                 p[2] = max.value[2];
             }
 
-            double dist = (new Vector(p)).magnitude();
+            float dist = (new Vector(p)).magnitude();
 
             if(dist < 0){
                 return true;
@@ -108,20 +108,20 @@ public class Frustum {
     }
 
     private static boolean isVertexWithinPlane(GridPosition point, Plane plane){
-        double distance = point.x() * plane.normal().get(0) + point.y() * plane.normal().get(1) + point.z() * plane.normal().get(2) + plane.dist(); 
+        float distance = point.x() * plane.normal().get(0) + point.y() * plane.normal().get(1) + point.z() * plane.normal().get(2) + plane.dist(); 
         System.out.println("distance");
         return distance >= 0;
     }
 
     private static GridPosition intersectEdgePlane(GridPosition p1, GridPosition p2, Plane plane) {
-        double d1 = p1.x() * plane.normal().get(0) + p1.y() * plane.normal().get(1) + p1.z() * plane.normal().get(2) + plane.dist();
-        double d2 = p2.x() * plane.normal().get(0) + p2.y() * plane.normal().get(1) + p2.z() * plane.normal().get(2) + plane.dist();
+        float d1 = p1.x() * plane.normal().get(0) + p1.y() * plane.normal().get(1) + p1.z() * plane.normal().get(2) + plane.dist();
+        float d2 = p2.x() * plane.normal().get(0) + p2.y() * plane.normal().get(1) + p2.z() * plane.normal().get(2) + plane.dist();
 
-        double t = d1 / (d1 - d2);
+        float t = d1 / (d1 - d2);
 
-        double x = p1.x() + t * (p2.x() - p1.x());
-        double y = p1.y() + t * (p2.y() - p1.y());
-        double z = p1.z() + t * (p2.z() - p1.z());
+        float x = p1.x() + t * (p2.x() - p1.x());
+        float y = p1.y() + t * (p2.y() - p1.y());
+        float z = p1.z() + t * (p2.z() - p1.z());
 
         return new Position3D(x, y, z);
     }

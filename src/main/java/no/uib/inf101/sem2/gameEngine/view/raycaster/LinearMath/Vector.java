@@ -8,31 +8,31 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.raycaster.RelativeRotation;
 
 public class Vector {
-    double[] value;
-    public Vector(double[] value){
+    float[] value;
+    public Vector(float[] value){
         this.value = value;
     }
 
     public Vector(GridPosition value){
-        this.value = new double[3];
+        this.value = new float[3];
         this.value[0] = value.x();
         this.value[1] = value.y();
         this.value[2] = value.z();
     }
 
     public static Vector getVector(GridPosition p1, GridPosition p2){
-        double x = p2.x() - p1.x();
-        double y = p2.y() - p1.y();
-        double z = p2.z() - p1.z();
+        float x = p2.x() - p1.x();
+        float y = p2.y() - p1.y();
+        float z = p2.z() - p1.z();
 
-        return new Vector(new double[] {x, y, z});
+        return new Vector(new float[] {x, y, z});
     }
 
     public static Vector add(Vector v1, Vector v2){
         if(v1.getDims() != v2.getDims()){
             throw new IllegalArgumentException();
         }
-        double[] result = new double[v1.getDims()];
+        float[] result = new float[v1.getDims()];
         for(int i = 0; i < v1.getDims(); i++){
             result[i] = v1.get(i) + v2.get(i);
         }
@@ -44,7 +44,7 @@ public class Vector {
         if (v1.getDims() != 3 || v2.getDims() != 3) {
             throw new IllegalArgumentException("Cross product is only supported for 3-dimensional vectors.");
         }
-        double[] result = new double[3];
+        float[] result = new float[3];
         result[0] = v1.get(1) * v2.get(2) - v1.get(2) * v2.get(1);
         result[1] = v1.get(2) * v2.get(0) - v1.get(0) * v2.get(2);
         result[2] = v1.get(0) * v2.get(1) - v1.get(1) * v2.get(0);
@@ -52,18 +52,18 @@ public class Vector {
     }
 
     //Made by chatGPT
-    public static double dotProduct(Vector v1, Vector v2) {
+    public static float dotProduct(Vector v1, Vector v2) {
         if (v1.getDims() != v2.getDims()) {
             throw new IllegalArgumentException("Vectors must have the same dimensions for dot product.");
         }
-        double result = 0;
+        float result = 0;
         for (int i = 0; i < v1.getDims(); i++) {
             result += v1.get(i) * v2.get(i);
         }
         return result;
     }
 
-    public double get(int i){
+    public float get(int i){
         return this.value[i];
     }
 
@@ -74,34 +74,34 @@ public class Vector {
 
     public static RelativeRotation getVectorRotation(Vector vector){
         vector = vector.normalized();
-        double upDown = Math.asin(vector.value[1]);
+        float upDown = (float) Math.asin(vector.value[1]);
 
-        Vector xzV = (new Vector(new double[] {vector.value[0], vector.value[2]})).normalized();
-        double leftRight = Math.atan2(xzV.value[0], xzV.value[1]);
+        Vector xzV = (new Vector(new float[] {vector.value[0], vector.value[2]})).normalized();
+        float leftRight = (float) Math.atan2(xzV.value[0], xzV.value[1]);
 
         return new RelativeRotation(upDown, leftRight);
     }
 
 
     public Vector normalized(){
-        double vectorMagnitude = this.magnitude();
+        float vectorMagnitude = this.magnitude();
         return this.scaledBy(1/vectorMagnitude);
     }
 
-    public Vector scaledBy(double scalar){
-        double[] scaledVector = new double[this.value.length];
+    public Vector scaledBy(float scalar){
+        float[] scaledVector = new float[this.value.length];
         for(int i = 0; i < this.value.length; i++){
             scaledVector[i] = this.value[i] * scalar;
         }
         return new Vector(scaledVector);
     }
 
-    public double magnitude(){
-        double magnitude = 0;
+    public float magnitude(){
+        float magnitude = 0;
         for(int i = 0; i < this.getDims(); i++){
             magnitude += Math.pow(this.value[i], 2);
         }
-        return Math.sqrt(magnitude);
+        return (float) Math.sqrt(magnitude);
     }
 
     public Position3D getPoint(){

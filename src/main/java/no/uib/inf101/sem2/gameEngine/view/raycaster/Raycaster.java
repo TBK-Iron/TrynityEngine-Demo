@@ -10,6 +10,7 @@ import java.util.Comparator;
 
 import javax.swing.text.AbstractDocument.LeafElement;
 
+import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
@@ -22,20 +23,22 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 
 public class Raycaster {
     ICamera viewport;
-    double fov;
+    float fov;
     int width;
     int height;
 
-    public Raycaster(int width, int height){
-        this.width = width;
-        this.height = height;
-        this.fov = Math.PI/2;
+    public Raycaster(Config config){
+        this.width = config.screenWidth();
+        this.height = config.screenHeight();
+        this.fov = config.verticalFOV();
 
-        double leftRightRot = 0; //Degrees
-        double upDownRot = 0; //Degrees
-        double renderDistance = 10000;
+        float leftRightRot = 0; //Degrees
+        float upDownRot = 0; //Degrees
+        float renderDistance = 10000;
         
-        this.viewport = new Camera(0.1*this.width/this.height, 0.1, renderDistance, fov, new Position3D(0, 0, 0), new RelativeRotation(Math.toRadians(upDownRot), Math.toRadians(leftRightRot)));
+        this.viewport = new Camera(this.width, this.height, config.nearPlane(), config.farPlane(), fov, new Position3D(0, 0, 0), );
+        viewport.updatePos(new Position3D(0, 0, 0));
+        viewport.updateRotation(new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
     }
 
     public ArrayList<Face> cull(ArrayList<Face> faces){
@@ -60,7 +63,7 @@ public class Raycaster {
     private static ArrayList<Face> backfaceCull(ArrayList<Face> faces, GridPosition pos){
         ArrayList<Face> culledFaces = new ArrayList<>();
         for(Face face : faces){
-            double dotProduct = Vector.dotProduct(face.getNormalVector(), Vector.getVector(face.get(0), pos));
+            float dotProduct = Vector.dotProduct(face.getNormalVector(), Vector.getVector(face.get(0), pos));
             if(dotProduct > 0){
                 culledFaces.add(face);
             }
@@ -91,8 +94,8 @@ public class Raycaster {
 
                 //System.out.println("X-Y ratios: " + xyRatios);
 
-                double screenX = (this.width/2) * (xyRatios.get(0) + 1);
-                double screenY = this.height - (this.height/2) * (xyRatios.get(1) + 1);
+                float screenX = (this.width/2) * (xyRatios.get(0) + 1);
+                float screenY = this.height - (this.height/2) * (xyRatios.get(1) + 1);
 
                 if(point.z() > 0){
                     screenX = this.width - screenX;
@@ -117,11 +120,11 @@ public class Raycaster {
         for(Face face : faces){
             ArrayList<GridPosition> transformedPoints = new ArrayList<>();
             for(GridPosition point : face.getPoints()){
-                double dx = point.x() - this.viewport.getCastPos().x();
-                double dy = point.y() - this.viewport.getCastPos().y();
-                double dz = point.z() - this.viewport.getCastPos().z();
+                float dx = point.x() - this.viewport.getCastPos().x();
+                float dy = point.y() - this.viewport.getCastPos().y();
+                float dz = point.z() - this.viewport.getCastPos().z();
 
-                Vector ray = new Vector(new double[] {dx, dy, dz});
+                Vector ray = new Vector(new float[] {dx, dy, dz});
 
                 Vector cameraSpaceRay = viewport.getViewProjectionMatrix().viewMatrixTransform(ray);
                 transformedPoints.add(cameraSpaceRay.getPoint());
@@ -132,10 +135,10 @@ public class Raycaster {
     }
 
     public ArrayList<Face> sortFacesByZ(ArrayList<Face> faces){
-        ArrayList<Double> highestZVals = new ArrayList<>();
+        ArrayList<Float> highestZVals = new ArrayList<>();
 
         for(Face face : faces){
-            double highestZ = 0;
+            float highestZ = 0;
             for(GridPosition point : face.getPoints()){
                 if(highestZ < point.z()){
                     highestZ = point.z();
@@ -147,10 +150,10 @@ public class Raycaster {
         Collections.sort(faces, new Comparator<Face>() {
             @Override
             public int compare(Face f1, Face f2){
-                Double value1 = highestZVals.get(faces.indexOf(f1));
-                Double value2 = highestZVals.get(faces.indexOf(f2));
+                float value1 = highestZVals.get(faces.indexOf(f1));
+                float value2 = highestZVals.get(faces.indexOf(f2));
 
-                return Double.compare(highestZVals.indexOf(value1), highestZVals.indexOf(value2));
+                return Float.compare(highestZVals.indexOf(value1), highestZVals.indexOf(value2));
             }
         });
 

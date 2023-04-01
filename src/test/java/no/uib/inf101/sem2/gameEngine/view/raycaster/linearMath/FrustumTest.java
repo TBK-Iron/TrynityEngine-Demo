@@ -22,10 +22,10 @@ public class FrustumTest {
     @Test
     public void testClipFace(){
         
-        double fov = Math.toRadians(60);
-        double aspectRatio = 16.0 / 9.0;
-        double near = 0.1;
-        double far = 100.0;
+        float fov = (float) Math.toRadians(60);
+        float aspectRatio = 16f / 9f;
+        float near = 0.1f;
+        float far = 100f;
         Rotation rotation = new Rotation(0, 0, 0);
         ViewProjectionMatrix vpMatrix = new ViewProjectionMatrix(fov, aspectRatio, near, far, rotation);
 
@@ -35,10 +35,10 @@ public class FrustumTest {
         Frustum frustum = new Frustum(viewProjectionMatrix);
 
         ArrayList<GridPosition> points1 = new ArrayList<>();
-            points1.add(new Position3D(-1.0, -1.0, 5.0));
-            points1.add(new Position3D(1.0, -1.0, 5.0));
-            points1.add(new Position3D(1.0, 1.0, 5.0));
-            points1.add(new Position3D(-1.0, 1.0, 5.0));
+            points1.add(new Position3D(-1.0f, -1.0f, 5.0f));
+            points1.add(new Position3D(1.0f, -1.0f, 5.0f));
+            points1.add(new Position3D(1.0f, 1.0f, 5.0f));
+            points1.add(new Position3D(-1.0f, 1.0f, 5.0f));
         
         Face inputFace1 = new Face(points1, Color.BLACK);
         Face clippedFace1 = frustum.clipFace(inputFace1);
@@ -52,17 +52,20 @@ public class FrustumTest {
             points2.add(new Position3D(-2, -1, 1));
             points2.add(new Position3D(2, -1, 1));
 
+
         Face inputFace2 = new Face(points2, null);
         Face clippedFace2 = frustum.clipFace(inputFace2);
 
         ArrayList<GridPosition> desiredClipPoints = new ArrayList<>();
-            desiredClipPoints.add(new Position3D(1.343, 0.57732, 1));
-            desiredClipPoints.add(new Position3D(-1.343, 0.57732, 1));
-            desiredClipPoints.add(new Position3D(-1.343, -0.57732, 1));
-            desiredClipPoints.add(new Position3D(1.343, -0.57732, 1));
+            desiredClipPoints.add(new Position3D(1.343f, 0.57732f, 1f));
+            desiredClipPoints.add(new Position3D(-1.343f, 0.57732f, 1f));
+            desiredClipPoints.add(new Position3D(-1.343f, -0.57732f, 1f));
+            desiredClipPoints.add(new Position3D(1.343f, -0.57732f, 1f));
 
         Face desiredClippedFace = new Face(desiredClipPoints, null);
         
+        //Test where the all points and sides in face are outside the frustum, and the result should be a square that are in all the corners of the
+        //frustum.
         assertEquals(clippedFace2, desiredClippedFace);
     }
 }

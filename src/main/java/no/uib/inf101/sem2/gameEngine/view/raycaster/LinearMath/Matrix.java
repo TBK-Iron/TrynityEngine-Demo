@@ -6,18 +6,18 @@ import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
 public class Matrix {
     
-    double[][] value;
+    float[][] value;
 
-    public Matrix(double[][] value){
+    public Matrix(float[][] value){
         if(!isValid(value)){
             throw new IllegalArgumentException("Number of rows not consistent");
         }
         this.value = value;
     }
 
-    private static boolean isValid(double[][] matrix){
+    private static boolean isValid(float[][] matrix){
         int cols = matrix[0].length;
-        for(double[] row : matrix){
+        for(float[] row : matrix){
             if(row.length != cols){
                 return false;
             }
@@ -30,10 +30,10 @@ public class Matrix {
         if (m1.value[0].length != m2.value.length) {
             throw new IllegalArgumentException("Matrices can't be multiplied");
         } else {
-            double[][] newMatrix = new double[m1.value.length][m2.value[0].length];
+            float[][] newMatrix = new float[m1.value.length][m2.value[0].length];
             for (int i = 0; i < m1.value.length; i++) {
                 for (int j = 0; j < m2.value[0].length; j++) {
-                    double sum = 0;
+                    float sum = 0;
                     for (int k = 0; k < m1.value[0].length; k++) {
                         sum += m1.value[i][k] * m2.value[k][j];
                     }
@@ -48,7 +48,7 @@ public class Matrix {
         if(this.getCols() != vector.getDims()){
             throw new IllegalArgumentException("Vector can't be multiplied with matrix");
         } else {
-            double[] result = new double[this.getRows()];
+            float[] result = new float[this.getRows()];
 
             for (int i = 0; i < this.value.length; i++) {
                 result[i] = 0;
@@ -71,26 +71,26 @@ public class Matrix {
     }
 
     public static Matrix getRotationMatrix(Rotation rot){
-        double rotX = rot.getxAxis();
-        double rotY = rot.getyAxis();
-        double rotZ = rot.getzAxis();
+        float rotX = rot.getxAxis();
+        float rotY = rot.getyAxis();
+        float rotZ = rot.getzAxis();
 
-        Matrix matrixX = new Matrix(new double[][] {
-            {1, 0, 0},
-            {0, Math.cos(rotX), -Math.sin(rotX)},
-            {0, Math.sin(rotX), Math.cos(rotX)}
+        Matrix matrixX = new Matrix(new float[][] {
+            {1f, 0f, 0f},
+            {0f, (float) Math.cos(rotX), (float) -Math.sin(rotX)},
+            {0f, (float) Math.sin(rotX), (float) Math.cos(rotX)}
         });
 
-        Matrix matrixY = new Matrix(new double[][] {
-            {Math.cos(rotY), 0, Math.sin(rotY)},
-            {0, 1, 0},
-            {-Math.sin(rotY), 0, Math.cos(rotY)}
+        Matrix matrixY = new Matrix(new float[][] {
+            {(float) Math.cos(rotY), 0f, (float) Math.sin(rotY)},
+            {0f, 1f, 0f},
+            {(float) -Math.sin(rotY), 0f, (float) Math.cos(rotY)}
         });
 
-        Matrix matrixZ = new Matrix(new double[][] {
-            {Math.cos(rotZ), -Math.sin(rotZ), 0},
-            {Math.sin(rotZ), Math.cos(rotZ), 0},
-            {0, 0, 1}
+        Matrix matrixZ = new Matrix(new float[][] {
+            {(float) Math.cos(rotZ), (float) -Math.sin(rotZ), 0f},
+            {(float) Math.sin(rotZ), (float) Math.cos(rotZ), 0f},
+            {0f, 0f, 1f}
         });
 
         Matrix rotationMatrix = multiply(multiply(matrixX, matrixY), matrixZ);
