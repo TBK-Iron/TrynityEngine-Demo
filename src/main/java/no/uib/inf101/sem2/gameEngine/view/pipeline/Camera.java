@@ -6,7 +6,6 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Projection;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.ViewProjection;
 
 public class Camera implements ICamera {
     GridPosition pos;
@@ -28,27 +27,28 @@ public class Camera implements ICamera {
         this.verticalFOV = verticalFOV;
         this.coordinateHeight = 2 * ((float) Math.tan(verticalFOV/2) * nearPlane);
         this.horizontalFOV = (float) Math.atan((this.coordinateHeight * this.aspectRatio) / (2 * nearPlane));
-        System.out.println("coordinateHeight:" + this.coordinateHeight/2);
+
+        /* System.out.println("coordinateHeight:" + this.coordinateHeight/2);
         System.out.println("coordinateWidth:" + this.coordinateHeight*this.aspectRatio/2);
         System.out.println("aspectRatio:" + this.aspectRatio);
         System.out.println("height:" + screenHeight);
-        System.out.println("width:" + screenWidth);
+        System.out.println("width:" + screenWidth); */
 
         this.projectionTransformation = new Projection(verticalFOV, aspectRatio, nearPlane, farPlane);
         this.cameraFrustum = new Frustum(this.projectionTransformation.getMatrix(), nearPlane, farPlane);
 
         updatePose(new Position3D(0, 0, 0), new RelativeRotation(0, 0));
 
-        System.out.println("focal:" + this.focalLength);
+        /* System.out.println("focal:" + this.focalLength);
         System.out.println(this.pos);
-        System.out.println(this.rotation);
+        System.out.println(this.rotation); */
     }
 
     @Override
     public void updatePose(GridPosition pos, RelativeRotation rotation){
         this.pos = pos;
         this.rotation = rotation;
-        this.viewTransformation = new View(rotation, pos);
+        this.viewTransformation = new View(this.rotation, this.pos);
     }
 
     @Override

@@ -36,7 +36,7 @@ public class gPipeline implements IPipeline {
         
         this.viewport = new Camera(this.width, this.height, config.nearPlane(), config.farPlane(), fov);
 
-        viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
+        //viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
     }
 
     @Override
@@ -80,7 +80,9 @@ public class gPipeline implements IPipeline {
                     culledFaces.add(face);
                 }
             }
-            culledShapes.add(new Shape3D(culledFaces));
+            if(!culledFaces.isEmpty()){
+                culledShapes.add(new Shape3D(culledFaces));
+            }
         }
         return culledShapes;
     }

@@ -1,6 +1,5 @@
-package no.uib.inf101.sem2.gameEngine.view.raycaster.linearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;

@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.grid3D;
+/*package no.uib.inf101.sem2.gameEngine.grid3D;
 
 public class Rotation {
 
@@ -36,4 +36,22 @@ public class Rotation {
                 ", zAxis=" + zAxis +
                 '}';
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Rotation){
+            Rotation rot = (Rotation) obj;
+            if(Math.abs(rot.getxAxis() - this.getxAxis()) < 0.0001){
+                if(Math.abs(rot.getyAxis() - this.getyAxis()) < 0.0001){
+                    if(Math.abs(rot.getzAxis() - this.getzAxis()) < 0.0001){
+                        return true;
+                    }
+                }
+            }
+        }
+
+        return false;
+        
+    }
 }
+*/

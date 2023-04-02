@@ -27,22 +27,24 @@ public class MouseHandler {
         Robot robot;
         try {
             robot = new Robot();
-            robot.mouseMove(centerX, centerY);
+            robot.mouseMove(centerX + 7, centerY + 30);
         } catch(AWTException e){
             e.printStackTrace();
         }
     }
 
     protected RelativeRotation getRotation(MouseEvent e){
+
         int x = e.getX();
         int y = e.getY();
+        /* System.out.println("centerX: " + centerX + " centerY: " + centerY);
+        System.out.println("x: " + x + " y: " + y); */
+        int dx = -(x - this.centerX);
+        int dy = y - this.centerY;
 
-        int dx = x - centerX;
-        int dy = y - centerY;
+        float leftRightRot = ((float) dx / width);
+        float upDownRot = ((float) dy / height);
 
-        float leftRightRot = ((float) dx / width) / 10;
-        float upDownRot = ((float) dy / height) / 10;
-
-        return new RelativeRotation(leftRightRot, upDownRot);
+        return new RelativeRotation(upDownRot, leftRightRot);
     }
 }

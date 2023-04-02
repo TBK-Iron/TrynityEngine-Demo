@@ -6,15 +6,15 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Shape3D implements IShape {
     ArrayList<Face> unchangedFaces;
     ArrayList<Face> faces;
     GridPosition anchoredPos;
-    Rotation rotation;
+    RelativeRotation rotation;
 
-    public Shape3D(GridPosition pos, Rotation rotation,File file){
+    public Shape3D(GridPosition pos, RelativeRotation rotation,File file){
         this.faces = new ArrayList<>();
         this.unchangedFaces = new ArrayList<>();
         this.anchoredPos = pos;
@@ -31,7 +31,7 @@ public class Shape3D implements IShape {
         this.faces = faces;
         this.unchangedFaces = faces;
         this.anchoredPos = new Position3D(0, 0, 0);
-        this.rotation = new Rotation(0, 0, 0);
+        this.rotation = new RelativeRotation(0, 0);
     }
 
     private static ArrayList<Face> parseTrymFile(File file){
@@ -88,27 +88,17 @@ public class Shape3D implements IShape {
         }
     }
 
+    //TODO: Need to fix
     protected void updateRotation(){
-        float[] cosVals = {(float) Math.cos((double) this.rotation.getxAxis()), (float) Math.cos((double) this.rotation.getyAxis()), (float) Math.cos((double) this.rotation.getzAxis())};
-        float[] sinVals = {(float) Math.sin((double) this.rotation.getxAxis()), (float) Math.sin((double) this.rotation.getyAxis()), (float) Math.sin((double) this.rotation.getzAxis())};
         for(int i = 0; i < this.faces.size(); i++){
             for(int j = 0; j < this.faces.get(i).size(); j++){
                 GridPosition point = this.unchangedFaces.get(i).get(j);
-                float[] newPoint = new float[3];
+                
 
-                //Rotation z-axis
-                newPoint[0] = point.x()*cosVals[2] - point.y()*sinVals[2];
-                newPoint[1] = point.x()*sinVals[2] + point.y()*cosVals[2];
-                //Rotation y-axis
-                float helper = newPoint[0];
-                newPoint[0] = newPoint[0]*cosVals[1] - point.z()*sinVals[1];
-                newPoint[2] = helper*sinVals[1] + point.z()*cosVals[1];
-                //Rotation x-axis
-                helper = newPoint[2];
-                newPoint[2] = newPoint[2]*cosVals[0] - newPoint[1]*sinVals[0];
-                newPoint[1] = helper*sinVals[0] + newPoint[1]*cosVals[0];
 
-                this.faces.get(i).set(j, new Position3D(newPoint[0], newPoint[1], newPoint[2]));
+                
+
+                //this.faces.get(i).set(j, new Position3D(newPoint[0], newPoint[1], newPoint[2]));
             }
         }
     }

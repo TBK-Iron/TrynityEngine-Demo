@@ -1,9 +1,13 @@
 package no.uib.inf101.sem2.gameEngine.view;
 
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
+import java.awt.Point;
+import java.awt.Toolkit;
 import java.awt.image.BufferedImage;
 
 import java.util.ArrayList;
@@ -34,6 +38,12 @@ public class GameView extends JPanel{
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         drawGame(g2);
+        if(true){
+            Toolkit toolkit = Toolkit.getDefaultToolkit();
+            Image transparentImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
+            Cursor transparentCursor = toolkit.createCustomCursor(transparentImage, new Point(0, 0), "transparentCursor");
+            this.setCursor(transparentCursor);
+        }
     }
 
     private void drawGame(Graphics2D g2){
@@ -45,11 +55,10 @@ public class GameView extends JPanel{
         ArrayList<Face> sortedFaces = pipeline.sortFacesByZ(NDCTransformedFaces);
         ArrayList<Face> castedFaces = pipeline.castTo2D(sortedFaces);
 
-        for(Face face : castedFaces){
+        /* for(Face face : castedFaces){
             System.out.println("face: " + face);
-        }
+        } */
         BufferedImage nextScene = pipeline.getSceneImage(castedFaces);
-        System.out.println(nextScene);
         g2.drawImage(nextScene, 0, 0, null);
     }
 }

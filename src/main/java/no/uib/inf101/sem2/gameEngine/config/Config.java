@@ -11,4 +11,6 @@ public interface Config {
     public float nearPlane();
 
     public float farPlane();
+
+    public float fps();
 }

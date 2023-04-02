@@ -3,15 +3,16 @@ package no.uib.inf101.sem2.gameEngine.model;
 import java.io.File;
 import java.util.ArrayList;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
+import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
-public class Model implements ViewableGameModel {
+public class Model implements ViewableGameModel, ControllableEngineModel {
     
     ArrayList<Shape3D> shapes;
     ArrayList<Entity> entities;
@@ -19,15 +20,18 @@ public class Model implements ViewableGameModel {
     GridPosition cameraPos;
     
     public Model(){
-        shapes = new ArrayList<>();
-        entities = new ArrayList<>();
+        this.shapes = new ArrayList<>();
+        this.entities = new ArrayList<>();
+        this.cameraPos = new Position3D(0, 0, 0);
+        this.cameraRotation = new RelativeRotation(0, 0);
     }
-    public void createShape(GridPosition pos, Rotation rotation, String filename){
+
+    public void createShape(GridPosition pos, RelativeRotation rotation, String filename){
         File shapeFile = new File(filename);
         shapes.add(new Shape3D(pos, rotation, shapeFile));
     }
 
-    public void createEntity(GridPosition pos, Rotation rotation, String filename){
+    public void createEntity(GridPosition pos, RelativeRotation rotation, String filename){
         File shapeFile = new File(filename);
         entities.add(new Entity(pos, rotation, shapeFile));
     }
@@ -63,12 +67,15 @@ public class Model implements ViewableGameModel {
         return this.cameraPos;
     }
 
-    public void setCameraRotation(RelativeRotation cameraRotation){
-        this.cameraRotation = cameraRotation;
+    public void addToCameraRotation(RelativeRotation cameraRotation){
+        //System.out.println(cameraRotation);
+        this.cameraRotation = this.cameraRotation.add(cameraRotation);
+        //System.out.println("Camera rotation set to: " + this.cameraRotation);
     }
 
     public void setCameraPosition(GridPosition cameraPos){
         this.cameraPos = cameraPos;
+        //System.out.println("Camera position set to: " + cameraPos);
     }
 
 }

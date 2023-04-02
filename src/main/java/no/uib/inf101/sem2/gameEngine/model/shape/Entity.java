@@ -2,15 +2,16 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 
 import java.io.File;
 
-import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+
 
 public class Entity extends Shape3D {
 
-    public Entity(GridPosition pos, Rotation rotation, File file) {
+    public Entity(GridPosition pos, RelativeRotation rotation, File file) {
         super(pos, rotation, file);
     }
     
-    public void setRotation(Rotation newRotation){
+    public void setRotation(RelativeRotation newRotation){
         this.rotation = newRotation;
         this.updateRotation();
     }

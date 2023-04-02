@@ -62,6 +62,29 @@ public class Matrix {
         }
         
     }
+    public static Matrix add(Matrix m1, Matrix m2){
+        if(m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()){
+            throw new IllegalArgumentException("Matrices can't be added");
+        } else {
+            float[][] newMatrix = new float[m1.getRows()][m1.getCols()];
+            for (int i = 0; i < m1.getRows(); i++) {
+                for (int j = 0; j < m1.getCols(); j++) {
+                    newMatrix[i][j] = m1.get(i, j) + m2.get(i, j);
+                }
+            }
+            return new Matrix(newMatrix);
+        }
+    }
+
+    public Matrix scaledBy(float scalar){
+        float[][] newMatrix = new float[this.getRows()][this.getCols()];
+        for (int i = 0; i < this.getRows(); i++) {
+            for (int j = 0; j < this.getCols(); j++) {
+                newMatrix[i][j] = this.get(i, j) * scalar;
+            }
+        }
+        return new Matrix(newMatrix);
+    }
 
     public int getRows(){
         return this.value.length;

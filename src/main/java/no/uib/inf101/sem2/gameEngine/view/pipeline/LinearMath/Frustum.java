@@ -17,12 +17,12 @@ public class Frustum {
         extractPlanes(viewProjectionMatrix, near, far);
         normalizePlanes();
 
-        System.out.println("Left: " + planes[0]);
+        /* System.out.println("Left: " + planes[0]);
         System.out.println("Right: " + planes[1]);
         System.out.println("Bottom: " + planes[2]);
         System.out.println("Top: " + planes[3]);
         System.out.println("Near: " + planes[4]);
-        System.out.println("Far: " + planes[5]);
+        System.out.println("Far: " + planes[5]); */
     }
 
     private void extractPlanes(Matrix viewProjMatrix, float near, float far){

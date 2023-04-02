@@ -14,13 +14,13 @@ public class Projection implements Transformation {
 
     public Projection(float fov, float aspectRatio, float near, float far){
         this.matrix = createProjectionMatrix(fov, aspectRatio, near, far);
-        System.out.println("Projection matrix: " + this.matrix);
+        //System.out.println("Projection matrix: " + this.matrix);
     }
 
     private Matrix createProjectionMatrix(float fov, float aspectRatio, float near, float far){
         float tanHalfFov = (float) Math.tan(fov / 2); 
 
-        System.out.println("aspectRatio: " + aspectRatio + ", fov: " + fov + ", near: " + near + ", far: " + far);
+        //System.out.println("aspectRatio: " + aspectRatio + ", fov: " + fov + ", near: " + near + ", far: " + far);
 
         Matrix pMatrix = new Matrix( new float[][] {
             {1/(aspectRatio*tanHalfFov), 0           , 0                         , 0 },
