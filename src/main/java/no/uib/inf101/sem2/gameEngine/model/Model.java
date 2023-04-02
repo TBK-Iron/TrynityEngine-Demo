@@ -9,11 +9,14 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Model implements ViewableGameModel {
     
     ArrayList<Shape3D> shapes;
     ArrayList<Entity> entities;
+    RelativeRotation cameraRotation;
+    GridPosition cameraPos;
     
     public Model(){
         shapes = new ArrayList<>();
@@ -50,6 +53,22 @@ public class Model implements ViewableGameModel {
             }
         }
         return maxDistance;
+    }
+
+    public RelativeRotation getCameraRotation(){
+        return this.cameraRotation;
+    }
+
+    public GridPosition getCameraPosition(){
+        return this.cameraPos;
+    }
+
+    public void setCameraRotation(RelativeRotation cameraRotation){
+        this.cameraRotation = cameraRotation;
+    }
+
+    public void setCameraPosition(GridPosition cameraPos){
+        this.cameraPos = cameraPos;
     }
 
 }

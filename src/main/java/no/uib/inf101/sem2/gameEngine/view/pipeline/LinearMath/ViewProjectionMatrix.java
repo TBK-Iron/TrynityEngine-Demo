@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
+/* package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
 
@@ -67,3 +67,4 @@ public class ViewProjectionMatrix {
         return this.viewProjectionMatrix;
     }
 }
+ */

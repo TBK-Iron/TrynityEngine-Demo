@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
-import no.uib.inf101.sem2.gameEngine.view.GameView;
+import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
@@ -24,11 +23,13 @@ public class gPipeline implements IPipeline {
     float fov;
     int width;
     int height;
+    ViewableGameModel model;
 
-    public gPipeline(Config config){
+    public gPipeline(ViewableGameModel model, Config config){
         this.width = config.screenWidth();
         this.height = config.screenHeight();
         this.fov = config.verticalFOV();
+        this.model = model;
 
         float leftRightRot = 0; //Degrees
         float upDownRot = 0; //Degrees
@@ -38,7 +39,9 @@ public class gPipeline implements IPipeline {
         viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
     }
 
+    @Override
     public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes){
+        this.viewport.updatePose(model.getCameraPosition(), model.getCameraRotation());
         ArrayList<Shape3D> transformedShapes = new ArrayList<>();
         Transformation cameraTransformation = this.viewport.getViewTranform();
 
@@ -53,9 +56,11 @@ public class gPipeline implements IPipeline {
         return transformedShapes;
     }
 
+    //TODO: Fix culling
+    @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
-        shapes = backfaceCull(shapes);
-        shapes = viewfrustrumCull(shapes, this.viewport.getFrustum());
+        //shapes = backfaceCull(shapes);
+        //shapes = viewfrustrumCull(shapes, this.viewport.getFrustum());
 
         //TODO: Implement occlusion culling
         //faces = occlusionCull(shapes);
@@ -90,26 +95,29 @@ public class gPipeline implements IPipeline {
         return culledShapes;
     }
 
-    public ArrayList<Face> clipTransform(ArrayList<Shape3D> shapes){
-        ArrayList<Face> transformedFaces = new ArrayList<>();
-        Transformation clipTransformation = this.viewport.getProjectionTransform();
-
-        for(Shape3D shape : shapes){
-            for(Face face : shape.getFaces()){
-                transformedFaces.add(clipTransformation.transform(face));
-            }
-        }
-        return transformedFaces;
-    }
-
-    public ArrayList<Face> clip(ArrayList<Face> faces){
+    @Override
+    public ArrayList<Face> clip(ArrayList<Shape3D> shapes){
         ArrayList<Face> clippedFaces = new ArrayList<>();
-        for(int i = 0; i < faces.size(); i++){
-            clippedFaces.add(this.viewport.getFrustum().clipFace(faces.get(i)));
-        }
+        for(Shape3D shape : shapes)
+            for(Face face : shape.getFaces()){
+                clippedFaces.add(this.viewport.getFrustum().clipFace(face));
+            }
         return clippedFaces;
     }
 
+    @Override
+    public ArrayList<Face> projectTransform(ArrayList<Face> faces){
+        ArrayList<Face> transformedFaces = new ArrayList<>();
+        Transformation projectTransformation = this.viewport.getProjectionTransform();
+
+        for(Face face : faces){
+            transformedFaces.add(projectTransformation.transform(face));
+        }
+        
+        return transformedFaces;
+    }
+
+    @Override
     public ArrayList<Face> NDCTransform(ArrayList<Face> faces){
         ArrayList<Face> transformedFaces = new ArrayList<>();
         for(Face face : faces){
@@ -126,6 +134,7 @@ public class gPipeline implements IPipeline {
         return transformedFaces;
     }
 
+    @Override
     public ArrayList<Face> sortFacesByZ(ArrayList<Face> faces){
         ArrayList<Float> highestZVals = new ArrayList<>();
 
@@ -152,6 +161,7 @@ public class gPipeline implements IPipeline {
         return faces;
     }
 
+    @Override
     public ArrayList<Face> castTo2D(ArrayList<Face> faces){
         
         ArrayList<Face> castedFaces = new ArrayList<>();
@@ -176,7 +186,7 @@ public class gPipeline implements IPipeline {
 
 
     public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
-        BufferedImage buffer = new BufferedImage(GameView.WIDTH, GameView.HEIGHT, BufferedImage.TYPE_INT_RGB);
+        BufferedImage buffer = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
         Graphics2D bufferGraphics = buffer.createGraphics();
 
         for(Face face : castedFaces){

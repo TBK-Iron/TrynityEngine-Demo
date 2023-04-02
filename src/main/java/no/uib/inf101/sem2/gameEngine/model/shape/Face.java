@@ -151,4 +151,23 @@ public class Face {
         }
     }
 
+    public GridPosition getPointClosestToOrigin(){
+        GridPosition closestPoint = this.points.get(0);
+        for(int i = 1; i < this.points.size(); i++){
+            GridPosition currentPoint = this.points.get(i);
+            Vector v = Vector.getVector(closestPoint, currentPoint);
+          
+            float t = -Vector.dotProduct(v, new Vector(closestPoint))/((float) Math.pow(v.get(0), 2) + (float) Math.pow(v.get(1), 2)+ (float) Math.pow(v.get(2), 2));
+            
+            if(t < 0){
+                //closestPoint = closestPoint;
+            } else if (t > 1){
+                closestPoint = currentPoint;
+            } else {
+                closestPoint = new Position3D(v.get(0)*t + closestPoint.x(), v.get(1)*t + closestPoint.y(), v.get(2)*t + closestPoint.z());
+            }
+        }
+        return closestPoint;
+    }
+
 }

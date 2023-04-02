@@ -19,17 +19,23 @@ public class Camera implements ICamera {
     float renderDistance;
     Transformation viewTransformation;
     Transformation projectionTransformation;
-    Transformation viewProjectionTransformation;
     Frustum cameraFrustum;
 
     public Camera(int screenWidth, int screenHeight, float nearPlane, float farPlane, float verticalFOV){
-        this.aspectRatio = screenWidth/screenHeight;
+        this.aspectRatio = (float) screenWidth/ (float)screenHeight;
         this.renderDistance = farPlane;
         this.focalLength = nearPlane;
         this.verticalFOV = verticalFOV;
         this.coordinateHeight = 2 * ((float) Math.tan(verticalFOV/2) * nearPlane);
         this.horizontalFOV = (float) Math.atan((this.coordinateHeight * this.aspectRatio) / (2 * nearPlane));
-        this.projectionTransformation = new Projection(verticalFOV, verticalFOV, nearPlane, farPlane);
+        System.out.println("coordinateHeight:" + this.coordinateHeight/2);
+        System.out.println("coordinateWidth:" + this.coordinateHeight*this.aspectRatio/2);
+        System.out.println("aspectRatio:" + this.aspectRatio);
+        System.out.println("height:" + screenHeight);
+        System.out.println("width:" + screenWidth);
+
+        this.projectionTransformation = new Projection(verticalFOV, aspectRatio, nearPlane, farPlane);
+        this.cameraFrustum = new Frustum(this.projectionTransformation.getMatrix(), nearPlane, farPlane);
 
         updatePose(new Position3D(0, 0, 0), new RelativeRotation(0, 0));
 
@@ -43,13 +49,6 @@ public class Camera implements ICamera {
         this.pos = pos;
         this.rotation = rotation;
         this.viewTransformation = new View(rotation, pos);
-        this.viewProjectionTransformation = new ViewProjection(this.viewTransformation.getMatrix(), this.projectionTransformation.getMatrix());
-        this.cameraFrustum = new Frustum(this.viewProjectionTransformation.getMatrix());
-    }
-
-    @Override
-    public Transformation getViewProjectionTransform(){
-        return this.viewProjectionTransformation;
     }
 
     @Override

@@ -11,8 +11,6 @@ public interface ICamera {
 
     public Frustum getFrustum();
 
-    public Transformation getViewProjectionTransform();
-
     public Transformation getViewTranform();
 
     public Transformation getProjectionTransform();

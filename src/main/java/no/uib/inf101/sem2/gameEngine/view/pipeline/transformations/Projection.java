@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.gameEngine.view.pipeline.transformations;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
@@ -13,16 +14,19 @@ public class Projection implements Transformation {
 
     public Projection(float fov, float aspectRatio, float near, float far){
         this.matrix = createProjectionMatrix(fov, aspectRatio, near, far);
+        System.out.println("Projection matrix: " + this.matrix);
     }
 
     private Matrix createProjectionMatrix(float fov, float aspectRatio, float near, float far){
         float tanHalfFov = (float) Math.tan(fov / 2); 
 
+        System.out.println("aspectRatio: " + aspectRatio + ", fov: " + fov + ", near: " + near + ", far: " + far);
+
         Matrix pMatrix = new Matrix( new float[][] {
-            {1/(aspectRatio*tanHalfFov), 0           , 0                       , 0                     },
-            {0                         , 1/tanHalfFov, 0                       , 0                     },
-            {0                         , 0           , -(far+near)/(far-near)  , -2*far*near/(far-near)},
-            {0                         , 0           , -1                      , 0                     }
+            {1/(aspectRatio*tanHalfFov), 0           , 0                         , 0 },
+            {0                         , 1/tanHalfFov, 0                         , 0 },
+            {0                         , 0           , -(far + near)/(far - near), -1},
+            {0                         , 0           , -(2*far*near)/(far - near), 0 }
         });
     
         return pMatrix;

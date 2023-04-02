@@ -11,9 +11,9 @@ public interface IPipeline {
 
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes);
 
-    public ArrayList<Face> clipTransform(ArrayList<Shape3D> shapes);
+    public ArrayList<Face> clip(ArrayList<Shape3D> shapes);
 
-    public ArrayList<Face> clip(ArrayList<Face> faces);
+    public ArrayList<Face> projectTransform(ArrayList<Face> faces);
 
     public ArrayList<Face> NDCTransform(ArrayList<Face> faces);
 

@@ -10,11 +10,11 @@ import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 public class Frustum {
     Plane[] planes;
 
-    public Frustum(Matrix viewProjectionMatrix){
+    public Frustum(Matrix viewProjectionMatrix, float near, float far){
 
         planes = new Plane[6];
 
-        extractPlanes(viewProjectionMatrix);
+        extractPlanes(viewProjectionMatrix, near, far);
         normalizePlanes();
 
         System.out.println("Left: " + planes[0]);
@@ -25,15 +25,15 @@ public class Frustum {
         System.out.println("Far: " + planes[5]);
     }
 
-    private void extractPlanes(Matrix viewProjMatrix){
+    private void extractPlanes(Matrix viewProjMatrix, float near, float far){
         float[][] m = viewProjMatrix.value;
 
-        this.planes[0] = new Plane(new Vector(new float[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), m[3][3] + m[3][0]); // Left
-        this.planes[1] = new Plane(new Vector(new float[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), m[3][3] - m[3][0]); // Right
-        this.planes[2] = new Plane(new Vector(new float[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), m[3][3] + m[3][1]); // Bottom
-        this.planes[3] = new Plane(new Vector(new float[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), m[3][3] - m[3][1]); // Top
-        this.planes[4] = new Plane(new Vector(new float[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), m[3][3] + m[3][2]); // Near
-        this.planes[5] = new Plane(new Vector(new float[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), m[3][3] - m[3][2]); // Far
+        this.planes[0] = new Plane(new Vector(new float[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), 0); // Left
+        this.planes[1] = new Plane(new Vector(new float[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), 0); // Right
+        this.planes[2] = new Plane(new Vector(new float[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), 0); // Bottom
+        this.planes[3] = new Plane(new Vector(new float[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), 0); // Top
+        this.planes[4] = new Plane(new Vector(new float[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), near); // Near
+        this.planes[5] = new Plane(new Vector(new float[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), far); // Far
 
     }
 
@@ -70,7 +70,7 @@ public class Frustum {
 
         for(Plane plane : this.planes){
             clippedFace = clipFaceAgainstPlane(clippedFace, plane);
-            System.out.println(clippedFace);
+            //System.out.println(clippedFace);
         }
         //clippedFace.removeDuplicatePoints();
 
@@ -87,7 +87,7 @@ public class Frustum {
             boolean isCurrentInside = plane.isVertexWithinPlane(currentPoint);
             boolean isNextInside = plane.isVertexWithinPlane(nextPoint);
 
-            System.out.println("Current: " + currentPoint + " is inside: " + isCurrentInside);
+            //System.out.println("Current: " + currentPoint + " is inside: " + isCurrentInside);
 
             if(isCurrentInside){
                 outputVertices.add(currentPoint);
