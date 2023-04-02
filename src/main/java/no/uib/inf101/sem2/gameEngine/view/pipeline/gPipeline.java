@@ -35,7 +35,7 @@ public class gPipeline implements IPipeline {
         
         this.viewport = new Camera(this.width, this.height, config.nearPlane(), config.farPlane(), fov);
 
-        viewport.updateRotation(new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
+        viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
     }
 
     public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes){
@@ -68,8 +68,10 @@ public class gPipeline implements IPipeline {
         for(Shape3D shape : shapes){
             ArrayList<Face> culledFaces = new ArrayList<>();
             for(Face face : shape.getFaces()){
-                float dotProduct = Vector.dotProduct(face.getNormalVector(), new Vector(face.get(0)));
-                if(dotProduct > 0){
+                //Since the shapes are in camera space the view direction is always this
+                Vector viewDirection = new Vector(new float[]{0, 0, 1});
+                float dotProduct = Vector.dotProduct(face.getNormalVector(), viewDirection);
+                if(dotProduct <= 0){
                     culledFaces.add(face);
                 }
             }

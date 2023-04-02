@@ -1,7 +1,9 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position4D;
+
 
 public class Plane {
 
@@ -23,6 +25,15 @@ public class Plane {
         float distance = point.x() * this.normal.get(0) + point.y() * this.normal.get(1) + point.z() * this.normal.get(2) - this.dist;
         return distance <= 0;
     }
+
+    /* public boolean isVertexWithinPlane(GridPosition point){
+        if (normal.equals(new Vector(new Position3D(0, 0, -1)))) {
+            return point.w() >= -point.z();
+        } else {
+            float distance = point.x() * this.normal.get(0) + point.y() * this.normal.get(1) + point.z() * this.normal.get(2) - this.dist;
+            return distance <= 0;
+        }
+    } */
 
     public GridPosition interpolate(GridPosition p1, GridPosition p2) {
         //Can't use the dot product function here because p1 and p2 are 4D while the normal is 3D

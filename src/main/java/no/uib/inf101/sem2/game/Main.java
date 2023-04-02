@@ -2,10 +2,8 @@ package no.uib.inf101.sem2.game;
 
 import no.uib.inf101.sem2.gameEngine.model.Model;
 import no.uib.inf101.sem2.gameEngine.view.GameView;
-import no.uib.inf101.sem2.gameEngine.view.SampleView;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.grid3D.Rotation;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 
 import javax.swing.JFrame;

@@ -6,9 +6,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 
 public interface ICamera {
-    public void updatePos(GridPosition pos);
 
-    public void updateRotation(RelativeRotation rotation);
+    public void updatePose(GridPosition pos, RelativeRotation rotation);
 
     public Frustum getFrustum();
 

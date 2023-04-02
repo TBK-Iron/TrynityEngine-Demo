@@ -31,22 +31,16 @@ public class Camera implements ICamera {
         this.horizontalFOV = (float) Math.atan((this.coordinateHeight * this.aspectRatio) / (2 * nearPlane));
         this.projectionTransformation = new Projection(verticalFOV, verticalFOV, nearPlane, farPlane);
 
-        updatePos(new Position3D(0, 0, 0));
-        updateRotation(new RelativeRotation(0, 0));
+        updatePose(new Position3D(0, 0, 0), new RelativeRotation(0, 0));
 
         System.out.println("focal:" + this.focalLength);
         System.out.println(this.pos);
         System.out.println(this.rotation);
     }
 
-
     @Override
-    public void updatePos(GridPosition pos){
+    public void updatePose(GridPosition pos, RelativeRotation rotation){
         this.pos = pos;
-    }
-
-    @Override
-    public void updateRotation(RelativeRotation rotation){
         this.rotation = rotation;
         this.viewTransformation = new View(rotation, pos);
         this.viewProjectionTransformation = new ViewProjection(this.viewTransformation.getMatrix(), this.projectionTransformation.getMatrix());

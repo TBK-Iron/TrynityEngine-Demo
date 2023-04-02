@@ -70,12 +70,12 @@ public class Frustum {
 
         for(Plane plane : this.planes){
             clippedFace = clipFaceAgainstPlane(clippedFace, plane);
+            System.out.println(clippedFace);
         }
         //clippedFace.removeDuplicatePoints();
 
         return clippedFace;
-    } 
-    
+    }
     private Face clipFaceAgainstPlane(Face face, Plane plane){
         ArrayList<GridPosition> inputVertices = face.getPoints();
         ArrayList<GridPosition> outputVertices = new ArrayList<>();
@@ -86,6 +86,8 @@ public class Frustum {
 
             boolean isCurrentInside = plane.isVertexWithinPlane(currentPoint);
             boolean isNextInside = plane.isVertexWithinPlane(nextPoint);
+
+            System.out.println("Current: " + currentPoint + " is inside: " + isCurrentInside);
 
             if(isCurrentInside){
                 outputVertices.add(currentPoint);

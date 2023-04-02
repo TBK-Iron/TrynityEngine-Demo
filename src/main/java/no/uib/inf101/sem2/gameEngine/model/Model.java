@@ -30,16 +30,16 @@ public class Model implements ViewableGameModel {
     }
 
     public ArrayList<Shape3D> getShapes(){
-        ArrayList<Shape3D> shapes = new ArrayList<>();
+        ArrayList<Shape3D> allShapes = new ArrayList<>();
 
-        for(Shape3D shape : shapes){
-            shapes.add(shape);
+        for(Shape3D shape : this.shapes){
+            allShapes.add(shape);
         }
-        for(Entity entity : entities){
-            shapes.add((Shape3D) entity);
+        for(Entity entity : this.entities){
+            allShapes.add((Shape3D) entity);
         }
 
-        return shapes;
+        return allShapes;
     }
     public float maxDistFromPointToFace(GridPosition pos1, Face face){
         float maxDistance = 0.0f;

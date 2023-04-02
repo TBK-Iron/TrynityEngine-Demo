@@ -19,7 +19,7 @@ public class View implements Transformation {
     private Matrix createViewMatrix(RelativeRotation cameraRotation, GridPosition cameraPos){
         Matrix rotationMatrix = new RotateTransform(cameraRotation.getAbsolute().getNegRotation()).getMatrix();
         Matrix positionMatrix = new Position3DTransform(cameraPos).getMatrix();
-        Matrix viewMatrix = Matrix.multiply(positionMatrix, rotationMatrix);
+        Matrix viewMatrix = Matrix.multiply(rotationMatrix, positionMatrix);
         return viewMatrix;
     }
 
