@@ -14,7 +14,9 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 
@@ -40,6 +42,24 @@ public class gPipeline implements IPipeline {
     }
 
     @Override
+    public ArrayList<Shape3D> worldTransform(ArrayList<Shape3D> shapes){
+        ArrayList<Shape3D> worldSpaceShapes = new ArrayList<>();
+        for(Shape3D shape : shapes){
+            Transformation rTrans = new RotateTransform(shape.getRotation().getNegRotation());
+            Transformation posTrans = new TranslateTransform(new Vector(shape.getPosition()));
+            ArrayList<Face> worldSpaceFaces = new ArrayList<>();
+
+            for(Face face : shape.getFaces()){
+                Face transformedFace =  posTrans.transform(rTrans.transform(face));
+                worldSpaceFaces.add(transformedFace);
+            }
+            worldSpaceShapes.add(new Shape3D(worldSpaceFaces));
+        }
+
+        return worldSpaceShapes;
+    }
+
+    @Override
     public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes){
         this.viewport.updatePose(model.getCameraPosition(), model.getCameraRotation());
         ArrayList<Shape3D> transformedShapes = new ArrayList<>();
@@ -56,45 +76,14 @@ public class gPipeline implements IPipeline {
         return transformedShapes;
     }
 
-    //TODO: Fix culling
     @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
-        //shapes = backfaceCull(shapes);
+        shapes = Culling.backfaceCull(shapes);
+        
         //shapes = viewfrustrumCull(shapes, this.viewport.getFrustum());
-
-        //TODO: Implement occlusion culling
         //faces = occlusionCull(shapes);
 
         return shapes;
-    }
-
-    private static ArrayList<Shape3D> backfaceCull(ArrayList<Shape3D> shapes){
-        ArrayList<Shape3D> culledShapes = new ArrayList<>();
-        for(Shape3D shape : shapes){
-            ArrayList<Face> culledFaces = new ArrayList<>();
-            for(Face face : shape.getFaces()){
-                //Since the shapes are in camera space the view direction is always this
-                Vector viewDirection = new Vector(new float[]{0, 0, 1});
-                float dotProduct = Vector.dotProduct(face.getNormalVector(), viewDirection);
-                if(dotProduct <= 0){
-                    culledFaces.add(face);
-                }
-            }
-            if(!culledFaces.isEmpty()){
-                culledShapes.add(new Shape3D(culledFaces));
-            }
-        }
-        return culledShapes;
-    }
-
-    private static ArrayList<Shape3D> viewfrustrumCull(ArrayList<Shape3D> shapes, Frustum cameraFrustum){
-        ArrayList<Shape3D> culledShapes = new ArrayList<>();
-        for(Shape3D shape : shapes){
-            if(cameraFrustum.isShapeVisible(shape)){
-                culledShapes.add(shape);
-            }
-        }
-        return culledShapes;
     }
 
     @Override
@@ -153,8 +142,8 @@ public class gPipeline implements IPipeline {
         Collections.sort(faces, new Comparator<Face>() {
             @Override
             public int compare(Face f1, Face f2){
-                float value1 = highestZVals.get(faces.indexOf(f1));
-                float value2 = highestZVals.get(faces.indexOf(f2));
+                float value1 = highestZVals.get(faces.indexOf(f2));
+                float value2 = highestZVals.get(faces.indexOf(f1));
 
                 return Float.compare(highestZVals.indexOf(value1), highestZVals.indexOf(value2));
             }

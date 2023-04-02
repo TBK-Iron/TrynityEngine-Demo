@@ -22,6 +22,7 @@ public class Main {
 
     Model model = new Model();
     model.createShape(new Position3D(0, 0, 0), new RelativeRotation(0, 0), "src/main/resources/tunnel.trym");
+    model.createShape(new Position3D(0, 0, 2.5f), new RelativeRotation((float) (Math.PI/10), (float) (Math.PI/4 - 0.2)), "src/main/resources/cube.trym");
     GameView view = new GameView((ViewableGameModel) model, config);
 
     GameController controller = new GameController((ControllableEngineModel) model, view, config);

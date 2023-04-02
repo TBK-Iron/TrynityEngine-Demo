@@ -47,7 +47,8 @@ public class GameView extends JPanel{
     }
 
     private void drawGame(Graphics2D g2){
-        ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(this.model.getShapes());
+        ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getShapes());
+        ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes);
         ArrayList<Shape3D> notCulledShapes = pipeline.cull(cameraSpaceShapes);
         ArrayList<Face> clippedFaces = pipeline.clip(notCulledShapes);
         ArrayList<Face> projectedFaces = pipeline.projectTransform(clippedFaces);

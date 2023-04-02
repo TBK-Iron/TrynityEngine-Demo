@@ -17,9 +17,15 @@ public class View implements Transformation {
     }
 
     private Matrix createViewMatrix(RelativeRotation cameraRotation, GridPosition cameraPos){
-        Matrix rotationMatrix = new RotateTransform(cameraRotation.getNegRotation()).getMatrix();
-        Matrix positionMatrix = new Position3DTransform(cameraPos).getMatrix();
-        Matrix viewMatrix = Matrix.multiply(rotationMatrix, positionMatrix);
+        Matrix rotM = new RotateTransform(cameraRotation.getNegRotation()).getMatrix();
+        Matrix expRotationMatrix = new Matrix(new float[][]{
+            {rotM.get(0, 0), rotM.get(0, 1), rotM.get(0, 2), 0},
+            {rotM.get(1, 0), rotM.get(1, 1), rotM.get(1, 2), 0},
+            {rotM.get(2, 0), rotM.get(2, 1), rotM.get(2, 2), 0},
+            {0, 0, 0, 1}
+        });
+        Matrix positionMatrix = new TranslateTransform(new Vector(cameraPos).scaledBy(-1)).getMatrix();
+        Matrix viewMatrix = Matrix.multiply(expRotationMatrix, positionMatrix);
         return viewMatrix;
     }
 
@@ -32,7 +38,7 @@ public class View implements Transformation {
     public Face transform(Face face) {
         ArrayList<GridPosition> newVertices = new ArrayList<GridPosition>();
         for (GridPosition vertex : face.getPoints()) {
-            Vector t = this.matrix.multiply(new Vector(vertex));
+            Vector t = this.matrix.multiply(new Vector(new float[] {vertex.x(), vertex.y(), vertex.z(), 1}));
             newVertices.add(new Position3D(t.get(0), t.get(1), t.get(2)));
         }
         return new Face(newVertices, face.getColor());

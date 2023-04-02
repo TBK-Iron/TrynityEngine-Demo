@@ -6,6 +6,7 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Shape3D implements IShape {
@@ -20,13 +21,10 @@ public class Shape3D implements IShape {
         this.anchoredPos = pos;
         this.rotation = rotation;
         this.faces = parseTrymFile(file);
-        this.unchangedFaces = faces;
-        updateRotation();
-        updatePosition();
-        
+        this.unchangedFaces = faces;    
     }
 
-    //Used for creating a shape that has already had all transformations applied
+    //Should only be used for when the shape is already in world space.
     public Shape3D(ArrayList<Face> faces){
         this.faces = faces;
         this.unchangedFaces = faces;
@@ -73,34 +71,12 @@ public class Shape3D implements IShape {
         return null;
     }
 
-
-
-
-    protected void updatePosition(){
-        for(int i = 0; i < this.faces.size(); i++){
-            for(int j = 0; j < this.faces.get(i).size(); j++){
-                float x = unchangedFaces.get(i).get(j).x() + anchoredPos.x();
-                float y = unchangedFaces.get(i).get(j).y() + anchoredPos.y();
-                float z = unchangedFaces.get(i).get(j).z() + anchoredPos.z();
-
-                this.faces.get(i).set(j, new Position3D(x, y, z));
-            }
-        }
+    public RelativeRotation getRotation(){
+        return this.rotation;
     }
 
-    //TODO: Need to fix
-    protected void updateRotation(){
-        for(int i = 0; i < this.faces.size(); i++){
-            for(int j = 0; j < this.faces.get(i).size(); j++){
-                GridPosition point = this.unchangedFaces.get(i).get(j);
-                
-
-
-                
-
-                //this.faces.get(i).set(j, new Position3D(newPoint[0], newPoint[1], newPoint[2]));
-            }
-        }
+    public GridPosition getPosition(){
+        return this.anchoredPos;
     }
 
     public BoundingSphere getBoundingSphere(){
@@ -133,9 +109,6 @@ public class Shape3D implements IShape {
         return new BoundingSphere(center, radius);
     }
 
-    public GridPosition getPos(){
-        return this.anchoredPos;
-    }
 
     public ArrayList<Face> getFaces(){
         return this.faces;

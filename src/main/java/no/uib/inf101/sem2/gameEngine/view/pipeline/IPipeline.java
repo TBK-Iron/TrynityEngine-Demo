@@ -7,6 +7,8 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 
 public interface IPipeline {
 
+    public ArrayList<Shape3D> worldTransform(ArrayList<Shape3D> shapes);
+
     public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes);
 
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes);

@@ -13,12 +13,10 @@ public class Entity extends Shape3D {
     
     public void setRotation(RelativeRotation newRotation){
         this.rotation = newRotation;
-        this.updateRotation();
+        
     }
 
     public void setPosision(GridPosition newPos){
         this.anchoredPos = newPos;
-        this.updatePosition();
-        
     }
 }
