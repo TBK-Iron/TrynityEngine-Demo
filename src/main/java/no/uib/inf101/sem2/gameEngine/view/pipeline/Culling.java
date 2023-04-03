@@ -27,15 +27,14 @@ public class Culling {
         return notCulledShapes;
     }
 
-    //TODO: Fix view frustum culling
     public static ArrayList<Shape3D> viewfrustrumCull(ArrayList<Shape3D> shapes, Frustum cameraFrustum){
-        ArrayList<Shape3D> culledShapes = new ArrayList<>();
+        ArrayList<Shape3D> notCulledShapes = new ArrayList<>();
         for(Shape3D shape : shapes){
             if(cameraFrustum.isShapeVisible(shape)){
-                culledShapes.add(shape);
+                notCulledShapes.add(shape);
             }
         }
-        return culledShapes;
+        return notCulledShapes;
     }
 
     //TODO: Implement occlusion culling

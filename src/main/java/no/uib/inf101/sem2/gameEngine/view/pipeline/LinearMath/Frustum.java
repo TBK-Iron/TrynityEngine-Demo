@@ -52,9 +52,9 @@ public class Frustum {
 
         for (Plane plane : planes) {
             float distance = Vector.dotProduct(plane.normal, new Vector(center)) - plane.dist;
-
+            //System.out.println("Distance: " + distance + " Radius: " + radius);
             // If the bounding sphere is entirely outside the plane, the shape should be culled
-            if (distance < -radius) {
+            if (distance > radius) {
                 return false;
             }
         }

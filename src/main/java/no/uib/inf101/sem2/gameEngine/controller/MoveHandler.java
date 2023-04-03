@@ -1,8 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.controller;
 
 import java.awt.event.KeyEvent;
-import java.util.HashSet;
-import java.util.Set;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 

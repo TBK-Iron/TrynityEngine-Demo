@@ -1,6 +1,5 @@
 package no.uib.inf101.sem2.gameEngine.model;
 
-import java.io.File;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;

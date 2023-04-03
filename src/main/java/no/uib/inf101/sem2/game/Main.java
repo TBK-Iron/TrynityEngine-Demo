@@ -1,10 +1,5 @@
 package no.uib.inf101.sem2.game;
 
-import no.uib.inf101.sem2.gameEngine.model.EngineModel;
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
-import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.controller.GameController;
 import no.uib.inf101.sem2.game.model.GameModel;
@@ -16,7 +11,6 @@ import no.uib.inf101.sem2.gameEngine.TrynityEngine;
 import no.uib.inf101.sem2.gameEngine.gameEngine;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
-import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
 
 import java.awt.event.ActionListener;
 

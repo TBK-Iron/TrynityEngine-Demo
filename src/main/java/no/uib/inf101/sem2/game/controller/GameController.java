@@ -6,8 +6,6 @@ import java.awt.event.MouseEvent;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
-import no.uib.inf101.sem2.gameEngine.controller.MouseHandler;
-import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
 public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener{
     ControllableGameModel model;

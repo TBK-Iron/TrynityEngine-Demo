@@ -3,10 +3,8 @@ package no.uib.inf101.sem2.gameEngine.controller;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
-import java.awt.Point;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
 
 public class EngineController {
     ControllableEngineModel model;

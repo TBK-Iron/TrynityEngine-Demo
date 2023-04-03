@@ -14,7 +14,6 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
@@ -32,9 +31,6 @@ public class gPipeline implements IPipeline {
         this.height = config.screenHeight();
         this.fov = config.verticalFOV();
         this.model = model;
-
-        float leftRightRot = 0; //Degrees
-        float upDownRot = 0; //Degrees
         
         this.viewport = new Camera(this.width, this.height, config.nearPlane(), config.farPlane(), fov);
 
@@ -79,8 +75,7 @@ public class gPipeline implements IPipeline {
     @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
         shapes = Culling.backfaceCull(shapes);
-        
-        //shapes = viewfrustrumCull(shapes, this.viewport.getFrustum());
+        shapes = Culling.viewfrustrumCull(shapes, this.viewport.getFrustum());
         //faces = occlusionCull(shapes);
 
         return shapes;
