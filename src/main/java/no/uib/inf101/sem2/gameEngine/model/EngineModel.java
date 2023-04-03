@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.gameEngine.model;
 import java.io.File;
 import java.util.ArrayList;
 
+import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
@@ -12,19 +13,26 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 
 public class EngineModel implements ViewableEngineModel, ControllableEngineModel {
     
     ArrayList<Shape3D> shapes;
     ArrayList<Entity> entities;
     RelativeRotation cameraRotation;
+    Vector cameraMoveSpeed;
     GridPosition cameraPos;
+    Config config;
     
-    public EngineModel(){
+    public EngineModel(Config config){
         this.shapes = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.cameraPos = new Position3D(0, 0, 0);
+        this.cameraMoveSpeed = new Vector(new float[]{0, 0, 0});
         this.cameraRotation = new RelativeRotation(0, 0);
+        this.config = config;
     }
 
     public void createShape(ShapeData shapeData){
@@ -57,6 +65,12 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         }
         return maxDistance;
     }
+    public void updateCameraPosition(){
+        if(this.cameraMoveSpeed.magnitude() != 0){
+            this.cameraPos = Vector.add(new Vector(this.cameraPos), this.cameraMoveSpeed).getPoint();
+        }
+        //System.out.println("Camera position set to: " + this.cameraPos);
+    }
 
     public RelativeRotation getCameraRotation(){
         return this.cameraRotation;
@@ -72,9 +86,18 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         //System.out.println("Camera rotation set to: " + this.cameraRotation);
     }
 
-    public void addToCameraPosition(GridPosition cameraPos){
-        this.cameraPos = cameraPos;
-        //System.out.println("Camera position set to: " + cameraPos);
+    public void setMovementDelta(Vector relativeDelta){
+        Vector delta;
+        if(relativeDelta.magnitude() != 0){
+            Matrix rotationMatrix = new RotateTransform(new RelativeRotation(0, this.cameraRotation.getLeftRight())).getMatrix();
+            delta = rotationMatrix.multiply(relativeDelta);
+        } else {
+            
+            delta = relativeDelta;
+        }
+        
+        this.cameraMoveSpeed = delta;
+        //System.out.println("Camera movement set to: " + this.cameraMoveSpeed);
     }
 
 }

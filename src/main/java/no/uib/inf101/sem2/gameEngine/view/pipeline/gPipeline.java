@@ -142,8 +142,8 @@ public class gPipeline implements IPipeline {
         Collections.sort(faces, new Comparator<Face>() {
             @Override
             public int compare(Face f1, Face f2){
-                float value1 = highestZVals.get(faces.indexOf(f2));
-                float value2 = highestZVals.get(faces.indexOf(f1));
+                float value1 = highestZVals.get(faces.indexOf(f1));
+                float value2 = highestZVals.get(faces.indexOf(f2));
 
                 return Float.compare(highestZVals.indexOf(value1), highestZVals.indexOf(value2));
             }

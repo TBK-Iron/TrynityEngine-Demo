@@ -11,7 +11,7 @@ public class TrynityEngine implements gameEngine {
     SceneMaker sceneMaker;
 
     public TrynityEngine(Config config){
-        this.model = new EngineModel();
+        this.model = new EngineModel(config);
         this.sceneMaker = new SceneMaker(model, config);
         this.controller = new EngineController(model, sceneMaker, config);
     }

@@ -13,4 +13,6 @@ public interface Config {
     public float farPlane();
 
     public float fps();
+
+    public float cameraMoveSpeed();
 }

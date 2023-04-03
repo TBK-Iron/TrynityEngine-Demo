@@ -30,6 +30,8 @@ public class GameView extends JPanel {
     public GameView(ViewableGameModel model, Config config, SceneMaker engineView) {
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.WHITE);
+        this.setFocusable(true);
+        this.requestFocusInWindow();
 
         this.model = model;
         this.engineView = engineView;

@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.game.controller;
 
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 import no.uib.inf101.sem2.game.view.GameView;
@@ -8,7 +9,7 @@ import no.uib.inf101.sem2.gameEngine.controller.EngineController;
 import no.uib.inf101.sem2.gameEngine.controller.MouseHandler;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
-public class GameController implements java.awt.event.MouseMotionListener{
+public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener{
     ControllableGameModel model;
     GameView view;
     Config config;
@@ -22,7 +23,8 @@ public class GameController implements java.awt.event.MouseMotionListener{
         this.engineController = engineController;
 
         this.view.addMouseMotionListener(this);
-        
+        this.view.addKeyListener(this);
+
     }
 
     @Override
@@ -34,5 +36,19 @@ public class GameController implements java.awt.event.MouseMotionListener{
     @Override
     public void mouseMoved(MouseEvent arg0) {
         this.engineController.mouseMoved(arg0);
+    }
+
+    @Override
+    public void keyPressed(KeyEvent arg0) {
+        this.engineController.keyPressed(arg0);
+    }
+
+    @Override
+    public void keyReleased(KeyEvent arg0) {
+        this.engineController.keyReleased(arg0);
+    }
+
+    @Override
+    public void keyTyped(KeyEvent arg0) {
     }
 }
