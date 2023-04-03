@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.controller;
 
 import java.awt.event.KeyEvent;
+import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
@@ -11,6 +12,8 @@ public class MoveHandler {
     boolean aKeyPressed;
     boolean sKeyPressed;
     boolean dKeyPressed;
+    boolean spaceKeyPressed;
+    boolean ctrlKeyPressed;
 
     public MoveHandler(float moveSpeed){
         this.moveSpeed = moveSpeed;
@@ -19,6 +22,8 @@ public class MoveHandler {
         aKeyPressed = false;
         sKeyPressed = false;
         dKeyPressed = false;
+        spaceKeyPressed = false;
+        ctrlKeyPressed = false;
     }
 
     public boolean keyPressed(KeyEvent press){
@@ -37,6 +42,14 @@ public class MoveHandler {
         }
         if(press.getKeyCode() == KeyEvent.VK_D && dKeyPressed == false) {
             dKeyPressed = true;
+            change = true;
+        }
+        if(press.getKeyCode() == KeyEvent.VK_SPACE && spaceKeyPressed == false) {
+            spaceKeyPressed = true;
+            change = true;
+        }
+        if(press.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed == false) {
+            ctrlKeyPressed = true;
             change = true;
         }
 
@@ -62,6 +75,14 @@ public class MoveHandler {
             dKeyPressed = false;
             change = true;
         }
+        if(release.getKeyCode() == KeyEvent.VK_SPACE && spaceKeyPressed == true) {
+            spaceKeyPressed = false;
+            change = true;
+        }
+        if(release.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed == true) {
+            ctrlKeyPressed = false;
+            change = true;
+        }
 
         return change;
     }
@@ -69,6 +90,7 @@ public class MoveHandler {
     public Vector getMovementDelta(){
         float forwards = 0;
         float left = 0;
+        float up = 0;
         if(this.wKeyPressed){
             forwards += 1;
         } 
@@ -81,13 +103,21 @@ public class MoveHandler {
         if(this.dKeyPressed){
             left += -1;
         }
-        Vector delta = new Vector(new float[]{left, 0, forwards});
+        if(this.spaceKeyPressed){
+            up += 1;
+        }
+        if(this.ctrlKeyPressed){
+            up += -1;
+        }
+
+        Vector deltaXZ = new Vector(new float[]{left, forwards});
 
         if(left == 0 && forwards == 0){
-            return new Vector(new float[]{0, 0, 0});
+            return new Vector(new float[]{0, up, 0}).scaledBy(this.moveSpeed);
         } else {
             //System.out.println(delta.normalized());
-            return delta.normalized().scaledBy(this.moveSpeed);
+            Vector normalizedXZ = deltaXZ.normalized(); 
+            return new Vector(new float[]{normalizedXZ.get(0), up, normalizedXZ.get(1)}).scaledBy(this.moveSpeed);
         }
     }
 }

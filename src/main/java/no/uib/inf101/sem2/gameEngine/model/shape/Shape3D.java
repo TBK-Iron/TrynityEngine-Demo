@@ -50,8 +50,14 @@ public class Shape3D implements IShape {
                     String[] points = face[0].split(";"); 
                     //Parse color value
                     String[] sColors = face[2].replace("(", "").replace(")", "").split(",");
-                    Color faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]));
-
+                    Color faceColor;
+                    if(sColors.length == 3){
+                        faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]));
+                    } else if(sColors.length == 4){
+                        faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]), Integer.parseInt(sColors[3]));
+                    } else {
+                        throw new UnsupportedOperationException("Color values must be either 3 or 4 values long");
+                    }
                     //Parse points
                     ArrayList<GridPosition> posisions = new ArrayList<>();
                     for(String point : points){
