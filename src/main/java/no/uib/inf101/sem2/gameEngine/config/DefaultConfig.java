@@ -2,12 +2,12 @@ package no.uib.inf101.sem2.gameEngine.config;
 
 
 public class DefaultConfig implements Config {
-    final float verticalFOV = 90;
+    final float verticalFOV = 75;
     final int screenWidth = 1280;
     final int screenHeight = 720;
     final float nearPlane = 0.5f;
     final float farPlane = 100f;
-    final float fps = 30f;
+    final float fps = 60f;
 
     @Override
     public float verticalFOV() {

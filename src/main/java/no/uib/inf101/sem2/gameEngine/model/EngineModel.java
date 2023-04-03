@@ -6,34 +6,33 @@ import java.util.ArrayList;
 import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
-import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
-public class Model implements ViewableGameModel, ControllableEngineModel {
+public class EngineModel implements ViewableEngineModel, ControllableEngineModel {
     
     ArrayList<Shape3D> shapes;
     ArrayList<Entity> entities;
     RelativeRotation cameraRotation;
     GridPosition cameraPos;
     
-    public Model(){
+    public EngineModel(){
         this.shapes = new ArrayList<>();
         this.entities = new ArrayList<>();
         this.cameraPos = new Position3D(0, 0, 0);
         this.cameraRotation = new RelativeRotation(0, 0);
     }
 
-    public void createShape(GridPosition pos, RelativeRotation rotation, String filename){
-        File shapeFile = new File(filename);
-        shapes.add(new Shape3D(pos, rotation, shapeFile));
+    public void createShape(ShapeData shapeData){
+        shapes.add(new Shape3D(shapeData));
     }
 
-    public void createEntity(GridPosition pos, RelativeRotation rotation, String filename){
-        File shapeFile = new File(filename);
-        entities.add(new Entity(pos, rotation, shapeFile));
+    public void createEntity(ShapeData shapeData){
+        entities.add(new Entity(shapeData));
     }
 
     public ArrayList<Shape3D> getShapes(){
@@ -73,7 +72,7 @@ public class Model implements ViewableGameModel, ControllableEngineModel {
         //System.out.println("Camera rotation set to: " + this.cameraRotation);
     }
 
-    public void setCameraPosition(GridPosition cameraPos){
+    public void addToCameraPosition(GridPosition cameraPos){
         this.cameraPos = cameraPos;
         //System.out.println("Camera position set to: " + cameraPos);
     }

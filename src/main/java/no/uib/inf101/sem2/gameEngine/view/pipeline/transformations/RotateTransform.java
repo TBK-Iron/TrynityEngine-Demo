@@ -6,8 +6,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class RotateTransform implements Transformation {
     
@@ -18,8 +18,15 @@ public class RotateTransform implements Transformation {
     }
 
     private static Matrix getRotationMatrix(RelativeRotation rot){
+        float pivot = rot.getPivot();
         float upDown = -rot.getUpDown();
         float leftRight = rot.getLeftRight();
+
+        Matrix pivotMatrix = new Matrix(new float[][]{
+            {(float) Math.cos(pivot), (float) -Math.sin(pivot), 0},
+            {(float) Math.sin(pivot), (float) Math.cos(pivot), 0},
+            {0, 0, 1}
+        });
 
         Matrix updownMatrix = new Matrix(new float[][] {
             {1, 0, 0},
@@ -33,7 +40,7 @@ public class RotateTransform implements Transformation {
             {(float) -Math.sin(leftRight), 0f, (float) Math.cos(leftRight)}
         });
 
-        Matrix rotationMatrix = Matrix.multiply(updownMatrix, leftRightMatrix);
+        Matrix rotationMatrix = Matrix.multiply(pivotMatrix, Matrix.multiply(updownMatrix, leftRightMatrix));
 
         return rotationMatrix;
     }

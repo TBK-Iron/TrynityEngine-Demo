@@ -1,12 +1,38 @@
 package no.uib.inf101.sem2.game.controller;
 
-import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
-import no.uib.inf101.sem2.gameEngine.controller.EngineController;
-import no.uib.inf101.sem2.gameEngine.view.GameView;
+import java.awt.event.MouseEvent;
 
-public class GameController extends EngineController {
-    public GameController(ControllableEngineModel engineModel, GameView view, Config config) {
-        super(engineModel, view, config);
+import no.uib.inf101.sem2.game.view.GameView;
+import no.uib.inf101.sem2.gameEngine.config.Config;
+import no.uib.inf101.sem2.gameEngine.controller.EngineController;
+import no.uib.inf101.sem2.gameEngine.controller.MouseHandler;
+import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
+
+public class GameController implements java.awt.event.MouseMotionListener{
+    ControllableGameModel model;
+    GameView view;
+    Config config;
+    EngineController engineController;
+
+
+    public GameController(ControllableGameModel model, GameView view, Config config, EngineController engineController) {
+        this.model = model;
+        this.config = config;
+        this.view = view;
+        this.engineController = engineController;
+
+        this.view.addMouseMotionListener(this);
+        
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent arg0) {
+        // TODO Auto-generated method stub
+        //sthrow new UnsupportedOperationException("Unimplemented method 'mouseDragged'");
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent arg0) {
+        this.engineController.mouseMoved(arg0);
     }
 }

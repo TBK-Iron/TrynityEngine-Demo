@@ -1,9 +1,9 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position4D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position4D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Vector {

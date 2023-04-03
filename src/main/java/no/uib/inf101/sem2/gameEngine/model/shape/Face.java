@@ -3,6 +3,8 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 import java.util.ArrayList;
 import java.util.Iterator;
 
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 import java.awt.Color;

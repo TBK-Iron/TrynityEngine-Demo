@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import no.uib.inf101.sem2.gameEngine.model.shape.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 
 public class Frustum {
     Plane[] planes;

@@ -3,11 +3,11 @@ package no.uib.inf101.sem2.gameEngine.view.pipeline.transformations;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class View implements Transformation {
     Matrix matrix;

@@ -6,8 +6,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+
 
 public class Shape3D implements IShape {
     ArrayList<Face> unchangedFaces;
@@ -15,12 +18,12 @@ public class Shape3D implements IShape {
     GridPosition anchoredPos;
     RelativeRotation rotation;
 
-    public Shape3D(GridPosition pos, RelativeRotation rotation,File file){
+    public Shape3D(ShapeData shapeData){
         this.faces = new ArrayList<>();
         this.unchangedFaces = new ArrayList<>();
-        this.anchoredPos = pos;
-        this.rotation = rotation;
-        this.faces = parseTrymFile(file);
+        this.anchoredPos = shapeData.position();
+        this.rotation = shapeData.rotation();
+        this.faces = parseTrymFile(shapeData.file());
         this.unchangedFaces = faces;    
     }
 

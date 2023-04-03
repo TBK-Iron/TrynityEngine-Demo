@@ -1,15 +1,8 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
-import java.util.ArrayList;
+import java.io.File;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
-public interface IShape {
-    
-    public GridPosition getPosition();
-
-    public RelativeRotation getRotation();
-
-    public ArrayList<Face> getFaces();
-}
+public record ShapeData(GridPosition position, RelativeRotation rotation, File file) {}

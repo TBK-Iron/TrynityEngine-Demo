@@ -19,22 +19,21 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.gPipeline;
 
-public class GameView extends JPanel{
+public class SceneMaker{
     
     gPipeline pipeline;
-    ViewableGameModel model;
+    ViewableEngineModel model;
 
     final Config config;
 
-    public GameView(ViewableGameModel model, Config config){
-        this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
-        this.setBackground(Color.WHITE);
+    public SceneMaker(ViewableEngineModel model, Config config){
         this.config = config;
-        pipeline = new gPipeline(model, this.config);
         this.model = model;
+
+        pipeline = new gPipeline(this.model, this.config);
     }
 
-    @Override
+    /* @Override
     protected void paintComponent(Graphics g) {
         Graphics2D g2 = (Graphics2D) g;
         drawGame(g2);
@@ -44,9 +43,9 @@ public class GameView extends JPanel{
             Cursor transparentCursor = toolkit.createCustomCursor(transparentImage, new Point(0, 0), "transparentCursor");
             this.setCursor(transparentCursor);
         }
-    }
+    } */
 
-    private void drawGame(Graphics2D g2){
+    public BufferedImage getNextSceneImage(){
         ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getShapes());
         ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes);
         ArrayList<Shape3D> notCulledShapes = pipeline.cull(cameraSpaceShapes);
@@ -59,7 +58,8 @@ public class GameView extends JPanel{
         /* for(Face face : castedFaces){
             System.out.println("face: " + face);
         } */
+
         BufferedImage nextScene = pipeline.getSceneImage(castedFaces);
-        g2.drawImage(nextScene, 0, 0, null);
+        return nextScene;
     }
 }

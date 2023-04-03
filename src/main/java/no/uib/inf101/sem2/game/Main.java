@@ -1,14 +1,22 @@
 package no.uib.inf101.sem2.game;
 
-import no.uib.inf101.sem2.gameEngine.model.Model;
-import no.uib.inf101.sem2.gameEngine.view.GameView;
-import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.model.EngineModel;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
+import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.controller.GameController;
+import no.uib.inf101.sem2.game.model.GameModel;
+import no.uib.inf101.sem2.game.model.levels.Level;
+import no.uib.inf101.sem2.game.model.levels.TestLevel1;
+import no.uib.inf101.sem2.game.view.GameView;
+import no.uib.inf101.sem2.game.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.TrynityEngine;
+import no.uib.inf101.sem2.gameEngine.gameEngine;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
 import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
 
 import java.awt.event.ActionListener;
 
@@ -20,12 +28,13 @@ public class Main {
 
     Config config = new DefaultConfig();
 
-    Model model = new Model();
-    model.createShape(new Position3D(0, 0, 0), new RelativeRotation(0, 0), "src/main/resources/tunnel.trym");
-    model.createShape(new Position3D(0, 0, 2.5f), new RelativeRotation((float) (Math.PI/10), (float) (Math.PI/4 - 0.2)), "src/main/resources/cube.trym");
-    GameView view = new GameView((ViewableGameModel) model, config);
+    gameEngine engine = new TrynityEngine(config);
 
-    GameController controller = new GameController((ControllableEngineModel) model, view, config);
+    Level map = new TestLevel1();
+
+    GameModel model = new GameModel(map, engine.model());
+    GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker());
+    GameController controller = new GameController((ControllableGameModel) model, view, config, engine.controller());
 
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

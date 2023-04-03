@@ -3,7 +3,7 @@ package no.uib.inf101.sem2.gameEngine.grid3D;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 
 public class Grid<E> implements IGrid<E> {
     ArrayList<GridValue<E>> shapes;

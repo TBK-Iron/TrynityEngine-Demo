@@ -9,25 +9,25 @@ import java.util.Comparator;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
-import no.uib.inf101.sem2.gameEngine.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position3D;
-import no.uib.inf101.sem2.gameEngine.model.shape.Position2D;
 
 public class gPipeline implements IPipeline {
     ICamera viewport;
     float fov;
     int width;
     int height;
-    ViewableGameModel model;
+    ViewableEngineModel model;
 
-    public gPipeline(ViewableGameModel model, Config config){
+    public gPipeline(ViewableEngineModel model, Config config){
         this.width = config.screenWidth();
         this.height = config.screenHeight();
         this.fov = config.verticalFOV();

@@ -1,6 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.grid3D;
 
-import no.uib.inf101.sem2.gameEngine.model.shape.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 
 public interface IGrid<E> extends Iterable<GridValue<E>> {
 
