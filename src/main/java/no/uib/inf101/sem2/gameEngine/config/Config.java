@@ -15,4 +15,6 @@ public interface Config {
     public float fps();
 
     public float cameraMoveSpeed();
+
+    public void resizeFrame(int width, int height);
 }

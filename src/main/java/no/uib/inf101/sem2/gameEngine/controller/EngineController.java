@@ -22,6 +22,7 @@ public class EngineController {
     }
 
     public void mouseMoved(MouseEvent arg0) {
+        
         this.model.addToCameraRotation(this.mouseHandler.getRotation(arg0));
         this.mouseHandler.resetMousePosition();
         this.model.setMovementDelta(this.moveHandler.getMovementDelta());

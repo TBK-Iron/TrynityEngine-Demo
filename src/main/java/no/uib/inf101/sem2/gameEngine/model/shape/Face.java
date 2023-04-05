@@ -172,4 +172,26 @@ public class Face {
         return closestPoint;
     }
 
+    public ArrayList<Face> getThreeVertexFaces(){
+        ArrayList<Face> faces = new ArrayList<>();
+        if(this.points.size() < 3){
+            return new ArrayList<Face>();
+        }else if(this.points.size() == 3){
+            faces.add(this);
+        } else {
+            ArrayList<GridPosition> threeFirstPoints = new ArrayList<>();
+            threeFirstPoints.add(this.points.get(0));
+            threeFirstPoints.add(this.points.get(1));
+            threeFirstPoints.add(this.points.get(2));
+
+            Face face1 = new Face(threeFirstPoints, this.color);
+            this.points.remove(1);
+            Face face2 = new Face(this.points, this.color);
+
+            faces.add(face1);
+            faces.addAll(face2.getThreeVertexFaces());
+        }
+        return faces;
+    }
+
 }

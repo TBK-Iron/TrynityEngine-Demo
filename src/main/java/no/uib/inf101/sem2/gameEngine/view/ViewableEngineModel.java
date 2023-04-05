@@ -4,12 +4,10 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public interface ViewableEngineModel {
     
-    public ArrayList<Shape3D> getShapes();
+    public ArrayList<Shape3D> getRenderShapes();
 
     public Camera getCamera();
 }

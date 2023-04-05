@@ -13,6 +13,8 @@ import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
 
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentAdapter;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -36,6 +38,12 @@ public class Main {
     frame.setContentPane(view);
     frame.pack();
     frame.setVisible(true);
+
+    frame.getRootPane().addComponentListener(new ComponentAdapter() {
+      public void componentResized(ComponentEvent componentEvent) {
+        config.resizeFrame(componentEvent.getComponent().getWidth(), componentEvent.getComponent().getHeight());
+      }
+    });
 
     Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override

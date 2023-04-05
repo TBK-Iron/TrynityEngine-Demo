@@ -2,17 +2,16 @@ package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
 import java.util.ArrayList;
 
+import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 
 public interface IPipeline {
 
-    public void updateCameraPose(RelativeRotation newCamRot, GridPosition newCamPos);
-
     public ArrayList<Shape3D> worldTransform(ArrayList<Shape3D> shapes);
 
-    public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes);
+    public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes, Camera camera);
 
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes);
 

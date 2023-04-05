@@ -44,10 +44,10 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
 
     public void setCameraCollisionShape(ShapeData collisionShapeData){
         Shape3D collisionShape = new Shape3D(collisionShapeData);
-        this.camera.setCollision(collisionShape.getPoints());
+        this.camera.setCollision(collisionShape.getUniquePoints());
     }
 
-    public ArrayList<Shape3D> getShapes(){
+    public ArrayList<Shape3D> getRenderShapes(){
         ArrayList<Shape3D> allShapes = new ArrayList<>();
 
         for(Shape3D shape : this.shapes){
@@ -87,7 +87,7 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     public void updateEntityPositions(){
         for(Entity entity : this.entities){
             if(entity.isMoving()){
-                if(!collisionDetector.isColliding(entity.getPoints(), entity.getPosition())){
+                if(!collisionDetector.isColliding(entity.getUniquePoints(), entity.getPosition())){
                     entity.move();
                 }
             }

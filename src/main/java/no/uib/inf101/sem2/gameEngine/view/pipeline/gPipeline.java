@@ -8,7 +8,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
+import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
@@ -22,11 +22,9 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransfo
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.ViewProjection;
 
 public class gPipeline implements IPipeline {
     Config config;
-    Transformation viewTransformation;
     Transformation projectTransformation;
     Frustum frustum;
 
@@ -35,12 +33,6 @@ public class gPipeline implements IPipeline {
 
         this.projectTransformation = new Projection(config.verticalFOV(), ((float) config.screenWidth())/ ((float) config.screenHeight()), config.nearPlane(), config.farPlane());
         this.frustum = new Frustum(this.projectTransformation.getMatrix(), this.config.nearPlane(), this.config.farPlane());
-        //viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
-    }
-
-    @Override
-    public void updateCameraPose(RelativeRotation newCamRot, GridPosition newCamPos){
-        this.viewTransformation = new View(newCamRot, newCamPos); 
     }
 
     @Override
@@ -62,14 +54,15 @@ public class gPipeline implements IPipeline {
     }
 
     @Override
-    public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes){
-        ArrayList<Shape3D> transformedShapes = new ArrayList<>();
+    public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes, Camera camera){
 
+        Transformation viewTransform = new View(camera.getRotation(), camera.getPos());
+        ArrayList<Shape3D> transformedShapes = new ArrayList<>();
 
         for(Shape3D shape : shapes){
             ArrayList<Face> transformedFaces = new ArrayList<>();
             for(Face face : shape.getFaces()){
-                transformedFaces.add(this.viewTransformation.transform(face));
+                transformedFaces.add(viewTransform.transform(face));
             }
             transformedShapes.add(new Shape3D(transformedFaces));
         }

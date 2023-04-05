@@ -3,10 +3,10 @@ package no.uib.inf101.sem2.gameEngine.config;
 
 public class DefaultConfig implements Config {
     final float verticalFOV = 75;
-    final int screenWidth = 1366;
-    final int screenHeight = 768;
+    int screenWidth = 1366;
+    int screenHeight = 768;
     final float nearPlane = 0.5f;
-    final float farPlane = 100f;
+    final float farPlane = 500f;
     final float fps = 60f;
     final float cameraMoveSpeed = 0.04f;
 
@@ -41,5 +41,11 @@ public class DefaultConfig implements Config {
         return this.cameraMoveSpeed;
     }
 
+    @Override
+    public void resizeFrame(int width, int height) {
+        System.out.println("Resizing frame to: " + width + "x" + height);
+        this.screenWidth = width;
+        this.screenHeight = height;
+    }
     
 }

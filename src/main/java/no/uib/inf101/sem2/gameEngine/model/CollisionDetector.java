@@ -3,8 +3,6 @@ package no.uib.inf101.sem2.gameEngine.model;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.CollisionBox;
-import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
-import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 
 public class CollisionDetector {

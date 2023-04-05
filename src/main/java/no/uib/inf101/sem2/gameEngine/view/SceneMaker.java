@@ -36,9 +36,8 @@ public class SceneMaker{
     } */
 
     public BufferedImage getNextSceneImage(){
-        pipeline.updateCameraPose(this.model.getCamera().getRotation(), this.model.getCamera().getPos());
-        ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getShapes());
-        ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes);
+        ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getRenderShapes());
+        ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes, this.model.getCamera());
         ArrayList<Shape3D> notCulledShapes = pipeline.cull(cameraSpaceShapes);
         ArrayList<Face> clippedFaces = pipeline.clip(notCulledShapes);
         ArrayList<Face> projectedFaces = pipeline.projectTransform(clippedFaces);

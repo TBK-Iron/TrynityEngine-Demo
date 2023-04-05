@@ -14,33 +14,40 @@ public class MouseHandler {
     int centerX;
     int centerY;
 
+    int relativeCenterX;
+    int relativeCenterY;
+
     protected MouseHandler(int width, int height){
         this.width = width;
         this.height = height;
 
-        centerX = width / 2;
-        centerY = height / 2;
-
+        this.centerX = width / 2;
+        this.centerY = height / 2;
+        
+        this.relativeCenterX = width / 2;
+        this.relativeCenterY = height / 2;
     }
 
     protected void resetMousePosition(){
         Robot robot;
         try {
             robot = new Robot();
-            robot.mouseMove(centerX + 6, centerY + 29);
+            robot.mouseMove(centerX, centerY);
         } catch(AWTException e){
             e.printStackTrace();
         }
     }
 
     protected RelativeRotation getRotation(MouseEvent e){
-
         int x = e.getX();
+        int absX = e.getXOnScreen();
         int y = e.getY();
+        int absY = e.getYOnScreen();
+        
         /* System.out.println("centerX: " + centerX + " centerY: " + centerY);
         System.out.println("x: " + x + " y: " + y); */
-        int dx = -(x - this.centerX);
-        int dy = y - this.centerY;
+        int dx = -(x + (absX - x) - this.centerX);
+        int dy = y + (absY - y) - this.centerY;
 
         //System.out.println("LeftRight:" + dx + ", Updown: " + dy);
 

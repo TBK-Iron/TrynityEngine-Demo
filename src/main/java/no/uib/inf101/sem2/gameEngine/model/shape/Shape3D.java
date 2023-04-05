@@ -11,25 +11,22 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 
-public class Shape3D implements IShape {
-    ArrayList<Face> unchangedFaces;
+public class Shape3D {
     ArrayList<Face> faces;
+    ArrayList<GridPosition> uniquePoints;
     GridPosition anchoredPos;
     RelativeRotation rotation;
 
     public Shape3D(ShapeData shapeData){
         this.faces = new ArrayList<>();
-        this.unchangedFaces = new ArrayList<>();
         this.anchoredPos = shapeData.position();
         this.rotation = shapeData.rotation();
         this.faces = parseTrymFile(shapeData.file());
-        this.unchangedFaces = faces;    
     }
 
     //Should only be used for when the shape is already in world space.
     public Shape3D(ArrayList<Face> faces){
         this.faces = faces;
-        this.unchangedFaces = faces;
         this.anchoredPos = new Position3D(0, 0, 0);
         this.rotation = new RelativeRotation(0, 0);
     }
@@ -73,7 +70,7 @@ public class Shape3D implements IShape {
                         }
                         posisions.add(new Position3D(dPoint[0], dPoint[1], dPoint[2]));
                     }
-                    faces.add(new Face(posisions, faceColor));
+                    faces.addAll(new Face(posisions, faceColor).getThreeVertexFaces());
                 }
             }
             myReader.close();
@@ -126,16 +123,30 @@ public class Shape3D implements IShape {
     public ArrayList<Face> getFaces(){
         return this.faces;
     }
-    public ArrayList<GridPosition> getPoints(){
-        ArrayList<GridPosition> points = new ArrayList<>();
-        for(Face face : this.faces){
-            for(GridPosition point : face.getPoints()){
-                if(!points.contains(point)){
-                    points.add(point);
+    public ArrayList<GridPosition> getUniquePoints(){
+        if(this.uniquePoints == null){
+            ArrayList<GridPosition> uniquePoints = new ArrayList<>();
+            for(Face face : this.faces){
+                for(GridPosition point1 : face.getPoints()){
+                    boolean addPoint = true;
+                    for(GridPosition point2 : uniquePoints){
+                        float dx = point1.x() - point2.x();
+                        float dy = point1.y() - point2.y();
+                        float dz = point1.z() - point2.z();
+                        if(dx > 0.000001 || dy > 0.000001 || dz > 0.000001){
+                            addPoint = false;
+                            break;
+                        }
+                    }
+                    if(addPoint){
+                        uniquePoints.add(point1);
+                    }
                 }
             }
-        }
-        return points;
+            this.uniquePoints = uniquePoints;
+        } 
+
+        return this.uniquePoints;
     }
 
     public void setFaces(ArrayList<Face> faces){
