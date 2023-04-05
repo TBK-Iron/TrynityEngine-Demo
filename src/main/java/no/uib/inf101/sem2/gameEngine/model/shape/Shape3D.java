@@ -56,6 +56,7 @@ public class Shape3D implements IShape {
                     } else if(sColors.length == 4){
                         faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]), Integer.parseInt(sColors[3]));
                     } else {
+                        myReader.close();
                         throw new UnsupportedOperationException("Color values must be either 3 or 4 values long");
                     }
                     //Parse points
@@ -63,6 +64,10 @@ public class Shape3D implements IShape {
                     for(String point : points){
                         float[] dPoint = new float[3];
                         String[] sPoint = point.replace("(", "").replace(")", "").split(",");
+                        if(sPoint.length != 3){
+                            myReader.close();
+                            throw new UnsupportedOperationException("Points must be 3 values long (x, y, z)");
+                        }
                         for(int j = 0; j < 3; j++){
                             dPoint[j] = Float.parseFloat(sPoint[j]);
                         }
@@ -120,6 +125,17 @@ public class Shape3D implements IShape {
 
     public ArrayList<Face> getFaces(){
         return this.faces;
+    }
+    public ArrayList<GridPosition> getPoints(){
+        ArrayList<GridPosition> points = new ArrayList<>();
+        for(Face face : this.faces){
+            for(GridPosition point : face.getPoints()){
+                if(!points.contains(point)){
+                    points.add(point);
+                }
+            }
+        }
+        return points;
     }
 
     public void setFaces(ArrayList<Face> faces){

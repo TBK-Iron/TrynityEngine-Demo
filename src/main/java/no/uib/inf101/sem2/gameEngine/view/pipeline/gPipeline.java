@@ -8,33 +8,39 @@ import java.util.Collections;
 import java.util.Comparator;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
+import no.uib.inf101.sem2.gameEngine.grid3D.Grid;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Projection;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.ViewProjection;
 
 public class gPipeline implements IPipeline {
-    ICamera viewport;
-    float fov;
-    int width;
-    int height;
-    ViewableEngineModel model;
+    Config config;
+    Transformation viewTransformation;
+    Transformation projectTransformation;
+    Frustum frustum;
 
     public gPipeline(ViewableEngineModel model, Config config){
-        this.width = config.screenWidth();
-        this.height = config.screenHeight();
-        this.fov = config.verticalFOV();
-        this.model = model;
-        
-        this.viewport = new Camera(this.width, this.height, config.nearPlane(), config.farPlane(), fov);
+        this.config = config;
 
+        this.projectTransformation = new Projection(config.verticalFOV(), ((float) config.screenWidth())/ ((float) config.screenHeight()), config.nearPlane(), config.farPlane());
+        this.frustum = new Frustum(this.projectTransformation.getMatrix(), this.config.nearPlane(), this.config.farPlane());
         //viewport.updatePose(new Position3D(0, 0, 0), new RelativeRotation((float) Math.toRadians(upDownRot), (float) Math.toRadians(leftRightRot)));
+    }
+
+    @Override
+    public void updateCameraPose(RelativeRotation newCamRot, GridPosition newCamPos){
+        this.viewTransformation = new View(newCamRot, newCamPos); 
     }
 
     @Override
@@ -57,14 +63,13 @@ public class gPipeline implements IPipeline {
 
     @Override
     public ArrayList<Shape3D> cameraTransform(ArrayList<Shape3D> shapes){
-        this.viewport.updatePose(model.getCameraPosition(), model.getCameraRotation());
         ArrayList<Shape3D> transformedShapes = new ArrayList<>();
-        Transformation cameraTransformation = this.viewport.getViewTranform();
+
 
         for(Shape3D shape : shapes){
             ArrayList<Face> transformedFaces = new ArrayList<>();
             for(Face face : shape.getFaces()){
-                transformedFaces.add(cameraTransformation.transform(face));
+                transformedFaces.add(this.viewTransformation.transform(face));
             }
             transformedShapes.add(new Shape3D(transformedFaces));
         }
@@ -75,7 +80,7 @@ public class gPipeline implements IPipeline {
     @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
         shapes = Culling.backfaceCull(shapes);
-        shapes = Culling.viewfrustrumCull(shapes, this.viewport.getFrustum());
+        shapes = Culling.viewfrustrumCull(shapes, this.frustum);
         //faces = occlusionCull(shapes);
 
         return shapes;
@@ -86,7 +91,7 @@ public class gPipeline implements IPipeline {
         ArrayList<Face> clippedFaces = new ArrayList<>();
         for(Shape3D shape : shapes)
             for(Face face : shape.getFaces()){
-                clippedFaces.add(this.viewport.getFrustum().clipFace(face));
+                clippedFaces.add(this.frustum.clipFace(face));
             }
         return clippedFaces;
     }
@@ -94,10 +99,9 @@ public class gPipeline implements IPipeline {
     @Override
     public ArrayList<Face> projectTransform(ArrayList<Face> faces){
         ArrayList<Face> transformedFaces = new ArrayList<>();
-        Transformation projectTransformation = this.viewport.getProjectionTransform();
 
         for(Face face : faces){
-            transformedFaces.add(projectTransformation.transform(face));
+            transformedFaces.add(this.projectTransformation.transform(face));
         }
         
         return transformedFaces;
@@ -156,8 +160,8 @@ public class gPipeline implements IPipeline {
                 
             ArrayList<GridPosition> castedPoints = new ArrayList<>();
             for(GridPosition point : face.getPoints()){
-                float x = ((point.x() + 1) / 2.0f) * this.width;
-                float y = ((point.y() + 1) / 2.0f) * this.height;
+                float x = ((point.x() + 1) / 2.0f) * this.config.screenWidth();
+                float y = ((point.y() + 1) / 2.0f) * this.config.screenHeight();
 
                 castedPoints.add(new Position2D(x, y));
                 
@@ -172,7 +176,7 @@ public class gPipeline implements IPipeline {
 
 
     public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
-        BufferedImage buffer = new BufferedImage(this.width, this.height, BufferedImage.TYPE_INT_RGB);
+        BufferedImage buffer = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D bufferGraphics = buffer.createGraphics();
 
         for(Face face : castedFaces){
@@ -191,10 +195,6 @@ public class gPipeline implements IPipeline {
         }
 
         return buffer;
-    }
-
-    public GridPosition getCamPos(){
-        return viewport.getCastPos();
     }
 
 }

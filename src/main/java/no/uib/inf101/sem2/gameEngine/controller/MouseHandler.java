@@ -27,7 +27,7 @@ public class MouseHandler {
         Robot robot;
         try {
             robot = new Robot();
-            robot.mouseMove(centerX + 7, centerY + 30);
+            robot.mouseMove(centerX + 6, centerY + 29);
         } catch(AWTException e){
             e.printStackTrace();
         }
@@ -41,6 +41,8 @@ public class MouseHandler {
         System.out.println("x: " + x + " y: " + y); */
         int dx = -(x - this.centerX);
         int dy = y - this.centerY;
+
+        //System.out.println("LeftRight:" + dx + ", Updown: " + dy);
 
         float leftRightRot = ((float) dx / width);
         float upDownRot = ((float) dy / height);

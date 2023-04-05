@@ -10,11 +10,11 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 public class Frustum {
     Plane[] planes;
 
-    public Frustum(Matrix viewProjectionMatrix, float near, float far){
+    public Frustum(Matrix projectionMatrix, float near, float far){
 
         planes = new Plane[6];
 
-        extractPlanes(viewProjectionMatrix, near, far);
+        extractPlanes(projectionMatrix, near, far);
         normalizePlanes();
 
         /* System.out.println("Left: " + planes[0]);
@@ -25,8 +25,8 @@ public class Frustum {
         System.out.println("Far: " + planes[5]); */
     }
 
-    private void extractPlanes(Matrix viewProjMatrix, float near, float far){
-        float[][] m = viewProjMatrix.value;
+    private void extractPlanes(Matrix projMatrix, float near, float far){
+        float[][] m = projMatrix.value;
 
         this.planes[0] = new Plane(new Vector(new float[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), 0); // Left
         this.planes[1] = new Plane(new Vector(new float[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), 0); // Right

@@ -26,7 +26,7 @@ public class Main {
 
     Level map = new TestLevel1();
 
-    GameModel model = new GameModel(map, engine.model());
+    GameModel model = new GameModel(map, engine.model(), engine.collisionDetector());
     GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker());
     GameController controller = new GameController((ControllableGameModel) model, view, config, engine.controller());
 

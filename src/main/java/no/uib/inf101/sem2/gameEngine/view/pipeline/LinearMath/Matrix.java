@@ -86,6 +86,20 @@ public class Matrix {
         return new Matrix(newMatrix);
     }
 
+    public static Matrix identityMatrix(int dimensions){
+        float[][] newMatrix = new float[dimensions][dimensions];
+        for (int i = 0; i < dimensions; i++) {
+            for (int j = 0; j < dimensions; j++) {
+                if(i == j){
+                    newMatrix[i][j] = 1;
+                } else {
+                    newMatrix[i][j] = 0;
+                }
+            }
+        }
+        return new Matrix(newMatrix);
+    }
+
     public int getRows(){
         return this.value.length;
     }

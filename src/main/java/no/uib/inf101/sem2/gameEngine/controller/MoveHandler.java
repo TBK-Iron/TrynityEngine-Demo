@@ -1,7 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.controller;
 
 import java.awt.event.KeyEvent;
-import java.nio.file.attribute.UserPrincipalNotFoundException;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 

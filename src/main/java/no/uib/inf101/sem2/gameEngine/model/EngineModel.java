@@ -20,26 +20,31 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     
     ArrayList<Shape3D> shapes;
     ArrayList<Entity> entities;
-    RelativeRotation cameraRotation;
+    Camera camera;
+    CollisionDetector collisionDetector;
     Vector cameraMoveSpeed;
-    GridPosition cameraPos;
     Config config;
     
-    public EngineModel(Config config){
+    public EngineModel(Config config, CollisionDetector collisionDetector){
         this.shapes = new ArrayList<>();
         this.entities = new ArrayList<>();
-        this.cameraPos = new Position3D(0, 0, 0);
+        this.camera = new Camera(new Position3D(0, 0, 0), new RelativeRotation(0, 0, 0));
         this.cameraMoveSpeed = new Vector(new float[]{0, 0, 0});
-        this.cameraRotation = new RelativeRotation(0, 0);
         this.config = config;
+        this.collisionDetector = collisionDetector;
     }
 
     public void createShape(ShapeData shapeData){
         shapes.add(new Shape3D(shapeData));
     }
 
-    public void createEntity(ShapeData shapeData){
-        entities.add(new Entity(shapeData));
+    public void createEntity(ShapeData shapeData, ShapeData collisionShape){
+        entities.add(new Entity(shapeData, collisionShape));
+    }
+
+    public void setCameraCollisionShape(ShapeData collisionShapeData){
+        Shape3D collisionShape = new Shape3D(collisionShapeData);
+        this.camera.setCollision(collisionShape.getPoints());
     }
 
     public ArrayList<Shape3D> getShapes(){
@@ -54,6 +59,10 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
 
         return allShapes;
     }
+    public ArrayList<Entity> getEntities(){
+        return this.entities;
+    }
+
     public float maxDistFromPointToFace(GridPosition pos1, Face face){
         float maxDistance = 0.0f;
         for(GridPosition pos2 : face.getPoints()){
@@ -66,29 +75,40 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     }
     public void updateCameraPosition(){
         if(this.cameraMoveSpeed.magnitude() != 0){
-            this.cameraPos = Vector.add(new Vector(this.cameraPos), this.cameraMoveSpeed).getPoint();
+            if(this.camera.collisionShapePoints.isEmpty()){
+                this.camera.setPos(Vector.add(new Vector(this.camera.getPos()), this.cameraMoveSpeed).getPoint());
+            }else if(!collisionDetector.isColliding(this.camera.getCollisionPoints(), this.camera.getPos())){
+                this.camera.setPos(Vector.add(new Vector(this.camera.getPos()), this.cameraMoveSpeed).getPoint());
+            }
         }
         //System.out.println("Camera position set to: " + this.cameraPos);
     }
 
-    public RelativeRotation getCameraRotation(){
-        return this.cameraRotation;
+    public void updateEntityPositions(){
+        for(Entity entity : this.entities){
+            if(entity.isMoving()){
+                if(!collisionDetector.isColliding(entity.getPoints(), entity.getPosition())){
+                    entity.move();
+                }
+            }
+        }
     }
 
-    public GridPosition getCameraPosition(){
-        return this.cameraPos;
+    public Camera getCamera(){
+        return this.camera;
     }
 
     public void addToCameraRotation(RelativeRotation cameraRotation){
         //System.out.println(cameraRotation);
-        this.cameraRotation = this.cameraRotation.add(cameraRotation);
+        
+        this.camera.setRotation(this.camera.getRotation().add(cameraRotation));
         //System.out.println("Camera rotation set to: " + this.cameraRotation);
     }
 
     public void setMovementDelta(Vector relativeDelta){
         Vector delta;
         if(relativeDelta.magnitude() != 0){
-            Matrix rotationMatrix = new RotateTransform(new RelativeRotation(0, this.cameraRotation.getLeftRight())).getMatrix();
+            Matrix rotationMatrix = new RotateTransform(new RelativeRotation(0, this.camera.getRotation().getLeftRight())).getMatrix();
             delta = rotationMatrix.multiply(relativeDelta);
         } else {
             
