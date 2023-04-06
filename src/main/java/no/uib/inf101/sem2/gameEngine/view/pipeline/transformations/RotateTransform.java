@@ -57,6 +57,6 @@ public class RotateTransform implements Transformation {
             Vector t = this.matrix.multiply(new Vector(vertex));
             newVertices.add(new Position3D(t.get(0), t.get(1), t.get(2)));
         }
-        return new Face(newVertices, face.getColor());
+        return new Face(newVertices, face.getTexture());
     }
 }

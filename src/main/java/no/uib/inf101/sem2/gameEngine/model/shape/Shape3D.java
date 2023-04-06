@@ -45,17 +45,6 @@ public class Shape3D {
                 String[] face = myReader.nextLine().split(":");
                 if(face.length != 0){
                     String[] points = face[0].split(";"); 
-                    //Parse color value
-                    String[] sColors = face[2].replace("(", "").replace(")", "").split(",");
-                    Color faceColor;
-                    if(sColors.length == 3){
-                        faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]));
-                    } else if(sColors.length == 4){
-                        faceColor = new Color(Integer.parseInt(sColors[0]), Integer.parseInt(sColors[1]), Integer.parseInt(sColors[2]), Integer.parseInt(sColors[3]));
-                    } else {
-                        myReader.close();
-                        throw new UnsupportedOperationException("Color values must be either 3 or 4 values long");
-                    }
                     //Parse points
                     ArrayList<GridPosition> posisions = new ArrayList<>();
                     for(String point : points){
@@ -70,7 +59,35 @@ public class Shape3D {
                         }
                         posisions.add(new Position3D(dPoint[0], dPoint[1], dPoint[2]));
                     }
-                    faces.addAll(new Face(posisions, faceColor).getThreeVertexFaces());
+                    FaceTexture texture;
+                    if(face[1].equals("COLOR")){
+                        //Parse color value
+                        String colorTexture = face[2];
+                        float[] uv = new float[posisions.size() * 2];
+                        for(int i = 0; i < uv.length; i++){
+                            uv[i] = 0.5f;
+                        }
+                       texture = new FaceTexture(colorTexture, uv);
+                    } else if(face[1].equals("TEXTURE")){
+                        //Parse texture value
+                        String textureKey = face[2];
+                        String[] uv = face[3].split(";");
+                        float[] fuv = new float[uv.length];
+                        for(int i = 0; i < uv.length; i++){
+                            fuv[i] = Float.parseFloat(uv[i]);
+                        }
+                        if(posisions.size() * 2 != fuv.length){
+                            myReader.close();
+                            throw new UnsupportedOperationException("Texture must have the same number of uv values as points");
+                        }
+                        texture = new FaceTexture(textureKey, fuv);
+                    } else {
+                        myReader.close();
+                        throw new UnsupportedOperationException("Face must be either COLOR or TEXTURE");
+                    }
+                    
+                    
+                    faces.addAll(new Face(posisions, texture).getThreeVertexFaces());
                 }
             }
             myReader.close();

@@ -37,7 +37,7 @@ public class TranslateTransform implements Transformation {
             Vector t = this.matrix.multiply(new Vector(new float[]{vertex.x(), vertex.y(), vertex.z(), 1}));
             newVertices.add(new Position3D(t.get(0), t.get(1), t.get(2)));
         }
-        return new Face(newVertices, face.getColor());
+        return new Face(newVertices, face.getTexture());
     }
     
 }

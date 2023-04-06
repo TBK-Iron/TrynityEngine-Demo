@@ -11,12 +11,16 @@ import java.awt.Color;
 
 public class Face {
     ArrayList<GridPosition> points;
-    Color color;
     Vector nVector;
+    FaceTexture texture;
 
-    public Face(ArrayList<GridPosition> points, Color color){
+    public Face(ArrayList<GridPosition> points, FaceTexture texture){
+        if(points.size() * 2 != texture.uvMap().length){
+            throw new IllegalArgumentException("Each vertex must have a corresponding UV coordinate");
+        }
+
         this.points = points;
-        this.color = color;
+        this.texture = texture;
     }
 
     public GridPosition get(int i){
@@ -27,8 +31,8 @@ public class Face {
         return this.points;
     }
 
-    public Color getColor(){
-        return this.color;
+    public FaceTexture getTexture(){
+        return this.texture;
     } 
 
     public int size(){
@@ -97,10 +101,6 @@ public class Face {
             }
         }
         
-        sb.append(", color: ");
-        sb.append(color.toString());
-        sb.append("]");
-        
         return sb.toString();
     }
     @Override
@@ -115,12 +115,6 @@ public class Face {
 
         if (points.size() != otherFace.points.size()) {
             return false;
-        }
-
-        if(!this.color.equals(otherFace.color)){
-            if(this.color != null && otherFace.color != null){
-                return false;
-            }
         }
 
         for (int i = 0; i < points.size(); i++) {
@@ -175,7 +169,7 @@ public class Face {
     public ArrayList<Face> getThreeVertexFaces(){
         ArrayList<Face> faces = new ArrayList<>();
         if(this.points.size() < 3){
-            return new ArrayList<Face>();
+            throw new IllegalArgumentException("Face must have at least 3 points");
         }else if(this.points.size() == 3){
             faces.add(this);
         } else {
@@ -184,9 +178,23 @@ public class Face {
             threeFirstPoints.add(this.points.get(1));
             threeFirstPoints.add(this.points.get(2));
 
-            Face face1 = new Face(threeFirstPoints, this.color);
+            float[] face1uv = new float[] {this.texture.uvMap()[0], this.texture.uvMap()[1], this.texture.uvMap()[2], this.texture.uvMap()[3], this.texture.uvMap()[4], this.texture.uvMap()[5]};
+
+            float[] face2uv = new float[this.texture.uvMap().length - 2];
+            face2uv[0] = this.texture.uvMap()[0];
+            face2uv[1] = this.texture.uvMap()[1];
+            System.out.println(this.texture.uvMap()[0]);
+            for(int i = 2; i < face2uv.length; i++){
+                System.out.println(i + ": " + this.texture.uvMap()[i+2]);
+                face2uv[i] = this.texture.uvMap()[i+2];
+            }
+
+
+            Face face1 = new Face(threeFirstPoints, new FaceTexture(this.texture.textureKey(), face1uv));
+            System.out.println("test1");
             this.points.remove(1);
-            Face face2 = new Face(this.points, this.color);
+            Face face2 = new Face(this.points, new FaceTexture(this.texture.textureKey(), face2uv));
+            System.out.println("test2");
 
             faces.add(face1);
             faces.addAll(face2.getThreeVertexFaces());

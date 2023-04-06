@@ -100,7 +100,7 @@ public class Frustum {
             }
         }
 
-        Face clippedFace = new Face(outputVertices, face.getColor());
+        Face clippedFace = new Face(outputVertices, face.getTexture());
         return clippedFace;
     }
     

@@ -1,5 +1,8 @@
 package no.uib.inf101.sem2.gameEngine;
 
+import java.awt.image.BufferedImage;
+import java.util.Map;
+
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
 import no.uib.inf101.sem2.gameEngine.model.CollisionDetector;
@@ -12,10 +15,10 @@ public class TrynityEngine implements gameEngine {
     EngineModel model;
     SceneMaker sceneMaker;
 
-    public TrynityEngine(Config config){
+    public TrynityEngine(Config config, Map<String, BufferedImage> textures){
         this.collisionDetector = new CollisionDetector();
         this.model = new EngineModel(config, collisionDetector);
-        this.sceneMaker = new SceneMaker(model, config);
+        this.sceneMaker = new SceneMaker(model, config, textures);
         this.controller = new EngineController(model, sceneMaker, config);
     }
 

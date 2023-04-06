@@ -5,6 +5,7 @@ import no.uib.inf101.sem2.game.controller.GameController;
 import no.uib.inf101.sem2.game.model.GameModel;
 import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.game.model.levels.TestLevel1;
+import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.TrynityEngine;
@@ -23,8 +24,10 @@ public class Main {
   public static void main(String[] args) {
 
     Config config = new DefaultConfig();
+    TextureLoader textureLoader = new TextureLoader();
 
-    gameEngine engine = new TrynityEngine(config);
+
+    gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
     Level map = new TestLevel1();
 
@@ -45,7 +48,7 @@ public class Main {
       }
     });
 
-    Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
+    /* Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override
       public void actionPerformed(java.awt.event.ActionEvent e) {
         engine.model().updateCameraPosition();
@@ -53,6 +56,6 @@ public class Main {
       }
     });
 
-    timer.start();
+    timer.start(); */
   }
 }

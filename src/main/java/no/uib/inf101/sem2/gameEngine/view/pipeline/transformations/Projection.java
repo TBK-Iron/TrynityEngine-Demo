@@ -49,6 +49,6 @@ public class Projection implements Transformation {
             
             newVertices.add(transformedV.getPoint());
         }
-        return new Face(newVertices, face.getColor());
+        return new Face(newVertices, face.getTexture());
     }
 }

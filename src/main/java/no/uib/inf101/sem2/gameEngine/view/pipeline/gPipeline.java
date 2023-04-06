@@ -1,11 +1,13 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Map;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.Camera;
@@ -112,7 +114,7 @@ public class gPipeline implements IPipeline {
 
                 transformedPoints.add(new Position3D(x, y, z));
             }
-            transformedFaces.add(new Face(transformedPoints, face.getColor()));
+            transformedFaces.add(new Face(transformedPoints, face.getTexture()));
         }
         return transformedFaces;
     }
@@ -160,15 +162,58 @@ public class gPipeline implements IPipeline {
                 
             }
            
-            castedFaces.add(new Face(castedPoints, face.getColor()));
+            castedFaces.add(new Face(castedPoints, face.getTexture()));
 
         }
 
         return castedFaces;
     }
 
+    @Override
+    public BufferedImage rastarizeFaces(ArrayList<Face> faces, Map<String, BufferedImage> textures) {
+        int[] rastarizedFace = new int[this.config.screenWidth() * this.config.screenHeight()];
 
-    public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
+        for(Face face : faces){
+            int[] textureData;
+            int textureWidth;
+            int textureHeight;
+            //Check if face is textured or just has a color
+            if(face.getTexture().textureKey().startsWith("#")){
+                Color color = Color.decode(face.getTexture().textureKey().trim());
+
+                textureData = new int[]{color.getRGB()};
+                textureWidth = 1;
+                textureHeight = 1;
+            } else {
+                BufferedImage texture = textures.get(face.getTexture().textureKey());
+                textureData = texture.getRGB(0, 0, texture.getWidth(), texture.getHeight(), null, 0, 0);
+                textureWidth = texture.getWidth();
+                textureHeight = texture.getHeight();
+            }
+
+            float[] vertices = new float[face.getPoints().size() * 2];
+            for(int i = 0; i < face.getPoints().size(); i++){
+                vertices[i * 2] = face.getPoints().get(i).x();
+                vertices[i * 2 + 1] = face.getPoints().get(i).y();
+            }
+
+            RasterizerKernel kernel = new RasterizerKernel(vertices, face.getTexture().uvMap(), textureData, rastarizedFace, textureWidth, textureHeight, this.config.screenWidth(), this.config.screenHeight());
+            int localSize = 256;
+            int globalSize = (int) Math.ceil((double) (this.config.screenWidth() * this.config.screenHeight()) / localSize) * localSize;
+            System.out.println("Global size: " + globalSize + " Local size: " + localSize);
+            System.out.println("Vertices: " + vertices.length + " UVs: " + face.getTexture().uvMap().length + " Texture data: " + textureData.length + " Rastarized face: " + rastarizedFace.length + "output: " + rastarizedFace.length);
+            
+            kernel.execute(globalSize, localSize);
+            kernel.dispose();
+            
+        }
+        BufferedImage sceneImage = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_ARGB);
+        sceneImage.setRGB(0, 0, this.config.screenWidth(), this.config.screenHeight(), rastarizedFace, 0, 0);
+        return sceneImage;
+    }
+
+
+    /* public BufferedImage getSceneImage(ArrayList<Face> castedFaces){
         BufferedImage buffer = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_RGB);
         Graphics2D bufferGraphics = buffer.createGraphics();
 
@@ -182,12 +227,12 @@ public class gPipeline implements IPipeline {
                 yVals[i] = (int) face.getPoints().get(i).y();
             }
             
-            bufferGraphics.setColor(face.getColor());
+            bufferGraphics.setColor(face.getTexture());
             Polygon face2D = new Polygon(xVals, yVals, xVals.length);
             bufferGraphics.fillPolygon(face2D);
         }
 
         return buffer;
-    }
+    } */
 
 }
