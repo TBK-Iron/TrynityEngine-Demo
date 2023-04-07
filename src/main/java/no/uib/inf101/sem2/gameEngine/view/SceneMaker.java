@@ -12,21 +12,22 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.gPipeline;
 
 public class SceneMaker{
     
-    gPipeline pipeline;
-    ViewableEngineModel model;
-    Map<String, BufferedImage> textures;
+    private final gPipeline pipeline;
+    private final ViewableEngineModel model;
+    private final Map<String, BufferedImage> textures;
 
-    final Config config;
+    private final Config config;
 
     public SceneMaker(ViewableEngineModel model, Config config, Map<String, BufferedImage> textures){
         this.config = config;
         this.model = model;
         this.textures = textures;
 
-        pipeline = new gPipeline(this.model, this.config);
+        pipeline = new gPipeline(this.config);
     }
 
     public BufferedImage getNextSceneImage(){
+        long startTime = System.nanoTime();
         ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getRenderShapes());
         ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes, this.model.getCamera());
         ArrayList<Shape3D> notCulledShapes = pipeline.cull(cameraSpaceShapes);
@@ -36,11 +37,11 @@ public class SceneMaker{
         ArrayList<Face> sortedFaces = pipeline.sortFacesByZ(NDCTransformedFaces);
         ArrayList<Face> castedFaces = pipeline.castTo2D(sortedFaces);
 
-        /* for(Face face : castedFaces){
-            System.out.println("face: " + face);
-        } */
-
         BufferedImage nextScene = pipeline.rastarizeFaces(castedFaces, this.textures);
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime);
+        System.out.println("FPS:" + 1000000000/duration);
         return nextScene;
     }
 }

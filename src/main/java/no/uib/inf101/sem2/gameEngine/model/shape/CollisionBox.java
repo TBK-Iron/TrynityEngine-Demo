@@ -5,9 +5,9 @@ import java.util.ArrayList;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
-public class CollisionBox {
-    GridPosition pos1;
-    GridPosition pos2;
+public final class CollisionBox {
+    private final GridPosition pos1;
+    private final GridPosition pos2;
 
     public CollisionBox(GridPosition pos1, GridPosition pos2){
         this.pos1 = pos1;

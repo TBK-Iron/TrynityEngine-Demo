@@ -4,12 +4,13 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
-public class Projection implements Transformation {
+public final class Projection implements Transformation {
     
-    Matrix matrix;
+    private final Matrix matrix;
 
     public Projection(float fov, float aspectRatio, float near, float far){
         this.matrix = createProjectionMatrix(fov, aspectRatio, near, far);
@@ -40,7 +41,7 @@ public class Projection implements Transformation {
     public Face transform(Face face) {
         ArrayList<GridPosition> newVertices = new ArrayList<GridPosition>();
         for(GridPosition vertex : face.getPoints()){
-            Vector v = new Vector(vertex);
+            Vector v = new Vector((Position3D) vertex);
             if(v.getDims() != 3){
                 throw new IllegalArgumentException("Vector must have 3 dimensions");
             }

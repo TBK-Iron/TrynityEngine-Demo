@@ -27,12 +27,12 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTran
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
 
 public class gPipeline implements IPipeline {
-    Config config;
-    Transformation projectTransformation;
-    Frustum frustum;
-    RasterizerKernel kernel;
+    private Config config;
+    private Transformation projectTransformation;
+    private Frustum frustum;
+    private final RasterizerKernel kernel;
 
-    public gPipeline(ViewableEngineModel model, Config config){
+    public gPipeline(Config config){
         this.config = config;
 
         this.projectTransformation = new Projection(config.verticalFOV(), ((float) config.screenWidth())/ ((float) config.screenHeight()), config.nearPlane(), config.farPlane());
@@ -46,7 +46,7 @@ public class gPipeline implements IPipeline {
         ArrayList<Shape3D> worldSpaceShapes = new ArrayList<>();
         for(Shape3D shape : shapes){
             Transformation rTrans = new RotateTransform(shape.getRotation().getNegRotation());
-            Transformation posTrans = new TranslateTransform(new Vector(shape.getPosition()));
+            Transformation posTrans = new TranslateTransform(new Vector((Position3D) shape.getPosition()));
             ArrayList<Face> worldSpaceFaces = new ArrayList<>();
 
             for(Face face : shape.getFaces()){
@@ -185,6 +185,9 @@ public class gPipeline implements IPipeline {
         Arrays.fill(rastarizedFace, 0xFFADD8E6);
 
         kernel.setOutput(rastarizedFace, this.config.screenWidth(), this.config.screenHeight());
+
+        long startTime = System.nanoTime();
+
         for(Face face : faces){
             int[] textureData;
             int textureWidth;
@@ -228,13 +231,21 @@ public class gPipeline implements IPipeline {
             kernel.setVertices(vertices, face.getTexture().uvMap());
             kernel.setStart(startI);
     
-            Range range = Range.create((int) Math.ceil((endI - startI)/256)*256, 256); 
+            int localSize = 256;
+
+            //Taking the closest multiple of localSize to the number of pixels to process, this avoids an error which makes the kernel not run on the gpu.
+            Range range = Range.create((int) Math.ceil((endI - startI)/localSize)*localSize, localSize); 
+            
             //System.out.println("Global size: " + globalSize + " Local size: " + localSize);
             //System.out.println("Vertices: " + vertices.length + " UVs: " + face.getTexture().uvMap().length + " Texture data: " + textureData.length + " Rastarized face: " + rastarizedFace.length);
             
             kernel.execute(range);
             kernel.get(rastarizedFace);
         }
+
+        long endTime = System.nanoTime();
+        long duration = (endTime - startTime) / 1000000;
+        //System.out.println("Rastarization time: " + duration + "ms");
 
         BufferedImage sceneImage = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_ARGB);
         

@@ -9,11 +9,11 @@ import no.uib.inf101.sem2.gameEngine.model.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.EngineModel;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
-public class TrynityEngine implements gameEngine {
-    EngineController controller;
-    CollisionDetector collisionDetector;
-    EngineModel model;
-    SceneMaker sceneMaker;
+public final class TrynityEngine implements gameEngine {
+    private final EngineController controller;
+    private final CollisionDetector collisionDetector;
+    private final EngineModel model;
+    private final SceneMaker sceneMaker;
 
     public TrynityEngine(Config config, Map<String, BufferedImage> textures){
         this.collisionDetector = new CollisionDetector();

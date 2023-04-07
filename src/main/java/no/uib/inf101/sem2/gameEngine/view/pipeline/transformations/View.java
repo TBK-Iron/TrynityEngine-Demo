@@ -9,8 +9,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
-public class View implements Transformation {
-    Matrix matrix;
+public final class View implements Transformation {
+    private final Matrix matrix;
 
     public View(RelativeRotation cameraRotation, GridPosition cameraPos){
         this.matrix = createViewMatrix(cameraRotation, cameraPos);
@@ -24,7 +24,7 @@ public class View implements Transformation {
             {rotM.get(2, 0), rotM.get(2, 1), rotM.get(2, 2), 0},
             {0, 0, 0, 1}
         });
-        Matrix positionMatrix = new TranslateTransform(new Vector(cameraPos).scaledBy(-1)).getMatrix();
+        Matrix positionMatrix = new TranslateTransform(new Vector((Position3D) cameraPos).scaledBy(-1)).getMatrix();
         Matrix viewMatrix = Matrix.multiply(expRotationMatrix, positionMatrix);
         return viewMatrix;
     }

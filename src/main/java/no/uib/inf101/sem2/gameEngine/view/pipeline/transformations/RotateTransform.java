@@ -9,9 +9,9 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
-public class RotateTransform implements Transformation {
+public final class RotateTransform implements Transformation {
     
-    Matrix matrix;
+    private final Matrix matrix;
 
     public RotateTransform(RelativeRotation rotation){
         this.matrix = getRotationMatrix(rotation);
@@ -54,7 +54,7 @@ public class RotateTransform implements Transformation {
     public Face transform(Face face) {
         ArrayList<GridPosition> newVertices = new ArrayList<GridPosition>();
         for (GridPosition vertex : face.getPoints()) {
-            Vector t = this.matrix.multiply(new Vector(vertex));
+            Vector t = this.matrix.multiply(new Vector((Position3D) vertex));
             newVertices.add(new Position3D(t.get(0), t.get(1), t.get(2)));
         }
         return new Face(newVertices, face.getTexture());

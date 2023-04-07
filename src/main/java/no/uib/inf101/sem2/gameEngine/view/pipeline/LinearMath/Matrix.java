@@ -1,9 +1,9 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
 
-public class Matrix {
+public final class Matrix {
     
-    float[][] value;
+    private final float[][] value;
 
     public Matrix(float[][] value){
         if(!isValid(value)){

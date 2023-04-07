@@ -6,17 +6,19 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position4D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
-public class Vector {
-    float[] value;
+public final class Vector {
+    private final float[] value;
+
     public Vector(float[] value){
         this.value = value;
     }
 
-    public Vector(GridPosition value){
-        this.value = new float[3];
-        this.value[0] = value.x();
-        this.value[1] = value.y();
-        this.value[2] = value.z();
+    public Vector(Position3D value){
+        this.value = new float[]{
+            value.x(),
+            value.y(),
+            value.z()
+        };
     }
 
     public static Vector getVector(GridPosition p1, GridPosition p2){

@@ -8,8 +8,8 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
-public class TranslateTransform implements Transformation {
-    Matrix matrix;
+public final class TranslateTransform implements Transformation {
+    private final Matrix matrix;
 
     public TranslateTransform(Vector position) {
         this.matrix = getPosistionMatrix(position);

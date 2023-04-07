@@ -8,8 +8,9 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
-public class ViewProjection implements Transformation {
-    Matrix matrix;
+public final class ViewProjection implements Transformation {
+    private final Matrix matrix;
+
     public ViewProjection(Matrix viewM, Matrix projMatrix){
         this.matrix = createViewProjectionMatrix(viewM, projMatrix);
     }
@@ -35,7 +36,7 @@ public class ViewProjection implements Transformation {
     public Face transform(Face face) {
         ArrayList<GridPosition> newVertices = new ArrayList<GridPosition>();
         for (GridPosition vertex : face.getPoints()) {
-            Vector t = this.matrix.multiply(new Vector(vertex));
+            Vector t = this.matrix.multiply(new Vector((Position3D) vertex));
             newVertices.add(new Position3D(t.get(0), t.get(1), t.get(2)));
         }
         return new Face(newVertices, face.getTexture());

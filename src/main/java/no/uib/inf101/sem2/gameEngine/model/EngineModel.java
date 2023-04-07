@@ -76,9 +76,9 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     public void updateCameraPosition(){
         if(this.cameraMoveSpeed.magnitude() != 0){
             if(this.camera.collisionShapePoints.isEmpty()){
-                this.camera.setPos(Vector.add(new Vector(this.camera.getPos()), this.cameraMoveSpeed).getPoint());
+                this.camera.setPos(Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint());
             }else if(!collisionDetector.isColliding(this.camera.getCollisionPoints(), this.camera.getPos())){
-                this.camera.setPos(Vector.add(new Vector(this.camera.getPos()), this.cameraMoveSpeed).getPoint());
+                this.camera.setPos(Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint());
             }
         }
         //System.out.println("Camera position set to: " + this.cameraPos);

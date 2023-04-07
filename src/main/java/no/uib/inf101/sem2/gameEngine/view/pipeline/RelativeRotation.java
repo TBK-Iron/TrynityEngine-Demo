@@ -1,29 +1,27 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
-public class RelativeRotation {
-    float pivot;
-    float upDown;
-    float leftRight;
+public final class RelativeRotation {
+    private final float pivot;
+    private final float upDown;
+    private final float leftRight;
 
     public RelativeRotation(float pivot, float upDown, float leftRight){
-        this.pivot = pivot;
-        this.upDown = upDown;
-        this.leftRight = leftRight;
-        validateRotation();
+        this.pivot = pivot % ((float) (2*Math.PI));
+
+        if(upDown > Math.PI/2){
+            this.upDown = (float) Math.PI/2;
+        } else if (upDown < -Math.PI/2){
+            this.upDown = -(float) Math.PI/2;
+        } else {
+            this.upDown = upDown;
+        }
+        
+        this.leftRight = leftRight % ((float) (2*Math.PI));
     }
 
 
     public RelativeRotation(float upDown, float leftRight){
         this(0, upDown, leftRight);
-    }
-
-    private void validateRotation(){
-        if(this.upDown > Math.PI/2){
-            this.upDown = (float) Math.PI/2;
-        } else if (upDown < -Math.PI/2){
-            this.upDown = -(float) Math.PI/2;
-        }
-        this.leftRight = this.leftRight % ((float) (2*Math.PI));
     }
 
     public RelativeRotation getNegRotation(){

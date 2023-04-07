@@ -10,7 +10,7 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class Frustum {
-    Plane[] planes;
+    private Plane[] planes;
 
     public Frustum(Matrix projectionMatrix, float near, float far){
 
@@ -27,15 +27,13 @@ public class Frustum {
         System.out.println("Far: " + planes[5]); */
     }
 
-    private void extractPlanes(Matrix projMatrix, float near, float far){
-        float[][] m = projMatrix.value;
-
-        this.planes[0] = new Plane(new Vector(new float[]{m[0][3] + m[0][0], m[1][3] + m[1][0], m[2][3] + m[2][0]}), 0); // Left
-        this.planes[1] = new Plane(new Vector(new float[]{m[0][3] - m[0][0], m[1][3] - m[1][0], m[2][3] - m[2][0]}), 0); // Right
-        this.planes[2] = new Plane(new Vector(new float[]{m[0][3] + m[0][1], m[1][3] + m[1][1], m[2][3] + m[2][1]}), 0); // Bottom
-        this.planes[3] = new Plane(new Vector(new float[]{m[0][3] - m[0][1], m[1][3] - m[1][1], m[2][3] - m[2][1]}), 0); // Top
-        this.planes[4] = new Plane(new Vector(new float[]{m[0][3] + m[0][2], m[1][3] + m[1][2], m[2][3] + m[2][2]}), near); // Near
-        this.planes[5] = new Plane(new Vector(new float[]{m[0][3] - m[0][2], m[1][3] - m[1][2], m[2][3] - m[2][2]}), far); // Far
+    private void extractPlanes(Matrix m, float near, float far){
+        this.planes[0] = new Plane(new Vector(new float[]{m.get(0,3) + m.get(0,0), m.get(1,3) + m.get(1,0), m.get(2,3) + m.get(2,0)}), 0); // Left
+        this.planes[1] = new Plane(new Vector(new float[]{m.get(0,3)- m.get(0,0), m.get(1,3)- m.get(1,0), m.get(2,3)- m.get(2,0)}), 0); // Right
+        this.planes[2] = new Plane(new Vector(new float[]{m.get(0,3)+ m.get(0,1), m.get(1,3)+ m.get(1,1), m.get(2,3)+ m.get(2,1)}), 0); // Bottom
+        this.planes[3] = new Plane(new Vector(new float[]{m.get(0,3)- m.get(0,1), m.get(1,3)- m.get(1,1), m.get(2,3)- m.get(2,1)}), 0); // Top
+        this.planes[4] = new Plane(new Vector(new float[]{m.get(0,3)+ m.get(0,2), m.get(1,3)+ m.get(1,2), m.get(2,3)+ m.get(2,2)}), near); // Near
+        this.planes[5] = new Plane(new Vector(new float[]{m.get(0,3)- m.get(0,2), m.get(1,3)- m.get(1,2), m.get(2,3)- m.get(2,2)}), far); // Far
 
     }
 
@@ -53,7 +51,7 @@ public class Frustum {
         float radius = boundingSphere.radius();
 
         for (Plane plane : planes) {
-            float distance = Vector.dotProduct(plane.normal, new Vector(center)) - plane.dist;
+            float distance = Vector.dotProduct(plane.normal, new Vector((Position3D) center)) - plane.dist;
             //System.out.println("Distance: " + distance + " Radius: " + radius);
             // If the bounding sphere is entirely outside the plane, the shape should be culled
             if (distance > radius) {

@@ -71,7 +71,7 @@ public class Face {
             if (point.y() > maxVals[1]){
                 maxVals[1] = point.y();
             }
-            //Y
+            //Z
             if(point.z() < minVals[2]){
                 minVals[2] = point.z();
             }
@@ -151,7 +151,7 @@ public class Face {
             GridPosition currentPoint = this.points.get(i);
             Vector v = Vector.getVector(closestPoint, currentPoint);
           
-            float t = -Vector.dotProduct(v, new Vector(closestPoint))/((float) Math.pow(v.get(0), 2) + (float) Math.pow(v.get(1), 2)+ (float) Math.pow(v.get(2), 2));
+            float t = -Vector.dotProduct(v, new Vector((Position3D) closestPoint))/((float) Math.pow(v.get(0), 2) + (float) Math.pow(v.get(1), 2)+ (float) Math.pow(v.get(2), 2));
             
             if(t < 0){
                 //closestPoint = closestPoint;
