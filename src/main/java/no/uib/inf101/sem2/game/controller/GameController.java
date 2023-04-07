@@ -27,8 +27,7 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void mouseDragged(MouseEvent arg0) {
-        // TODO Auto-generated method stub
-        //sthrow new UnsupportedOperationException("Unimplemented method 'mouseDragged'");
+        
     }
 
     @Override

@@ -7,8 +7,6 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
-import java.awt.Color;
-
 public class Face {
     ArrayList<GridPosition> points;
     Vector nVector;
@@ -183,18 +181,16 @@ public class Face {
             float[] face2uv = new float[this.texture.uvMap().length - 2];
             face2uv[0] = this.texture.uvMap()[0];
             face2uv[1] = this.texture.uvMap()[1];
-            System.out.println(this.texture.uvMap()[0]);
+            //System.out.println(this.texture.uvMap()[0]);
             for(int i = 2; i < face2uv.length; i++){
-                System.out.println(i + ": " + this.texture.uvMap()[i+2]);
+                //System.out.println(i + ": " + this.texture.uvMap()[i+2]);
                 face2uv[i] = this.texture.uvMap()[i+2];
             }
 
 
             Face face1 = new Face(threeFirstPoints, new FaceTexture(this.texture.textureKey(), face1uv));
-            System.out.println("test1");
             this.points.remove(1);
             Face face2 = new Face(this.points, new FaceTexture(this.texture.textureKey(), face2uv));
-            System.out.println("test2");
 
             faces.add(face1);
             faces.addAll(face2.getThreeVertexFaces());

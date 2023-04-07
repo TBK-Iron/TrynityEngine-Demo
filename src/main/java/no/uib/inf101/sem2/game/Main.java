@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.game;
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.controller.GameController;
 import no.uib.inf101.sem2.game.model.GameModel;
+import no.uib.inf101.sem2.game.model.levels.GrassWorld;
 import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.game.model.levels.TestLevel1;
 import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
@@ -48,7 +49,7 @@ public class Main {
       }
     });
 
-    /* Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
+    Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override
       public void actionPerformed(java.awt.event.ActionEvent e) {
         engine.model().updateCameraPosition();
@@ -56,6 +57,6 @@ public class Main {
       }
     });
 
-    timer.start(); */
+    timer.start();
   }
 }

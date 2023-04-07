@@ -4,8 +4,10 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
+import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class Frustum {
     Plane[] planes;
@@ -64,7 +66,6 @@ public class Frustum {
     }
 
 
-    //TODO: fix method for clipping faces with the frustum
     public Face clipFace(Face face) {
         Face clippedFace = face;
 
@@ -80,10 +81,16 @@ public class Frustum {
         ArrayList<GridPosition> inputVertices = face.getPoints();
         ArrayList<GridPosition> outputVertices = new ArrayList<>();
 
+        float[] inputUV = face.getTexture().uvMap();
+        float[] outputUV = new float[]{};
+
         for(int i = 0; i < inputVertices.size(); i++){
             GridPosition currentPoint = inputVertices.get(i);
             GridPosition nextPoint = inputVertices.get((i+1) % inputVertices.size());
 
+            float[] currentUV = new float[]{inputUV[i*2], inputUV[i*2+1]};
+            float[] nextUV = new float[]{inputUV[((i+1) % inputVertices.size())*2], inputUV[((i+1) % inputVertices.size())*2+1]};
+ 
             boolean isCurrentInside = plane.isVertexWithinPlane(currentPoint);
             boolean isNextInside = plane.isVertexWithinPlane(nextPoint);
 
@@ -91,17 +98,50 @@ public class Frustum {
 
             if(isCurrentInside){
                 outputVertices.add(currentPoint);
+                outputUV = appendFloatArray(outputUV, currentUV);
             }
             if(isCurrentInside != isNextInside){
-                GridPosition intersectionPoint = plane.interpolate(currentPoint, nextPoint);
+                float t = plane.calculateT(currentPoint, nextPoint);
+                GridPosition intersectionPoint = interpolatePosition(t, currentPoint, nextPoint);
+                float[] intersectionUV = interpolateUV(t, currentUV, nextUV);
                 if(intersectionPoint != null){
                     outputVertices.add(intersectionPoint);
+                    outputUV = appendFloatArray(outputUV, intersectionUV);
                 }
             }
         }
 
-        Face clippedFace = new Face(outputVertices, face.getTexture());
+        FaceTexture texture = new FaceTexture(face.getTexture().textureKey(), outputUV);
+        Face clippedFace = new Face(outputVertices, texture);
         return clippedFace;
+    }
+
+    private static float[] appendFloatArray(float[] array1, float[] array2){
+        float[] appendedArray = new float[array1.length + array2.length];
+        for(int i = 0; i < array1.length; i++){
+            appendedArray[i] = array1[i];
+        }
+        for(int i = 0; i < array2.length; i++){
+            appendedArray[i + array1.length] = array2[i];
+        }
+
+        return appendedArray;
+    }
+
+    private static GridPosition interpolatePosition(float t, GridPosition p1, GridPosition p2){
+        float x = p1.x() + t * (p2.x() - p1.x());
+        float y = p1.y() + t * (p2.y() - p1.y());
+        float z = p1.z() + t * (p2.z() - p1.z());
+
+        return new Position3D(x, y, z);
+    }
+
+    private static float[] interpolateUV(float t, float[] uv1, float[] uv2){
+        float[] interpolatedUV = new float[2];
+        interpolatedUV[0] = uv1[0] + t * (uv2[0] - uv1[0]);
+        interpolatedUV[1] = uv1[1] + t * (uv2[1] - uv1[1]);
+
+        return interpolatedUV;
     }
     
     

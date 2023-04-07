@@ -1,13 +1,14 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
 import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Polygon;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Map;
+
+import com.aparapi.Range;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.Camera;
@@ -29,12 +30,15 @@ public class gPipeline implements IPipeline {
     Config config;
     Transformation projectTransformation;
     Frustum frustum;
+    RasterizerKernel kernel;
 
     public gPipeline(ViewableEngineModel model, Config config){
         this.config = config;
 
         this.projectTransformation = new Projection(config.verticalFOV(), ((float) config.screenWidth())/ ((float) config.screenHeight()), config.nearPlane(), config.farPlane());
         this.frustum = new Frustum(this.projectTransformation.getMatrix(), this.config.nearPlane(), this.config.farPlane());
+
+        this.kernel = new RasterizerKernel();
     }
 
     @Override
@@ -74,6 +78,7 @@ public class gPipeline implements IPipeline {
 
     @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
+
         shapes = Culling.backfaceCull(shapes);
         shapes = Culling.viewfrustrumCull(shapes, this.frustum);
         //faces = occlusionCull(shapes);
@@ -83,10 +88,14 @@ public class gPipeline implements IPipeline {
 
     @Override
     public ArrayList<Face> clip(ArrayList<Shape3D> shapes){
+
         ArrayList<Face> clippedFaces = new ArrayList<>();
         for(Shape3D shape : shapes)
             for(Face face : shape.getFaces()){
-                clippedFaces.add(this.frustum.clipFace(face));
+                face = this.frustum.clipFace(face);
+                if(face.getPoints().size() != 0){
+                    clippedFaces.addAll(face.getThreeVertexFaces());
+                }
             }
         return clippedFaces;
     }
@@ -148,7 +157,7 @@ public class gPipeline implements IPipeline {
 
     @Override
     public ArrayList<Face> castTo2D(ArrayList<Face> faces){
-        
+
         ArrayList<Face> castedFaces = new ArrayList<>();
         for(Face face : faces){
             //System.out.println(face);
@@ -171,8 +180,11 @@ public class gPipeline implements IPipeline {
 
     @Override
     public BufferedImage rastarizeFaces(ArrayList<Face> faces, Map<String, BufferedImage> textures) {
-        int[] rastarizedFace = new int[this.config.screenWidth() * this.config.screenHeight()];
 
+        int[] rastarizedFace = new int[this.config.screenWidth() * this.config.screenHeight()];
+        Arrays.fill(rastarizedFace, 0xFFADD8E6);
+
+        kernel.setOutput(rastarizedFace, this.config.screenWidth(), this.config.screenHeight());
         for(Face face : faces){
             int[] textureData;
             int textureWidth;
@@ -186,29 +198,50 @@ public class gPipeline implements IPipeline {
                 textureHeight = 1;
             } else {
                 BufferedImage texture = textures.get(face.getTexture().textureKey());
-                textureData = texture.getRGB(0, 0, texture.getWidth(), texture.getHeight(), null, 0, 0);
                 textureWidth = texture.getWidth();
                 textureHeight = texture.getHeight();
+                textureData = texture.getRGB(0, 0, textureWidth, textureHeight, null, 0, textureWidth);
             }
 
             float[] vertices = new float[face.getPoints().size() * 2];
+
+            int[] lowestYandX = new int[] {0, Integer.MAX_VALUE};
+            int[] highestYandX = new int[] {0, Integer.MIN_VALUE};
+
             for(int i = 0; i < face.getPoints().size(); i++){
                 vertices[i * 2] = face.getPoints().get(i).x();
                 vertices[i * 2 + 1] = face.getPoints().get(i).y();
+                if(face.getPoints().get(i).y() < lowestYandX[1]){
+                    lowestYandX[0] = (int) face.getPoints().get(i).x();
+                    lowestYandX[1] = (int) face.getPoints().get(i).y();
+                } 
+                if(face.getPoints().get(i).y() > highestYandX[1]){
+                    highestYandX[0] = (int) face.getPoints().get(i).x();
+                    highestYandX[1] = (int) face.getPoints().get(i).y();
+                }
             }
 
-            RasterizerKernel kernel = new RasterizerKernel(vertices, face.getTexture().uvMap(), textureData, rastarizedFace, textureWidth, textureHeight, this.config.screenWidth(), this.config.screenHeight());
-            int localSize = 256;
-            int globalSize = (int) Math.ceil((double) (this.config.screenWidth() * this.config.screenHeight()) / localSize) * localSize;
-            System.out.println("Global size: " + globalSize + " Local size: " + localSize);
-            System.out.println("Vertices: " + vertices.length + " UVs: " + face.getTexture().uvMap().length + " Texture data: " + textureData.length + " Rastarized face: " + rastarizedFace.length + "output: " + rastarizedFace.length);
+            int startI = (int) (lowestYandX[1] * this.config.screenWidth() + lowestYandX[0]);
+            int endI = (int) (highestYandX[1] * this.config.screenWidth() + highestYandX[0]);
+
+            kernel.setTexture(textureData, textureWidth, textureHeight);
+            kernel.setVertices(vertices, face.getTexture().uvMap());
+            kernel.setStart(startI);
+    
+            Range range = Range.create((int) Math.ceil((endI - startI)/256)*256, 256); 
+            //System.out.println("Global size: " + globalSize + " Local size: " + localSize);
+            //System.out.println("Vertices: " + vertices.length + " UVs: " + face.getTexture().uvMap().length + " Texture data: " + textureData.length + " Rastarized face: " + rastarizedFace.length);
             
-            kernel.execute(globalSize, localSize);
-            kernel.dispose();
-            
+            kernel.execute(range);
+            kernel.get(rastarizedFace);
         }
+
         BufferedImage sceneImage = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_ARGB);
-        sceneImage.setRGB(0, 0, this.config.screenWidth(), this.config.screenHeight(), rastarizedFace, 0, 0);
+        
+        //kernel.dispose();
+
+        sceneImage.setRGB(0, 0, this.config.screenWidth(), this.config.screenHeight(), rastarizedFace, 0, this.config.screenWidth());
+        
         return sceneImage;
     }
 

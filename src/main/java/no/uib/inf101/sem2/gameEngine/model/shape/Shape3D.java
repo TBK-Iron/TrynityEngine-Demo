@@ -1,6 +1,5 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
-import java.awt.Color;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
@@ -72,9 +71,12 @@ public class Shape3D {
                         //Parse texture value
                         String textureKey = face[2];
                         String[] uv = face[3].split(";");
-                        float[] fuv = new float[uv.length];
+                        float[] fuv = new float[uv.length * 2];
                         for(int i = 0; i < uv.length; i++){
-                            fuv[i] = Float.parseFloat(uv[i]);
+                            String[] uvi = uv[i].replace("(", "").replace(")", "").split(",");
+
+                            fuv[i*2] = Float.parseFloat(uvi[0]);
+                            fuv[i*2 + 1] = Float.parseFloat(uvi[1]);
                         }
                         if(posisions.size() * 2 != fuv.length){
                             myReader.close();
@@ -87,7 +89,7 @@ public class Shape3D {
                     }
                     
                     
-                    faces.addAll(new Face(posisions, texture).getThreeVertexFaces());
+                    faces.add(new Face(posisions, texture));
                 }
             }
             myReader.close();

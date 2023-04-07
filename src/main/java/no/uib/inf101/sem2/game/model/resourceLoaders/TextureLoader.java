@@ -14,8 +14,11 @@ public class TextureLoader {
     public TextureLoader(){
         try {
             textures.put("trollface", ImageIO.read(new File("src/main/resources/textures/trollface.png")));
-
-
+            textures.put("checkered", ImageIO.read(new File("src/main/resources/textures/checkered.png")));
+            textures.put("grass", ImageIO.read(new File("src/main/resources/textures/grass.jpg")));
+            textures.put("bark", ImageIO.read(new File("src/main/resources/textures/bark.jpg")));
+            textures.put("leaves", ImageIO.read(new File("src/main/resources/textures/leaves.jpg")));
+            textures.put("brick", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
 
 
         } catch (IOException e) {

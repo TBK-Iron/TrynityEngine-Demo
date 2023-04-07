@@ -4,30 +4,24 @@ import com.aparapi.Kernel;
 
 public class RasterizerKernel extends Kernel{
 
-    private final float[] vertices; // Triangle vertices (xA, yA, xB, yB, xC, yC)
-    private final float[] texCoords; // Texture coordinates (uA, vA, uB, vB, uC, vC)
-    private final int[] texture; // Texture image as a 1D int array (width * height)
-    private final int[] output; // Output color buffer as a 1D int array (width * height)
+    private float[] vertices; // Triangle vertices (xA, yA, xB, yB, xC, yC)
+    private float[] texCoords; // Texture coordinates (uA, vA, uB, vB, uC, vC)
+    private int[] texture; // Texture image as a 1D int array (width * height)
+    private int[] output; // Output color buffer as a 1D int array (width * height)
 
-    private final int textureWidth;
-    private final int textureHeight;
-    private final int outputWidth;
-    private final int outputHeight;
+    private int textureWidth;
+    private int textureHeight;
+    private int outputWidth;
+    //private int outputHeight;
 
-    public RasterizerKernel(float[] vertices, float[] texCoords, int[] texture, int[] output, int textureWidth, int textureHeight, int outputWidth, int outputHeight) {
-        this.vertices = vertices;
-        this.texCoords = texCoords;
-        this.texture = texture;
-        this.textureWidth = textureWidth;
-        this.textureHeight = textureHeight;
-        this.outputWidth = outputWidth;
-        this.outputHeight = outputHeight;
-        this.output = output;
+    private int startI;
+
+    public RasterizerKernel() {
     }
 
     @Override
     public void run() {
-        int gid = getGlobalId();
+        int gid = getGlobalId() + this.startI;
 
         int xP = gid % this.outputWidth;
         int yP = gid / this.outputWidth;
@@ -55,5 +49,26 @@ public class RasterizerKernel extends Kernel{
 
             this.output[gid] = pixelColor;
         }
+    }
+
+    public void setTexture(int[] texture, int textureWidth, int textureHeight) {
+        this.texture = texture;
+        this.textureWidth = textureWidth;
+        this.textureHeight = textureHeight;
+    }
+
+    public void setVertices(float[] vertices, float[] texCoords) {
+        this.vertices = vertices;
+        this.texCoords = texCoords;
+    }
+
+    public void setOutput(int[] output, int outputWidth, int outputHeight) {
+        this.output = output;
+        this.outputWidth = outputWidth;
+        //this.outputHeight = outputHeight;
+    }
+
+    public void setStart(int start) {
+        this.startI = start;
     }
 }
