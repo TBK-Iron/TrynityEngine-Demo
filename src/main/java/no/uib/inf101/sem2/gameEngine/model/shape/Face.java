@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
@@ -52,7 +53,33 @@ public class Face {
         }
     }
 
-    public Vector[] getAABB(){
+    public Vector[] getAABB_xy(){
+        float[] minVals = new float[] {999999999, 999999999};
+        float[] maxVals = new float[] {-999999999, -999999999};
+
+        for(GridPosition point : this.points){
+            //X
+            if(point.x() < minVals[0]){
+                minVals[0] = point.x();
+            }
+            if (point.x() > maxVals[0]){
+                maxVals[0] = point.x();
+            }
+            //Y
+            if(point.y() < minVals[1]){
+                minVals[1] = point.y();
+            }
+            if (point.y() > maxVals[1]){
+                maxVals[1] = point.y();
+            }
+        }
+        Vector minVector = new Vector(minVals);
+        Vector maxVector = new Vector(maxVals);
+
+        return new Vector[] {minVector, maxVector};
+    }
+
+    /* public Vector[] getAABB_xyz(){
         float[] minVals = new float[] {999999999, 999999999, 999999999};
         float[] maxVals = new float[] {-999999999, -999999999, -999999999};
 
@@ -83,7 +110,7 @@ public class Face {
         Vector maxVector = new Vector(maxVals);
 
         return new Vector[] {minVector, maxVector};
-    }
+    } */
 
 
     @Override

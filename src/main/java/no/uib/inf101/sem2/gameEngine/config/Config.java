@@ -17,4 +17,6 @@ public interface Config {
     public float cameraMoveSpeed();
 
     public void resizeFrame(int width, int height);
+
+    public int skyboxColor();
 }

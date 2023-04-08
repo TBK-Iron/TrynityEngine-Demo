@@ -23,7 +23,7 @@ public class SceneMaker{
         this.model = model;
         this.textures = textures;
 
-        pipeline = new gPipeline(this.config);
+        pipeline = new gPipeline(this.config, this.textures);
     }
 
     public BufferedImage getNextSceneImage(){
@@ -37,11 +37,12 @@ public class SceneMaker{
         ArrayList<Face> sortedFaces = pipeline.sortFacesByZ(NDCTransformedFaces);
         ArrayList<Face> castedFaces = pipeline.castTo2D(sortedFaces);
 
-        BufferedImage nextScene = pipeline.rastarizeFaces(castedFaces, this.textures);
+        BufferedImage nextScene = pipeline.rastarizeFaces(castedFaces);
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("FPS:" + 1000000000/duration);
+        System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + duration/1000000);
+        
         return nextScene;
     }
 }

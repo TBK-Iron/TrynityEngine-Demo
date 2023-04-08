@@ -9,6 +9,7 @@ public class DefaultConfig implements Config {
     final float farPlane = 500f;
     final float fps = 60f;
     final float cameraMoveSpeed = 0.04f;
+    final int skyboxColor = 0xFFADD8E6;
 
     @Override
     public float verticalFOV() {
@@ -46,6 +47,11 @@ public class DefaultConfig implements Config {
         System.out.println("Resizing frame to: " + width + "x" + height);
         this.screenWidth = width;
         this.screenHeight = height;
+    }
+
+    @Override
+    public int skyboxColor(){
+        return this.skyboxColor;
     }
     
 }

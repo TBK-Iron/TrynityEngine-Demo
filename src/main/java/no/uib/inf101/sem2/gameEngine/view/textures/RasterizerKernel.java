@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.view.pipeline;
+package no.uib.inf101.sem2.gameEngine.view.textures;
 
 import com.aparapi.Kernel;
 
@@ -8,23 +8,24 @@ public class RasterizerKernel extends Kernel{
     private float[] texCoords; // Texture coordinates (uA, vA, uB, vB, uC, vC)
     private int[] texture; // Texture image as a 1D int array (width * height)
     private int[] output; // Output color buffer as a 1D int array (width * height)
+    private float[] zBuffer; // Z buffer as a 1D float array (width * height)
 
     private int textureWidth;
     private int textureHeight;
-    private int outputWidth;
-    //private int outputHeight;
+    private int faceWidth;
+    private int totalWidth;
 
-    private int startI;
+    private int dispX;
+    private int dispY;
 
-    public RasterizerKernel() {
-    }
+    public RasterizerKernel() {}
 
     @Override
     public void run() {
-        int gid = getGlobalId() + this.startI;
+        int gid = getGlobalId();
 
-        int xP = gid % this.outputWidth;
-        int yP = gid / this.outputWidth;
+        int xP = gid % this.faceWidth + this.dispX;
+        int yP = gid / this.faceWidth + this.dispY;
 
         // Calculate barycentric coordinates
         float xA = this.vertices[0];
@@ -42,12 +43,19 @@ public class RasterizerKernel extends Kernel{
         if (alpha >= 0 && beta >= 0 && gamma >= 0) {
             //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
             float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
+            if(u > 1){
+                u = u - (int) u;
+            }
+            
             float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
+            if(v > 1){
+                v = v - (int) v;
+            }
 
             //Get the color that corresponds to the texture coordinates
             int pixelColor = this.texture[(int) (u * this.textureWidth) + (int) (v * this.textureHeight) * this.textureWidth];
 
-            this.output[gid] = pixelColor;
+            this.output[xP + yP * totalWidth] = pixelColor;
         }
     }
 
@@ -62,13 +70,21 @@ public class RasterizerKernel extends Kernel{
         this.texCoords = texCoords;
     }
 
-    public void setOutput(int[] output, int outputWidth, int outputHeight) {
+    public void setOutput(int[] output, int totalWidth) {
         this.output = output;
-        this.outputWidth = outputWidth;
-        //this.outputHeight = outputHeight;
+        this.totalWidth = totalWidth;
     }
 
-    public void setStart(int start) {
-        this.startI = start;
+    public void setWidth(int width) {
+        this.faceWidth = width;
+    }
+
+    public void setDisp(int dispX, int dispY) {
+        this.dispX = dispX;
+        this.dispY = dispY;
+    }
+
+    public void setZBuffer(float[] zBuffer) {
+        this.zBuffer = zBuffer;
     }
 }

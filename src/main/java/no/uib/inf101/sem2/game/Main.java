@@ -6,6 +6,7 @@ import no.uib.inf101.sem2.game.model.GameModel;
 import no.uib.inf101.sem2.game.model.levels.GrassWorld;
 import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.game.model.levels.TestLevel1;
+import no.uib.inf101.sem2.game.model.levels.TextureTest;
 import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
@@ -30,7 +31,7 @@ public class Main {
 
     gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
-    Level map = new TestLevel1();
+    Level map = new GrassWorld();
 
     GameModel model = new GameModel(map, engine.model(), engine.collisionDetector());
     GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker());
