@@ -208,7 +208,7 @@ public class Face {
             throw new IllegalArgumentException("Face must have at least 3 points");
         } else if(this.points.size() == 3){
             faces.add(this);
-        } else {
+        } else { 
             ArrayList<GridPosition> threeFirstPoints = new ArrayList<>();
             threeFirstPoints.add(this.points.get(0));
             threeFirstPoints.add(this.points.get(1));

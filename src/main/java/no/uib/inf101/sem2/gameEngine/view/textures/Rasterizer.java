@@ -40,7 +40,7 @@ public class Rasterizer {
 
         kernel.setOutput(rastarizedImageData, this.config.screenWidth());
 
-        
+        //System.out.println("\nRASTARIZING:\n");
 
         for(Face face : faces){
             int[] textureData;
@@ -67,10 +67,11 @@ public class Rasterizer {
             int dispX = (int) AABB[0].get(0);
             int dispY = (int) AABB[0].get(1);
 
-            float[] vertices = new float[face.getPoints().size() * 2];
+            float[] vertices = new float[face.getPoints().size() * 3];
             for(int i = 0; i < face.getPoints().size(); i++){
-                vertices[i*2] = face.getPoints().get(i).x();
-                vertices[i*2 + 1] = face.getPoints().get(i).y();
+                vertices[i*3] = face.getPoints().get(i).x();
+                vertices[i*3 + 1] = face.getPoints().get(i).y();
+                vertices[i*3 + 2] = face.getPoints().get(i).z();
             }
 
             int faceWidth = (int) ((AABB[1].get(0) - AABB[0].get(0)));
@@ -87,9 +88,9 @@ public class Rasterizer {
 
             float[] uv = face.getTexture().uvMap();
 
-            System.out.println("u1: " + uv[0] + " v1: " + uv[1] + " u2: " + uv[2] + " v2: " + uv[3] + " u3: " + uv[4] + " v3: " + uv[5]);
+            /* System.out.println("u1: " + uv[0] + " v1: " + uv[1] + " u2: " + uv[2] + " v2: " + uv[3] + " u3: " + uv[4] + " v3: " + uv[5]);
             System.out.println("x1: " + vertices[0] + " y1: " + vertices[1] + " x2: " + vertices[2] + " y2: " + vertices[3] + " x3: " + vertices[4] + " y3: " + vertices[5]);
-            System.out.println();
+            System.out.println(); */
     
             int localSize = 256;
 
@@ -103,8 +104,6 @@ public class Rasterizer {
             kernel.get(rastarizedImageData);
 
         }
-
-        System.out.println("\n\n\n");
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;

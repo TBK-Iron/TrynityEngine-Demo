@@ -31,7 +31,7 @@ public class Main {
 
     gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
-    Level map = new GrassWorld();
+    Level map = new TestLevel1();
 
     GameModel model = new GameModel(map, engine.model(), engine.collisionDetector());
     GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker());
@@ -50,7 +50,7 @@ public class Main {
       }
     });
 
-    /* Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
+    Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override
       public void actionPerformed(java.awt.event.ActionEvent e) {
         engine.model().updateCameraPosition();
@@ -58,6 +58,6 @@ public class Main {
       }
     });
  
-    timer.start(); */
+    timer.start();
   }
 }

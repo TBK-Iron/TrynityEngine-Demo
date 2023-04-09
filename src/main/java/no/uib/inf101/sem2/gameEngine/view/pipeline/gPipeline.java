@@ -90,14 +90,48 @@ public class gPipeline implements IPipeline {
     @Override
     public ArrayList<Face> clip(ArrayList<Shape3D> shapes){
 
+       
+
         ArrayList<Face> clippedFaces = new ArrayList<>();
-        for(Shape3D shape : shapes)
+        for(Shape3D shape : shapes){
             for(Face face : shape.getFaces()){
+                /* System.out.println("Unclipped face:");
+                for(GridPosition point : face.getPoints()){
+                    System.out.println("x: " + point.x() + " y: " + point.y() + " z: " + point.z());
+                }
+                float[] uv = face.getTexture().uvMap();
+                for(int i = 0; i < uv.length/2; i++){
+                    System.out.print("u" + i + ": " + uv[i*2] + " v" + i + ": " + uv[i*2+1] + " ");
+                }
+                System.out.println(); */
                 face = this.frustum.clipFace(face);
+
+                /* System.out.println("Clipped face:");
+                for(GridPosition point : face.getPoints()){
+                    System.out.println("x: " + point.x() + " y: " + point.y() + " z: " + point.z());
+                }
+                uv = face.getTexture().uvMap();
+                for(int i = 0; i < uv.length/2; i++){
+                    System.out.print("u" + i + ": " + uv[i*2] + " v" + i + ": " + uv[i*2+1] + " ");
+                }
+                System.out.println(); */
+
+
                 if(face.getPoints().size() != 0){
                     clippedFaces.addAll(face.getThreeVertexFaces());
                 }
             }
+        }
+
+
+        /* System.out.println("Clipped split faces:");
+        for(Face face : clippedFaces){
+            for(GridPosition point : face.getPoints()){
+                System.out.println("x: " + point.x() + " y: " + point.y() + " z: " + point.z());
+            }
+            float[] uv = face.getTexture().uvMap();
+            System.out.println("u1: " + uv[0] + " v1: " + uv[1] + " u2: " + uv[2] + " v2: " + uv[3] + " u3: " + uv[4] + " v3: " + uv[5] + "\n");
+        } */
         return clippedFaces;
     }
 
@@ -120,9 +154,8 @@ public class gPipeline implements IPipeline {
             for(GridPosition point : face.getPoints()){
                 float x = point.x() / point.w();
                 float y = point.y() / point.w();
-                float z = point.z() / point.w();
 
-                transformedPoints.add(new Position3D(x, y, z));
+                transformedPoints.add(new Position3D(x, y, point.z()));
             }
             transformedFaces.add(new Face(transformedPoints, face.getTexture()));
         }

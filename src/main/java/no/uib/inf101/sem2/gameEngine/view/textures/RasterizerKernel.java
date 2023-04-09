@@ -30,13 +30,18 @@ public class RasterizerKernel extends Kernel{
         // Calculate barycentric coordinates
         float xA = this.vertices[0];
         float yA = this.vertices[1];
-        float xB = this.vertices[2];
-        float yB = this.vertices[3];
-        float xC = this.vertices[4];
-        float yC = this.vertices[5];
+        float zA_inv = 1 / this.vertices[2];
+        float xB = this.vertices[3];
+        float yB = this.vertices[4];
+        float zB_inv = 1 / this.vertices[5];
+        float xC = this.vertices[6];
+        float yC = this.vertices[7];
+        float zC_inv = 1 / this.vertices[8];
 
-        float alpha = ((yB - yC) * (xP - xC) + (xC - xB) * (yP - yC)) / ((yB - yC) * (xA - xC) + (xC - xB) * (yA - yC));
-        float beta  = ((yC - yA) * (xP - xC) + (xA - xC) * (yP - yC)) / ((yB - yC) * (xA - xC) + (xC - xB) * (yA - yC));
+        float areaABC = ((yB - yC) * (xA - xC) + (xC - xB) * (yA - yC));
+
+        float alpha = ((yB - yC) * (xP - xC) + (xC - xB) * (yP - yC)) / areaABC;
+        float beta  = ((yC - yA) * (xP - xC) + (xA - xC) * (yP - yC)) / areaABC;
         float gamma = 1 - alpha - beta;
 
         /* float alpha = ((xP * yB + xB * yC + xC * yP) - (yP * xB + yB * xC + yC * xP)) / ((xA * yB + xB * yC + xC * yA) - (yA * xB + yB * xC + yC * xA));
@@ -45,6 +50,14 @@ public class RasterizerKernel extends Kernel{
 
         // Check if point is inside triangle
         if (alpha >= 0 && beta >= 0 && gamma >= 0) {
+
+            float zP_inv = alpha * zA_inv + beta * zB_inv + gamma * zC_inv;
+
+            //Correct the barycentric coordinates for perspective
+            alpha = alpha * zA_inv / zP_inv;
+            beta = beta * zB_inv / zP_inv;
+            gamma = gamma * zC_inv / zP_inv;
+
             //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
             float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
             //u = u % 1.00000001f;
@@ -55,8 +68,8 @@ public class RasterizerKernel extends Kernel{
             v = v - (int) v;
 
             //Get the color that corresponds to the texture coordinates
-            int textureX = (int) (u * this.textureWidth) % this.textureWidth;
-            int textureY = (int) (v * this.textureHeight) % this.textureHeight;
+            int textureX = (int) (u * (this.textureWidth - 1));
+            int textureY = (int) (v * (this.textureHeight - 1));
             int pixelColor = this.texture[textureX + textureY * this.textureWidth];
 
             this.output[xP + yP * totalWidth] = pixelColor;

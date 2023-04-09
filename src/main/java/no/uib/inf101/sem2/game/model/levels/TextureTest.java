@@ -13,7 +13,7 @@ public class TextureTest implements Level {
     public ArrayList<ShapeData> loadShapes() {
         ArrayList<ShapeData> shapes = new ArrayList<>();
         
-        shapes.add(new ShapeData(new Position3D(0, 0, 0), new RelativeRotation(0, 0), new File("src/main/resources/shapes/triangle.trym")));
+        shapes.add(new ShapeData(new Position3D(1, 0, 0), new RelativeRotation(0, 0), new File("src/main/resources/shapes/triangle.trym")));
         return shapes;
     }
 
