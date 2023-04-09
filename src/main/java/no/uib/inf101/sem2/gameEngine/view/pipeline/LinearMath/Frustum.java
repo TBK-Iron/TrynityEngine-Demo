@@ -134,6 +134,28 @@ public class Frustum {
         return new Position3D(x, y, z);
     }
 
+    /* private static float[] interpolateUV(float t, float[] uv1, float[] uv2, float z1, float z2) {
+        System.out.println("z1: " + z1 + " z2: " + z2);
+        System.out.println("current:" + uv1[0] + " " + uv1[1] + " next: " + uv2[0] + " " + uv2[1]);
+        float z1Inv = 1.0f / z1;
+        float z2Inv = 1.0f / z2;
+    
+        float u1 = uv1[0] * z1Inv;
+        float v1 = uv1[1] * z1Inv;
+        float u2 = uv2[0] * z2Inv;
+        float v2 = uv2[1] * z2Inv;
+    
+        float interpolatedZInv = z1Inv + t * (z2Inv - z1Inv);
+        float interpolatedU = u1 + t * (u2 - u1);
+        float interpolatedV = v1 + t * (v2 - v1);
+    
+        float[] interpolatedUV = new float[2];
+        interpolatedUV[0] = interpolatedU / interpolatedZInv;
+        interpolatedUV[1] = interpolatedV / interpolatedZInv;
+    
+        return interpolatedUV;
+    } */
+
     private static float[] interpolateUV(float t, float[] uv1, float[] uv2){
         float[] interpolatedUV = new float[2];
         interpolatedUV[0] = uv1[0] + t * (uv2[0] - uv1[0]);

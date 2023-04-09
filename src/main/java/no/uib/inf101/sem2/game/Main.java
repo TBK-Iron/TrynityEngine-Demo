@@ -50,14 +50,14 @@ public class Main {
       }
     });
 
-    Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
+    /* Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override
       public void actionPerformed(java.awt.event.ActionEvent e) {
         engine.model().updateCameraPosition();
         view.repaint();
       }
     });
-
-    timer.start();
+ 
+    timer.start(); */
   }
 }

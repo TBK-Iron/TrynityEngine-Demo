@@ -60,6 +60,8 @@ public class Rasterizer {
                 textureData = texture.getRGB(0, 0, textureWidth, textureHeight, null, 0, textureWidth);
             }
 
+            
+
             Vector[] AABB = face.getAABB_xy();
 
             int dispX = (int) AABB[0].get(0);
@@ -82,7 +84,12 @@ public class Rasterizer {
             kernel.setDisp(dispX, dispY);
             kernel.setTexture(textureData, textureWidth, textureHeight);
             kernel.setVertices(vertices, face.getTexture().uvMap());
-          
+
+            float[] uv = face.getTexture().uvMap();
+
+            System.out.println("u1: " + uv[0] + " v1: " + uv[1] + " u2: " + uv[2] + " v2: " + uv[3] + " u3: " + uv[4] + " v3: " + uv[5]);
+            System.out.println("x1: " + vertices[0] + " y1: " + vertices[1] + " x2: " + vertices[2] + " y2: " + vertices[3] + " x3: " + vertices[4] + " y3: " + vertices[5]);
+            System.out.println();
     
             int localSize = 256;
 
@@ -97,9 +104,11 @@ public class Rasterizer {
 
         }
 
+        System.out.println("\n\n\n");
+
         long endTime = System.nanoTime();
         long duration = (endTime - startTime) / 1000000;
-        System.out.print("Rastarization time: " + duration + "ms, facecount: " + faces.size() + ", ");
+        //System.out.print("Rastarization time: " + duration + "ms, facecount: " + faces.size() + ", ");
 
         BufferedImage rastarizedImage = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_ARGB);
         rastarizedImage.setRGB(0, 0, this.config.screenWidth(), this.config.screenHeight(), rastarizedImageData, 0, this.config.screenWidth());

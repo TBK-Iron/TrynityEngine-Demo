@@ -168,6 +168,9 @@ public class gPipeline implements IPipeline {
                 float x = ((point.x() + 1) / 2.0f) * this.config.screenWidth();
                 float y = ((point.y() + 1) / 2.0f) * this.config.screenHeight();
 
+                if(x < 0 || x > this.config.screenWidth() || y < 0 || y > this.config.screenHeight()){
+                    System.out.println("Out of bounds: " + x + ", " + y);
+                }
                 //Keeiping the z value for interpolating the z buffer values.
                 castedPoints.add(new Position3D(x, y, point.z()));
                 

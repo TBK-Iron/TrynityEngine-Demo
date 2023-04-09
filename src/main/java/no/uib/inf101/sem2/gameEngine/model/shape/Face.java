@@ -137,22 +137,32 @@ public class Face {
             return false;
         }
         Face otherFace = (Face) obj;
-
+    
         if (points.size() != otherFace.points.size()) {
             return false;
         }
-
+    
         for (int i = 0; i < points.size(); i++) {
             GridPosition thisPoint = points.get(i);
             GridPosition otherPoint = otherFace.points.get(i);
-
+    
             if (Math.abs(thisPoint.x() - otherPoint.x()) > 0.0001 ||
                 Math.abs(thisPoint.y() - otherPoint.y()) > 0.0001 ||
                 Math.abs(thisPoint.z() - otherPoint.z()) > 0.0001) {
                 return false;
             }
         }
-
+    
+        if (texture.uvMap().length != otherFace.texture.uvMap().length) {
+            return false;
+        }
+    
+        for (int i = 0; i < texture.uvMap().length; i++) {
+            if (Math.abs(texture.uvMap()[i] - otherFace.texture.uvMap()[i]) > 0.0001) {
+                return false;
+            }
+        }
+    
         return true;
     }
 
@@ -191,34 +201,36 @@ public class Face {
         return closestPoint;
     }
 
+    //TODO: Fix this, there is something very wrong
     public ArrayList<Face> getThreeVertexFaces(){
         ArrayList<Face> faces = new ArrayList<>();
         if(this.points.size() < 3){
             throw new IllegalArgumentException("Face must have at least 3 points");
-        }else if(this.points.size() == 3){
+        } else if(this.points.size() == 3){
             faces.add(this);
         } else {
             ArrayList<GridPosition> threeFirstPoints = new ArrayList<>();
             threeFirstPoints.add(this.points.get(0));
             threeFirstPoints.add(this.points.get(1));
             threeFirstPoints.add(this.points.get(2));
-
+    
             float[] face1uv = new float[] {this.texture.uvMap()[0], this.texture.uvMap()[1], this.texture.uvMap()[2], this.texture.uvMap()[3], this.texture.uvMap()[4], this.texture.uvMap()[5]};
-
+    
             float[] face2uv = new float[this.texture.uvMap().length - 2];
             face2uv[0] = this.texture.uvMap()[0];
             face2uv[1] = this.texture.uvMap()[1];
-            //System.out.println(this.texture.uvMap()[0]);
             for(int i = 2; i < face2uv.length; i++){
-                //System.out.println(i + ": " + this.texture.uvMap()[i+2]);
                 face2uv[i] = this.texture.uvMap()[i+2];
             }
-
-
+    
             Face face1 = new Face(threeFirstPoints, new FaceTexture(this.texture.textureKey(), face1uv));
-            this.points.remove(1);
-            Face face2 = new Face(this.points, new FaceTexture(this.texture.textureKey(), face2uv));
-
+    
+            // Create a new list of points excluding the point at index 1
+            ArrayList<GridPosition> remainingPoints = new ArrayList<>(this.points);
+            remainingPoints.remove(1);
+    
+            Face face2 = new Face(remainingPoints, new FaceTexture(this.texture.textureKey(), face2uv));
+    
             faces.add(face1);
             faces.addAll(face2.getThreeVertexFaces());
         }

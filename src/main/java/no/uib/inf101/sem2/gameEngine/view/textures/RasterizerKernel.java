@@ -39,21 +39,25 @@ public class RasterizerKernel extends Kernel{
         float beta  = ((yC - yA) * (xP - xC) + (xA - xC) * (yP - yC)) / ((yB - yC) * (xA - xC) + (xC - xB) * (yA - yC));
         float gamma = 1 - alpha - beta;
 
+        /* float alpha = ((xP * yB + xB * yC + xC * yP) - (yP * xB + yB * xC + yC * xP)) / ((xA * yB + xB * yC + xC * yA) - (yA * xB + yB * xC + yC * xA));
+        float beta =  ((xP * yC + xC * yA + xA * yP) - (yP * xC + yC * xA + yA * xP)) / ((xA * yB + xB * yC + xC * yA) - (yA * xB + yB * xC + yC * xA));
+        float gamma = 1 - alpha - beta; */
+
         // Check if point is inside triangle
         if (alpha >= 0 && beta >= 0 && gamma >= 0) {
             //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
             float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
-            if(u > 1){
-                u = u - (int) u;
-            }
-            
+            //u = u % 1.00000001f;
+            u = u - (int) u;
+
             float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
-            if(v > 1){
-                v = v - (int) v;
-            }
+            //v = v % 1.00000001f;
+            v = v - (int) v;
 
             //Get the color that corresponds to the texture coordinates
-            int pixelColor = this.texture[(int) (u * this.textureWidth) + (int) (v * this.textureHeight) * this.textureWidth];
+            int textureX = (int) (u * this.textureWidth) % this.textureWidth;
+            int textureY = (int) (v * this.textureHeight) % this.textureHeight;
+            int pixelColor = this.texture[textureX + textureY * this.textureWidth];
 
             this.output[xP + yP * totalWidth] = pixelColor;
         }
