@@ -15,12 +15,12 @@ public class GrassWorld implements Level {
         ArrayList<ShapeData> shapes = new ArrayList<>();
 
         shapes.add(new ShapeData(new Position3D(-25, -2, -25), new RelativeRotation(0, 0), new File("src/main/resources/shapes/grass_groundplane.trym")));
-        //shapes.add(new ShapeData(new Position3D(5, -2, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_A.trym")));
-        //shapes.add(new ShapeData(new Position3D(20, -2, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_B.trym")));
-        shapes.add(new ShapeData(new Position3D(0, -2, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
-        /* shapes.add(new ShapeData(new Position3D(15, -2, 25), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
-        shapes.add(new ShapeData(new Position3D(20, -2, 20), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
-        shapes.add(new ShapeData(new Position3D(25, -2, 15), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym"))); */
+        shapes.add(new ShapeData(new Position3D(5, 0, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_A.trym")));
+        shapes.add(new ShapeData(new Position3D(20, 0, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_B.trym")));
+        shapes.add(new ShapeData(new Position3D(-5, -2, 0), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
+        shapes.add(new ShapeData(new Position3D(-8, -2, 10), new RelativeRotation(0, (float) Math.PI/8), new File("src/main/resources/shapes/tree.trym")));
+        shapes.add(new ShapeData(new Position3D(1, -2, -7), new RelativeRotation((float) Math.PI/4, 0), new File("src/main/resources/shapes/tree.trym")));
+        shapes.add(new ShapeData(new Position3D(4, -2, 15), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
 
         return shapes;
     }

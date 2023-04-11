@@ -34,8 +34,7 @@ public class SceneMaker{
         ArrayList<Face> clippedFaces = pipeline.clip(notCulledShapes);
         ArrayList<Face> projectedFaces = pipeline.projectTransform(clippedFaces);
         ArrayList<Face> NDCTransformedFaces = pipeline.NDCTransform(projectedFaces);
-        ArrayList<Face> sortedFaces = pipeline.sortFacesByZ(NDCTransformedFaces);
-        ArrayList<Face> castedFaces = pipeline.castTo2D(sortedFaces);
+        ArrayList<Face> castedFaces = pipeline.castTo2D(NDCTransformedFaces);
 
         BufferedImage nextScene = pipeline.rastarizeFaces(castedFaces);
 

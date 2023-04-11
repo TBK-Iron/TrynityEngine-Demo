@@ -125,6 +125,12 @@ public class Face {
                 sb.append(", ");
             }
         }
+        sb.append("\n");
+        float[] uvMap = this.texture.uvMap();
+        for(int i = 0; i < this.points.size(); i++){
+            sb.append(", u" + i + ": " + uvMap[i*2]);
+            sb.append(", v" + i + ": " + uvMap[i*2 +1]);
+        } 
         
         return sb.toString();
     }

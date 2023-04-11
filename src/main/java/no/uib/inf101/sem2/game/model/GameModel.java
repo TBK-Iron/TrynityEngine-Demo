@@ -50,8 +50,13 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
     }
 
-    public GameState getCurrentState(){
+    public GameState getGameState(){
         return this.currentState;
     }
+
+    public void setGameState(GameState state){
+        this.currentState = state;
+    }
+
 
 }

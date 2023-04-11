@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.game.controller;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
+import no.uib.inf101.sem2.game.model.GameState;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
@@ -32,12 +33,26 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void mouseMoved(MouseEvent arg0) {
-        this.engineController.mouseMoved(arg0);
+        if(this.model.getGameState() == GameState.ACTIVE){
+            this.engineController.mouseMoved(arg0);
+        }
     }
 
     @Override
     public void keyPressed(KeyEvent arg0) {
-        this.engineController.keyPressed(arg0);
+        if(this.model.getGameState() == GameState.ACTIVE){
+            this.engineController.keyPressed(arg0);
+            if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+                this.model.setGameState(GameState.PAUSED);
+            }
+        } else if (this.model.getGameState() == GameState.PAUSED){
+            if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+                this.model.setGameState(GameState.ACTIVE);
+            }
+        }
+        
+
+        
     }
 
     @Override

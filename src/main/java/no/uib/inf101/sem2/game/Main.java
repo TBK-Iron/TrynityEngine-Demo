@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.game;
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.controller.GameController;
 import no.uib.inf101.sem2.game.model.GameModel;
+import no.uib.inf101.sem2.game.model.GameState;
 import no.uib.inf101.sem2.game.model.levels.GrassWorld;
 import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.game.model.levels.TestLevel1;
@@ -31,10 +32,10 @@ public class Main {
 
     gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
-    Level map = new TestLevel1();
+    Level map = new GrassWorld();
 
     GameModel model = new GameModel(map, engine.model(), engine.collisionDetector());
-    GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker());
+    GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker(), textureLoader.getLogo());
     GameController controller = new GameController((ControllableGameModel) model, view, config, engine.controller());
 
     JFrame frame = new JFrame();
@@ -53,11 +54,16 @@ public class Main {
     Timer timer = new Timer((int) (1000 / config.fps()), new ActionListener() {
       @Override
       public void actionPerformed(java.awt.event.ActionEvent e) {
-        engine.model().updateCameraPosition();
+        if(model.getGameState() == GameState.ACTIVE){
+          engine.model().updateCameraPosition();
+        }
+  
         view.repaint();
       }
     });
  
     timer.start();
+
+    
   }
 }

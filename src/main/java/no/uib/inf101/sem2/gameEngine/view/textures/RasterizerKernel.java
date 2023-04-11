@@ -30,13 +30,13 @@ public class RasterizerKernel extends Kernel{
         // Calculate barycentric coordinates
         float xA = this.vertices[0];
         float yA = this.vertices[1];
-        float zA_inv = 1 / this.vertices[2];
+        
         float xB = this.vertices[3];
         float yB = this.vertices[4];
-        float zB_inv = 1 / this.vertices[5];
+        
         float xC = this.vertices[6];
         float yC = this.vertices[7];
-        float zC_inv = 1 / this.vertices[8];
+        
 
         float areaABC = ((yB - yC) * (xA - xC) + (xC - xB) * (yA - yC));
 
@@ -51,28 +51,38 @@ public class RasterizerKernel extends Kernel{
         // Check if point is inside triangle
         if (alpha >= 0 && beta >= 0 && gamma >= 0) {
 
+            float zA_inv = 1 / this.vertices[2];
+            float zB_inv = 1 / this.vertices[5];
+            float zC_inv = 1 / this.vertices[8];
+
             float zP_inv = alpha * zA_inv + beta * zB_inv + gamma * zC_inv;
 
-            //Correct the barycentric coordinates for perspective
-            alpha = alpha * zA_inv / zP_inv;
-            beta = beta * zB_inv / zP_inv;
-            gamma = gamma * zC_inv / zP_inv;
+            if(1/zP_inv < this.zBuffer[xP + yP * totalWidth]){
+                //Correct the barycentric coordinates for perspective
+                this.zBuffer[xP + yP * totalWidth] = 1/zP_inv;
 
-            //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
-            float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
-            //u = u % 1.00000001f;
-            u = u - (int) u;
+                alpha = alpha * zA_inv / zP_inv;
+                beta = beta * zB_inv / zP_inv;
+                gamma = gamma * zC_inv / zP_inv;
 
-            float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
-            //v = v % 1.00000001f;
-            v = v - (int) v;
+                //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
+                float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
+                //u = u % 1.00000001f;
+                u = u - (int) u;
 
-            //Get the color that corresponds to the texture coordinates
-            int textureX = (int) (u * (this.textureWidth - 1));
-            int textureY = (int) (v * (this.textureHeight - 1));
-            int pixelColor = this.texture[textureX + textureY * this.textureWidth];
+                float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
+                //v = v % 1.00000001f;
+                v = v - (int) v;
 
-            this.output[xP + yP * totalWidth] = pixelColor;
+                //Get the color that corresponds to the texture coordinates
+                int textureX = (int) (u * (this.textureWidth - 1));
+                int textureY = (int) (v * (this.textureHeight - 1));
+                int pixelColor = this.texture[textureX + textureY * this.textureWidth];
+
+                this.output[xP + yP * totalWidth] = pixelColor;
+            }
+
+            
         }
     }
 

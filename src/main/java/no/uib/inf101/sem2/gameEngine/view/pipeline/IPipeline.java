@@ -59,14 +59,6 @@ public interface IPipeline {
     public ArrayList<Face> NDCTransform(ArrayList<Face> faces);
 
     /**
-     * Sorts the input faces based on their highest z value.
-     *
-     * @param faces The input faces to be sorted.
-     * @return A new list of faces sorted by their highest z value.
-     */
-    public ArrayList<Face> sortFacesByZ(ArrayList<Face> faces);
-
-    /**
      * Casts the input faces from 3D space to 2D space.
      *
      * @param faces The input faces to be casted.

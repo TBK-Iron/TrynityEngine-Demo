@@ -8,7 +8,7 @@ public class DefaultConfig implements Config {
     final float nearPlane = 0.5f;
     final float farPlane = 500f;
     final float fps = 60f;
-    final float cameraMoveSpeed = 0.04f;
+    final float cameraMoveSpeed = 0.1f;
     final int skyboxColor = 0xFFADD8E6;
 
     @Override

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position4D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
@@ -47,8 +48,10 @@ public final class Projection implements Transformation {
             }
             Vector homogenousV = new Vector(new float[] {v.get(0), v.get(1), v.get(2), 1});
             Vector transformedV = this.matrix.multiply(homogenousV);
+
+            GridPosition newP = transformedV.getPoint();
             
-            newVertices.add(transformedV.getPoint());
+            newVertices.add(new Position4D(newP.x(), newP.y(), v.get(2), newP.w()));
         }
         return new Face(newVertices, face.getTexture());
     }

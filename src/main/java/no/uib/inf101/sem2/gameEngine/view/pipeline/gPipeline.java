@@ -162,7 +162,7 @@ public class gPipeline implements IPipeline {
         return transformedFaces;
     }
 
-    @Override
+    /* @Override
     public ArrayList<Face> sortFacesByZ(ArrayList<Face> faces){
         ArrayList<Float> highestZVals = new ArrayList<>();
 
@@ -188,7 +188,7 @@ public class gPipeline implements IPipeline {
 
         return faces;
     }
-
+ */
     @Override
     public ArrayList<Face> castTo2D(ArrayList<Face> faces){
 
