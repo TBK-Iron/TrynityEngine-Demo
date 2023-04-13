@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
@@ -10,46 +11,35 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 public class Entity extends Shape3D {
 
-    ArrayList<GridPosition> collisionPoints;
+    CollisionBox collisionBox;
     Vector movementVector;
 
-    public Entity(ShapeData shapeData, ShapeData collisionShape) {
+    public Entity(ShapeData shapeData, CollisionBox collisionBox) {
         super(shapeData);
-        getCollisionPoints(collisionShape);
         this.movementVector = new Vector(new float[]{0, 0, 0});
+        this.collisionBox = collisionBox;
     }
 
-    private void getCollisionPoints(ShapeData collisionShape){
-        Shape3D collisionShape3D = new Shape3D(collisionShape);
-        for(Face face : collisionShape3D.getFaces()){
-            for(GridPosition point : face.getPoints()){
-                this.collisionPoints.add(point);
-            }
-        }
-    }
     
     public void setRotation(RelativeRotation newRotation){
         this.rotation = newRotation;
         
     }
 
-    public void setPosision(GridPosition newPos){
+    public void setPosition(GridPosition newPos){
         this.anchoredPos = newPos;
     }
 
-    public ArrayList<GridPosition> getCollisionPoints(){
-        return this.collisionPoints;
+    public CollisionBox getCollisionBox(){
+        return this.collisionBox;
     }
 
     public void setMovementVector(Vector newVector){
         this.movementVector = newVector;
     }
 
-    public void move(){
-        float newX = this.anchoredPos.x() + this.movementVector.get(0);
-        float newY = this.anchoredPos.y() + this.movementVector.get(1);
-        float newZ = this.anchoredPos.z() + this.movementVector.get(2);
-        this.anchoredPos = new Position3D(newX, newY, newZ);
+    public Vector getMovementVector(){
+        return this.movementVector;
     }
 
     public boolean isMoving(){

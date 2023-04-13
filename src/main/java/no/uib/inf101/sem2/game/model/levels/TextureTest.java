@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.model.shape.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
@@ -25,8 +25,8 @@ public class TextureTest implements Level {
     }
 
     @Override
-    public ArrayList<ShapeData> loadEntityCollision() {
-        ArrayList<ShapeData> entityCollisionShapes = new ArrayList<>();
+    public ArrayList<CollisionBox> loadEntityCollision() {
+        ArrayList<CollisionBox> entityCollisionShapes = new ArrayList<>();
 
         return entityCollisionShapes;
     }

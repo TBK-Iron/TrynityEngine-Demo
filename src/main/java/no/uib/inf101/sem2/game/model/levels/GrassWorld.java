@@ -4,7 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.model.shape.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
@@ -33,8 +33,8 @@ public class GrassWorld implements Level {
     }
 
     @Override
-    public ArrayList<ShapeData> loadEntityCollision() {
-        ArrayList<ShapeData> entityCollisionShapes = new ArrayList<>();
+    public ArrayList<CollisionBox> loadEntityCollision() {
+        ArrayList<CollisionBox> entityCollisionShapes = new ArrayList<>();
 
         return entityCollisionShapes;
     }
@@ -43,6 +43,8 @@ public class GrassWorld implements Level {
     public ArrayList<CollisionBox> loadCollisionBoxes() {
         ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
 
+        collisionBoxes.add(new CollisionBox(new Position3D(-25, -2, -25), new Position3D(25, -20, 25)));
+        collisionBoxes.add(new CollisionBox(new Position3D(7, -2, 11), new Position3D(3, 2, 7)));
         return collisionBoxes;
     }
 }

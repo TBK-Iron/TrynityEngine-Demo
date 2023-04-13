@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
@@ -50,8 +51,39 @@ public class Culling {
         return notCulledShapes;
     }
 
-    //TODO: Implement occlusion culling
-    protected static ArrayList<Shape3D> occlusionCull(ArrayList<Shape3D> shapes){
-        return null;
+    /**
+     * Performs occlusion culling on a list of 3D shapes using a depth buffer.
+     * 
+     * @author ChatGPT
+     *
+     * @param shapes The list of 3D shapes to be culled.
+     * @return A new list of 3D shapes containing only the visible shapes after occlusion culling.
+     */
+    protected static ArrayList<Shape3D> occlusionCull(ArrayList<Shape3D> shapes) {
+        ArrayList<Shape3D> notCulledShapes = new ArrayList<>();
+
+        // Sort the shapes by their distance to the camera
+        shapes.sort(Comparator.comparingDouble(shape -> shape.getDistanceToOriginSquared()));
+
+        // Create a depth buffer
+        DepthBuffer depthBuffer = new DepthBuffer();
+
+        for (Shape3D shape : shapes) {
+            boolean isOccluded = true;
+
+            // Check if the shape is occluded using the depth buffer
+            for (Face face : shape.getFaces()) {
+                if (!depthBuffer.isOccluded(face)) {
+                    isOccluded = false;
+                    depthBuffer.update(face);
+                }
+            }
+
+            if (!isOccluded) {
+                notCulledShapes.add(shape);
+            }
+        }
+
+        return notCulledShapes;
     }
 }

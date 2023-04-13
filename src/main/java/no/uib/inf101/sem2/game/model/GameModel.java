@@ -6,10 +6,11 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
-import no.uib.inf101.sem2.gameEngine.model.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.EngineModel;
-import no.uib.inf101.sem2.gameEngine.model.shape.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class GameModel implements ViewableGameModel, ControllableGameModel{
     
@@ -40,7 +41,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
 
         ArrayList<ShapeData> entityData = this.map.loadEntities();
-        ArrayList<ShapeData> entityCollision = this.map.loadEntityCollision();
+        ArrayList<CollisionBox> entityCollision = this.map.loadEntityCollision();
         if(entityData.size() != entityCollision.size()){
             throw new Error("Every entity must have a corresponding collision shape");
         }
@@ -48,6 +49,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.engineModel.createEntity(entityData.get(i), entityCollision.get(i));
         }
 
+        CollisionBox cameraCollisionBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.5f, 0.5f));
+        this.engineModel.setCameraCollision(cameraCollisionBox);
     }
 
     public GameState getGameState(){

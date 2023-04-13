@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.ControllableEngineModel;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
@@ -38,13 +40,12 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         shapes.add(new Shape3D(shapeData));
     }
 
-    public void createEntity(ShapeData shapeData, ShapeData collisionShape){
-        entities.add(new Entity(shapeData, collisionShape));
+    public void createEntity(ShapeData shapeData, CollisionBox collisionBox){
+        entities.add(new Entity(shapeData, collisionBox));
     }
 
-    public void setCameraCollisionShape(ShapeData collisionShapeData){
-        Shape3D collisionShape = new Shape3D(collisionShapeData);
-        this.camera.setCollision(collisionShape.getUniquePoints());
+    public void setCameraCollision(CollisionBox collisionBox){
+        this.camera.setCollision(collisionBox);
     }
 
     public ArrayList<Shape3D> getRenderShapes(){
@@ -75,10 +76,17 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     }
     public void updateCameraPosition(){
         if(this.cameraMoveSpeed.magnitude() != 0){
-            if(this.camera.collisionShapePoints.isEmpty()){
+            if(this.camera.getCollisionBox() == null){
                 this.camera.setPos(Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint());
-            }else if(!collisionDetector.isColliding(this.camera.getCollisionPoints(), this.camera.getPos())){
-                this.camera.setPos(Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint());
+            }else {
+                GridPosition newPos = Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint();
+                CollisionBox collidingBox = collisionDetector.getCollidingBox(this.camera.getCollisionBox(), newPos);
+                if(collidingBox == null){
+                    this.camera.setPos(newPos);
+                } else {     
+                    GridPosition correctedNewPos = collidingBox.getCollisionPos(this.camera.getCollisionBox(), this.camera.getPos(), newPos);
+                    this.camera.setPos(correctedNewPos);
+                }
             }
         }
         //System.out.println("Camera position set to: " + this.cameraPos);
@@ -87,8 +95,18 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     public void updateEntityPositions(){
         for(Entity entity : this.entities){
             if(entity.isMoving()){
-                if(!collisionDetector.isColliding(entity.getUniquePoints(), entity.getPosition())){
-                    entity.move();
+                if(entity.getCollisionBox() == null){
+                    entity.setPosition(Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint());
+                }else {
+                    GridPosition newPos = Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint();
+                    CollisionBox collidingBox = collisionDetector.getCollidingBox(entity.getCollisionBox(), newPos);
+                    if(collidingBox == null){
+                        entity.setPosition(newPos);
+                    } else {
+                        GridPosition correctedNewPos = collidingBox.getCollisionPos(entity.getCollisionBox(), entity.getPosition(), newPos);
+    
+                        this.camera.setPos(correctedNewPos);
+                    }
                 }
             }
         }

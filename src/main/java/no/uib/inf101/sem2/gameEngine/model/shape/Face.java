@@ -243,4 +243,23 @@ public class Face {
         return faces;
     }
 
+    public GridPosition getCenter() {
+        float x = 0;
+        float y = 0;
+        float z = 0;
+        int numVertices = points.size();
+
+        for (GridPosition point : points) {
+            x += point.x();
+            y += point.y();
+            z += point.z();
+        }
+
+        x /= numVertices;
+        y /= numVertices;
+        z /= numVertices;
+
+        return new Position3D(x, y, z);
+    }
+
 }

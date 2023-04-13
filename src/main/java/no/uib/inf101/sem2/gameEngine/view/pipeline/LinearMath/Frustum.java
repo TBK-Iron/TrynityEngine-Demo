@@ -2,7 +2,7 @@ package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
 
 import java.util.ArrayList;
 
-import no.uib.inf101.sem2.gameEngine.model.shape.BoundingSphere;
+import no.uib.inf101.sem2.gameEngine.model.collision.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;

@@ -82,7 +82,9 @@ public class gPipeline implements IPipeline {
 
         shapes = Culling.backfaceCull(shapes);
         shapes = Culling.viewfrustrumCull(shapes, this.frustum);
-        //faces = occlusionCull(shapes);
+        //shapes = Culling.occlusionCull(shapes);
+
+        System.out.println("Visible shapes: " + shapes.size());
 
         return shapes;
     }

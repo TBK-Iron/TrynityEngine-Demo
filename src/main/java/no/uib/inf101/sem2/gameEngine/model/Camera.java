@@ -2,23 +2,22 @@ package no.uib.inf101.sem2.gameEngine.model;
 
 import java.util.ArrayList;
 
+import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class Camera {
     GridPosition position;
     RelativeRotation rotation;
-    ArrayList<GridPosition> collisionShapePoints;
+    CollisionBox collisionBox;
 
     public Camera(GridPosition startPos, RelativeRotation startRot){
         this.position = startPos;
         this.rotation = startRot;
-
-        this.collisionShapePoints = new ArrayList<>();
     }
 
-    public void setCollision(ArrayList<GridPosition> points){
-        this.collisionShapePoints = points;
+    public void setCollision(CollisionBox box){
+        this.collisionBox = box;
     }
 
     public void setPos(GridPosition pos){
@@ -37,7 +36,7 @@ public class Camera {
         return this.rotation;
     }
 
-    public ArrayList<GridPosition> getCollisionPoints(){
-        return this.collisionShapePoints;
+    public CollisionBox getCollisionBox(){
+        return this.collisionBox;
     }
 }

@@ -5,9 +5,11 @@ import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import no.uib.inf101.sem2.gameEngine.model.collision.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 
 public class Shape3D {
@@ -170,5 +172,17 @@ public class Shape3D {
 
     public void setFaces(ArrayList<Face> faces){
         this.faces = faces;
+    }
+
+    public float getDistanceToOriginSquared(){
+        float minDist = Float.MAX_VALUE;
+        for(GridPosition point : getUniquePoints()){
+            float dist = (float) Math.pow(point.x(), 2) + (float) Math.pow(point.y(), 2) + (float) Math.pow(point.z(), 2);
+            if(dist < minDist){
+                minDist = dist;
+            }
+        }
+
+        return minDist;
     }
 }
