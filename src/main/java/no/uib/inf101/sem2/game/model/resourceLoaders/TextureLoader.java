@@ -22,6 +22,11 @@ public class TextureLoader {
             textures.put("leaves", ImageIO.read(new File("src/main/resources/textures/leaves.jpg")));
             textures.put("brick", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
 
+            textures.put("zombie_head", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+            textures.put("zombie_leg", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+            textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+            textures.put("zombie_arm", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+
             logoImage = ImageIO.read(new File("src/main/resources/Trynity_Logo.png"));
         } catch (IOException e) {
             e.printStackTrace();

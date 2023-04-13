@@ -21,7 +21,7 @@ public class GrassWorld implements Level {
         shapes.add(new ShapeData(new Position3D(-8, -2, 10), new RelativeRotation(0, (float) Math.PI/8), new File("src/main/resources/shapes/tree.trym")));
         shapes.add(new ShapeData(new Position3D(1, -2, -7), new RelativeRotation((float) Math.PI/4, 0), new File("src/main/resources/shapes/tree.trym")));
         shapes.add(new ShapeData(new Position3D(4, -2, 15), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
-
+        shapes.add(new ShapeData(new Position3D(4, -2, -5), new RelativeRotation(0, 0, 0), new File("src/main/resources/shapes/zombie_A.trym")));
         return shapes;
     }
 

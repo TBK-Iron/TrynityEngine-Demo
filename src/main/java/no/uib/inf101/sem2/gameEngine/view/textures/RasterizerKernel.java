@@ -67,12 +67,12 @@ public class RasterizerKernel extends Kernel{
 
                 //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
                 float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
-                //u = u % 1.00000001f;
-                u = u - (int) u;
+                u = u % 1;
+                //u = u - (int) u;
 
                 float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
-                //v = v % 1.00000001f;
-                v = v - (int) v;
+                v = v % 1;
+                //v = v - (int) v;
 
                 //Get the color that corresponds to the texture coordinates
                 int textureX = (int) (u * (this.textureWidth - 1));

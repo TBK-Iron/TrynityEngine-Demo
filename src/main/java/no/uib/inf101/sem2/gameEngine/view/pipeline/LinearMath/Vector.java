@@ -122,7 +122,7 @@ public final class Vector {
     public String toString(){
         String[] sPoints = new String[getDims()];
         for(int i = 0; i < getDims(); i++){
-            sPoints[i] = this.value[i] + "";
+            sPoints[i] = String.valueOf(this.value[i]);
         }
         String result = "Points:[" + String.join(", ", sPoints) + "]";
 

@@ -2,21 +2,21 @@ package no.uib.inf101.sem2.gameEngine.config;
 
 public interface Config {
 
-    public float verticalFOV();
+    float verticalFOV();
 
-    public int screenWidth();
+    int screenWidth();
 
-    public int screenHeight();
+    int screenHeight();
 
-    public float nearPlane();
+    float nearPlane();
 
-    public float farPlane();
+    float farPlane();
 
-    public float fps();
+    float fps();
 
-    public float cameraMoveSpeed();
+    float cameraMoveSpeed();
 
-    public void resizeFrame(int width, int height);
+    void resizeFrame(int width, int height);
 
-    public int skyboxColor();
+    int skyboxColor();
 }

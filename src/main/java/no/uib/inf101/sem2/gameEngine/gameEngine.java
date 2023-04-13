@@ -6,11 +6,11 @@ import no.uib.inf101.sem2.gameEngine.model.EngineModel;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
 public interface gameEngine {
-    public EngineController controller();
+    EngineController controller();
 
-    public EngineModel model();
+    EngineModel model();
 
-    public SceneMaker sceneMaker();
+    SceneMaker sceneMaker();
 
-    public CollisionDetector collisionDetector();
+    CollisionDetector collisionDetector();
 }

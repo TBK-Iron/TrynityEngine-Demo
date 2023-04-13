@@ -5,7 +5,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 public interface ControllableEngineModel {
 
-    public void setMovementDelta(Vector deltaM);
+    void setMovementDelta(Vector deltaM);
 
-    public void addToCameraRotation(RelativeRotation rot);
+    void addToCameraRotation(RelativeRotation rot);
 }

@@ -22,7 +22,7 @@ import java.util.concurrent.TimeUnit;
 
 public class Rasterizer {
 
-    private static final int KERNEL_POOL_SIZE = 128; // Adjust according to the number of threads you want to use
+    private static final int KERNEL_POOL_SIZE = 128; 
     private final RasterizerKernel[] kernelPool = new RasterizerKernel[KERNEL_POOL_SIZE];
     Map<String, BufferedImage> textures;
     Config config;
@@ -89,8 +89,8 @@ public class Rasterizer {
 
                 Vector[] AABB = face.getAABB_xy();
 
-                int dispX = (int) AABB[0].get(0);
-                int dispY = (int) AABB[0].get(1);
+                int dispX = (int) AABB[0].get(0) - 3;
+                int dispY = (int) AABB[0].get(1) - 3;
 
                 float[] vertices = new float[face.getPoints().size() * 3];
                 for(int i = 0; i < face.getPoints().size(); i++){
@@ -99,31 +99,19 @@ public class Rasterizer {
                     vertices[i*3 + 2] = face.getPoints().get(i).z();
                 }
 
-                int faceWidth = (int) ((AABB[1].get(0) - AABB[0].get(0)));
-                int faceHeight = (int) ((AABB[1].get(1) - AABB[0].get(1)));
+                int faceWidth = (int) ((AABB[1].get(0) - AABB[0].get(0))) + 6;
+                int faceHeight = (int) ((AABB[1].get(1) - AABB[0].get(1))) + 6;
 
                 kernel.setWidth(faceWidth);
-
-                //System.out.println("dispX" + dispX + " dispY: " + dispY + " faceWidth: " + faceWidth + " faceHeight: " + faceHeight);
-                //System.out.println("x1: " + vertices[0] + " y1: " + vertices[1] + " x2: " + vertices[2] + " y2: " + vertices[3] + " x3: " + vertices[4] + " y3: " + vertices[5]);
 
                 kernel.setDisp(dispX, dispY);
                 kernel.setTexture(textureData, textureWidth, textureHeight);
                 kernel.setVertices(vertices, face.getTexture().uvMap());
-
-                float[] uv = face.getTexture().uvMap();
-
-                /* System.out.println("u1: " + uv[0] + " v1: " + uv[1] + " u2: " + uv[2] + " v2: " + uv[3] + " u3: " + uv[4] + " v3: " + uv[5]);
-                System.out.println("x1: " + vertices[0] + " y1: " + vertices[1] + " x2: " + vertices[2] + " y2: " + vertices[3] + " x3: " + vertices[4] + " y3: " + vertices[5]);
-                System.out.println(); */
         
                 int localSize = 256;
 
                 //Taking the closest multiple of localSize to the number of pixels to process, this avoids an error which makes the kernel not run on the gpu.
                 Range range = Range.create((int) Math.ceil((faceWidth * faceHeight)/localSize)*localSize, localSize); 
-                
-                //System.out.println("Global size: " + globalSize + " Local size: " + localSize);
-                //System.out.println("Vertices: " + vertices.length + " UVs: " + face.getTexture().uvMap().length + " Texture data: " + textureData.length + " Rastarized face: " + rastarizedFace.length);
                 
                 kernel.execute(range);
 

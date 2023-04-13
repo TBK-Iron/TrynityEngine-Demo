@@ -27,27 +27,27 @@ public class MoveHandler {
 
     public boolean keyPressed(KeyEvent press){
         boolean change = false;
-        if(press.getKeyCode() == KeyEvent.VK_W && wKeyPressed == false) {
+        if(press.getKeyCode() == KeyEvent.VK_W && !wKeyPressed) {
             wKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_S && sKeyPressed == false){
+        if(press.getKeyCode() == KeyEvent.VK_S && !sKeyPressed){
             sKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_A && aKeyPressed == false) {
+        if(press.getKeyCode() == KeyEvent.VK_A && !aKeyPressed) {
             aKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_D && dKeyPressed == false) {
+        if(press.getKeyCode() == KeyEvent.VK_D && !dKeyPressed) {
             dKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_SPACE && spaceKeyPressed == false) {
+        if(press.getKeyCode() == KeyEvent.VK_SPACE && !spaceKeyPressed) {
             spaceKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed == false) {
+        if(press.getKeyCode() == KeyEvent.VK_CONTROL && !ctrlKeyPressed) {
             ctrlKeyPressed = true;
             change = true;
         }
@@ -58,27 +58,27 @@ public class MoveHandler {
     public boolean keyReleased(KeyEvent release){
         boolean change = false;
 
-        if(release.getKeyCode() == KeyEvent.VK_W && wKeyPressed == true) {
+        if(release.getKeyCode() == KeyEvent.VK_W && wKeyPressed) {
             wKeyPressed = false;
             change = true;
         }
-        if(release.getKeyCode() == KeyEvent.VK_S && sKeyPressed == true){
+        if(release.getKeyCode() == KeyEvent.VK_S && sKeyPressed){
             sKeyPressed = false;
             change = true;
         }
-        if(release.getKeyCode() == KeyEvent.VK_A && aKeyPressed == true) {
+        if(release.getKeyCode() == KeyEvent.VK_A && aKeyPressed) {
             aKeyPressed = false;
             change = true;
         }
-        if(release.getKeyCode() == KeyEvent.VK_D && dKeyPressed == true) {
+        if(release.getKeyCode() == KeyEvent.VK_D && dKeyPressed) {
             dKeyPressed = false;
             change = true;
         }
-        if(release.getKeyCode() == KeyEvent.VK_SPACE && spaceKeyPressed == true) {
+        if(release.getKeyCode() == KeyEvent.VK_SPACE && spaceKeyPressed) {
             spaceKeyPressed = false;
             change = true;
         }
-        if(release.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed == true) {
+        if(release.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed) {
             ctrlKeyPressed = false;
             change = true;
         }
