@@ -6,28 +6,35 @@ import java.awt.event.MouseEvent;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
+/**
+ * MouseHandler class is responsible for handling mouse input
+ * and converting it into rotation values.
+ */
 public class MouseHandler {
 
-    int width;
-    int height;
+    private int width;
+    private int height;
 
-    int centerX;
-    int centerY;
+    private int centerX;
+    private int centerY;
 
-    int relativeCenterX;
-    int relativeCenterY;
-
+    /**
+     * Constructs a new MouseHandler with the specified screen dimensions.
+     *
+     * @param width  The width of the screen.
+     * @param height The height of the screen.
+     */
     protected MouseHandler(int width, int height){
         this.width = width;
         this.height = height;
 
         this.centerX = width / 2;
         this.centerY = height / 2;
-        
-        this.relativeCenterX = width / 2;
-        this.relativeCenterY = height / 2;
     }
-
+    
+    /**
+     * Resets the mouse position to the center of the screen.
+     */
     protected void resetMousePosition(){
         Robot robot;
         try {
@@ -38,18 +45,20 @@ public class MouseHandler {
         }
     }
 
+    /**
+     * Calculates the relative rotation based on the mouse event.
+     *
+     * @param e The MouseEvent to process.
+     * @return A RelativeRotation object representing the rotation values.
+     */
     protected RelativeRotation getRotation(MouseEvent e){
         int x = e.getX();
         int absX = e.getXOnScreen();
         int y = e.getY();
         int absY = e.getYOnScreen();
         
-        /* System.out.println("centerX: " + centerX + " centerY: " + centerY);
-        System.out.println("x: " + x + " y: " + y); */
         int dx = -(x + (absX - x) - this.centerX);
         int dy = y + (absY - y) - this.centerY;
-
-        //System.out.println("LeftRight:" + dx + ", Updown: " + dy);
 
         float leftRightRot = ((float) dx / width);
         float upDownRot = ((float) dy / height);

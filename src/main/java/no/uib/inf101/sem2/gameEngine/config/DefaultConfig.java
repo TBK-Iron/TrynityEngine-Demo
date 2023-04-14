@@ -3,10 +3,10 @@ package no.uib.inf101.sem2.gameEngine.config;
 
 public class DefaultConfig implements Config {
     final float verticalFOV = 75;
-    int screenWidth = 1366;
-    int screenHeight = 768;
-    /* int screenWidth = 854;
-    int screenHeight = 480; */
+    /* int screenWidth = 1366;
+    int screenHeight = 768; */
+    int screenWidth = 854;
+    int screenHeight = 480;
     final float nearPlane = 0.5f;
     final float farPlane = 500f;
     final float fps = 60f;

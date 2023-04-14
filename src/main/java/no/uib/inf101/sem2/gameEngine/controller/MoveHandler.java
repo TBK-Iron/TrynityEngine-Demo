@@ -4,6 +4,10 @@ import java.awt.event.KeyEvent;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
+/**
+ * Handles movement input from the user through keyboard events and
+ * calculates the movement delta based on the pressed keys.
+ */
 public class MoveHandler {
     float moveSpeed;
     boolean noclip;
@@ -16,6 +20,13 @@ public class MoveHandler {
     boolean spaceKeyPressed;
     boolean ctrlKeyPressed;
 
+    /**
+     * Constructor for MoveHandler.
+     *
+     * @param moveSpeed The speed at which movement occurs.
+     * @param noclip Whether noclip mode is enabled or not.
+     * @param jumpBurst The burst of movement when jumping.
+     */
     public MoveHandler(float moveSpeed, boolean noclip, float jumpBurst){
         this.moveSpeed = moveSpeed;
         this.noclip = noclip;
@@ -29,6 +40,12 @@ public class MoveHandler {
         ctrlKeyPressed = false;
     }
 
+    /**
+     * Updates the state of the pressed keys when a key is pressed.
+     *
+     * @param press The KeyEvent generated when a key is pressed.
+     * @return true if any movement-related key state has changed, false otherwise.
+     */
     public boolean keyPressed(KeyEvent press){
         boolean change = false;
         if(press.getKeyCode() == KeyEvent.VK_W && !wKeyPressed) {
@@ -47,6 +64,7 @@ public class MoveHandler {
             dKeyPressed = true;
             change = true;
         }
+        //The difference here is so that the player jumps continuously while the space key is held down.
         if(press.getKeyCode() == KeyEvent.VK_SPACE && (!spaceKeyPressed || !noclip)) {
             spaceKeyPressed = true;
             change = true;
@@ -59,6 +77,12 @@ public class MoveHandler {
         return change;
     }
 
+    /**
+     * Updates the state of the pressed keys when a key is released.
+     *
+     * @param release The KeyEvent generated when a key is released.
+     * @return true if any movement-related key state has changed, false otherwise.
+     */
     public boolean keyReleased(KeyEvent release){
         boolean change = false;
 
@@ -90,6 +114,11 @@ public class MoveHandler {
         return change;
     }
 
+    /**
+     * Calculates the movement delta based on the state of the pressed keys.
+     *
+     * @return A Vector representing the movement delta.
+     */
     public Vector getMovementDelta(){
         float forwards = 0;
         float left = 0;

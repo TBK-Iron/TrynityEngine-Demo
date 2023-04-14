@@ -26,6 +26,20 @@ public class TextureLoader {
             textures.put("zombie_leg", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
             textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
             textures.put("zombie_arm", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+            textures.put("trym", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            
+            /* textures.put("trollface", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("checkered", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("grass", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("bark", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("leaves", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("brick", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+
+            textures.put("zombie_head", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("zombie_leg", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("zombie_arm", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("trym", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg"))); */
 
             logoImage = ImageIO.read(new File("src/main/resources/Trynity_Logo.png"));
         } catch (IOException e) {

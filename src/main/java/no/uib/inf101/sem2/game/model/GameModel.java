@@ -49,7 +49,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.engineModel.createEntity(entityData.get(i), entityCollision.get(i));
         }
 
-        CollisionBox cameraCollisionBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.5f, 0.5f));
+        CollisionBox cameraCollisionBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
         this.engineModel.setCameraCollision(cameraCollisionBox);
     }
 
