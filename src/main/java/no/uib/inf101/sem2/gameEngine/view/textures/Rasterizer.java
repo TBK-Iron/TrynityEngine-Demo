@@ -24,13 +24,13 @@ public class Rasterizer {
 
     private static final int KERNEL_POOL_SIZE = 128; 
     private final RasterizerKernel[] kernelPool = new RasterizerKernel[KERNEL_POOL_SIZE];
-    Map<String, BufferedImage> textures;
+    Mipmapper mipmapper;
     Config config;
 
 
 
     public Rasterizer(Map<String, BufferedImage> textures, Config config){
-        this.textures = textures;
+        this.mipmapper = new Mipmapper(textures);
         this.config = config;
 
         for(int i = 0; i < KERNEL_POOL_SIZE; i++){
@@ -71,6 +71,15 @@ public class Rasterizer {
                 int[] textureData;
                 int textureWidth;
                 int textureHeight;
+
+                Vector[] AABB = face.getAABB_xy();
+
+                int dispX = (int) AABB[0].get(0) - 3;
+                int dispY = (int) AABB[0].get(1) - 3;
+
+                int faceWidth = (int) ((AABB[1].get(0) - AABB[0].get(0))) + 6;
+                int faceHeight = (int) ((AABB[1].get(1) - AABB[0].get(1))) + 6;
+
                 //Check if face is textured or just has a color
                 if(face.getTexture().textureKey().startsWith("#")){
                     Color color = Color.decode(face.getTexture().textureKey().trim());
@@ -79,18 +88,46 @@ public class Rasterizer {
                     textureWidth = 1;
                     textureHeight = 1;
                 } else {
-                    BufferedImage texture = this.textures.get(face.getTexture().textureKey());
+
+                    float minU = 1;
+                    float maxU = 0;
+                    float minV = 1;
+                    float maxV = 0;
+
+                    float[] uvMap = face.getTexture().uvMap();
+
+                    for(int i = 0; i < face.getTexture().uvMap().length/2; i++){
+                        if(uvMap[i*2] < minU){
+                            minU = uvMap[i*2];
+                        }
+                        if(uvMap[i*2] > maxU){
+                            maxU = uvMap[i*2];
+                        }
+
+                        if(uvMap[i*2 + 1] < minV){
+                            minV = uvMap[i*2 + 1];
+                        }
+                        if(uvMap[i*2 + 1] > maxV){
+                            maxV = uvMap[i*2 + 1];
+                        }
+                    }
+
+                    float uvWidth = maxU - minU;
+                    float uvHeight = maxV - minV;
+                 
+                    int totalWidth = (int) (faceWidth / uvWidth);
+                    int totalHeight = (int) (faceHeight / uvHeight);
+
+                    BufferedImage texture = this.mipmapper.getMipmappedTexture(face.getTexture().textureKey(), totalWidth, totalHeight);
                     textureWidth = texture.getWidth();
                     textureHeight = texture.getHeight();
                     textureData = texture.getRGB(0, 0, textureWidth, textureHeight, null, 0, textureWidth);
+                    
+                    /* if(face.getTexture().textureKey().equals("leaves")){
+                        System.out.println(textureData.length);
+                    } */
                 }
 
-                
-
-                Vector[] AABB = face.getAABB_xy();
-
-                int dispX = (int) AABB[0].get(0) - 3;
-                int dispY = (int) AABB[0].get(1) - 3;
 
                 float[] vertices = new float[face.getPoints().size() * 3];
                 for(int i = 0; i < face.getPoints().size(); i++){
@@ -98,9 +135,6 @@ public class Rasterizer {
                     vertices[i*3 + 1] = face.getPoints().get(i).y();
                     vertices[i*3 + 2] = face.getPoints().get(i).z();
                 }
-
-                int faceWidth = (int) ((AABB[1].get(0) - AABB[0].get(0))) + 6;
-                int faceHeight = (int) ((AABB[1].get(1) - AABB[0].get(1))) + 6;
 
                 kernel.setWidth(faceWidth);
 

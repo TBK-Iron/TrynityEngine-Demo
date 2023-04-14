@@ -19,4 +19,10 @@ public interface Config {
     void resizeFrame(int width, int height);
 
     int skyboxColor();
+
+    float gravityAcceleration();
+
+    float jumpBurst();
+
+    boolean noclip();
 }

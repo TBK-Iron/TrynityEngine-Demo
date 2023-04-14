@@ -6,6 +6,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 public class MoveHandler {
     float moveSpeed;
+    boolean noclip;
+    float jumpBurst;
 
     boolean wKeyPressed;
     boolean aKeyPressed;
@@ -14,8 +16,10 @@ public class MoveHandler {
     boolean spaceKeyPressed;
     boolean ctrlKeyPressed;
 
-    public MoveHandler(float moveSpeed){
+    public MoveHandler(float moveSpeed, boolean noclip, float jumpBurst){
         this.moveSpeed = moveSpeed;
+        this.noclip = noclip;
+        this.jumpBurst = jumpBurst;
 
         wKeyPressed = false;
         aKeyPressed = false;
@@ -43,7 +47,7 @@ public class MoveHandler {
             dKeyPressed = true;
             change = true;
         }
-        if(press.getKeyCode() == KeyEvent.VK_SPACE && !spaceKeyPressed) {
+        if(press.getKeyCode() == KeyEvent.VK_SPACE && (!spaceKeyPressed || !noclip)) {
             spaceKeyPressed = true;
             change = true;
         }
@@ -102,6 +106,7 @@ public class MoveHandler {
         if(this.dKeyPressed){
             left += -1;
         }
+        
         if(this.spaceKeyPressed){
             up += 1;
         }
@@ -110,13 +115,22 @@ public class MoveHandler {
         }
 
         Vector deltaXZ = new Vector(new float[]{left, forwards});
-
+        Vector normalizedXZ;
         if(left == 0 && forwards == 0){
-            return new Vector(new float[]{0, up, 0}).scaledBy(this.moveSpeed);
+            normalizedXZ = new Vector(new float[]{0, 0});
         } else {
-            //System.out.println(delta.normalized());
-            Vector normalizedXZ = deltaXZ.normalized(); 
-            return new Vector(new float[]{normalizedXZ.get(0), up, normalizedXZ.get(1)}).scaledBy(this.moveSpeed);
+            normalizedXZ = deltaXZ.normalized().scaledBy(this.moveSpeed);
+        }
+
+        if(this.noclip){
+            return new Vector(new float[]{normalizedXZ.get(0), up*this.moveSpeed, normalizedXZ.get(1)});
+        
+        } else {
+            if(this.spaceKeyPressed) {
+                return new Vector(new float[]{normalizedXZ.get(0), this.jumpBurst, normalizedXZ.get(1)});
+            } else {
+                return new Vector(new float[]{normalizedXZ.get(0), 0, normalizedXZ.get(1)});
+            }
         }
     }
 }

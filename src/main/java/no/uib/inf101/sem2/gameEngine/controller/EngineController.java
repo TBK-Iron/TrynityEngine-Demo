@@ -18,11 +18,10 @@ public class EngineController {
         this.config = config;
         this.view = view;
         this.mouseHandler = new MouseHandler(config.screenWidth(), config.screenHeight());
-        this.moveHandler = new MoveHandler(config.cameraMoveSpeed());
+        this.moveHandler = new MoveHandler(config.cameraMoveSpeed(), config.noclip(), config.jumpBurst());
     }
 
-    public void mouseMoved(MouseEvent arg0) {
-        
+    public void mouseMoved(MouseEvent arg0) {    
         this.model.addToCameraRotation(this.mouseHandler.getRotation(arg0));
         this.mouseHandler.resetMousePosition();
         this.model.setMovementDelta(this.moveHandler.getMovementDelta());

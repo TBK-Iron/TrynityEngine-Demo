@@ -1,21 +1,29 @@
 package no.uib.inf101.sem2.gameEngine.model.collision;
 
-import java.util.ArrayList;
-
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
+/**
+ * This class represents a collision box in 3D space for detecting and resolving collisions between game objects.
+ * The collision box is defined by two opposite corners, pos1 and pos2.
+ */
 public final class CollisionBox {
-    private final GridPosition pos1;
-    private final GridPosition pos2;
-    private static final float MARGIN = 0.001f;
+    final GridPosition pos1;
+    final GridPosition pos2;
+    static final float MARGIN = 0.001f;
 
     public CollisionBox(GridPosition pos1, GridPosition pos2){
         this.pos1 = pos1;
         this.pos2 = pos2;
     }
 
+    /**
+     * Checks if this collision box is colliding with another collision box.
+     *
+     * @param otherBox The other collision box to check for collision.
+     * @param dispPosOther The displacement position of the other collision box.
+     * @return True if the collision boxes are colliding, false otherwise.
+     */
     public boolean isColliding(CollisionBox otherBox, GridPosition dispPosOther) {
 
         GridPosition other1 = new Position3D(otherBox.pos1.x() + dispPosOther.x(), otherBox.pos1.y() + dispPosOther.y(), otherBox.pos1.z() + dispPosOther.z());
@@ -26,6 +34,15 @@ public final class CollisionBox {
                 isCollidingAxis(pos1.z(), pos2.z(), other1.z(), other2.z());
     }
 
+    /**
+     * Helper method to check if two intervals on a single axis are colliding.
+     *
+     * @param a1 The first value of the first interval.
+     * @param a2 The second value of the first interval.
+     * @param b1 The first value of the second interval.
+     * @param b2 The second value of the second interval.
+     * @return True if the intervals are colliding, false otherwise.
+     */
     private static boolean isCollidingAxis(float a1, float a2, float b1, float b2) {
         float minA = Math.min(a1, a2);
         float maxA = Math.max(a1, a2);
@@ -35,6 +52,14 @@ public final class CollisionBox {
         return !(maxA < minB || minA > maxB);
     }
 
+    /**
+     * Calculates the collision position between this collision box and another collision box.
+     *
+     * @param otherBox The other collision box to calculate the collision position with.
+     * @param beforePos The position of the other collision box before the collision.
+     * @param afterPos The position of the other collision box after the collision.
+     * @return The position of otherBox that is the closest to thisBox without colliding. With a small margin
+     */
     public GridPosition getCollisionPos(CollisionBox otherBox, GridPosition beforePos, GridPosition afterPos){
         
         GridPosition otherPos1bef = new Position3D(otherBox.pos1.x() + beforePos.x(), otherBox.pos1.y() + beforePos.y(), otherBox.pos1.z() + beforePos.z());
