@@ -100,15 +100,33 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         for(Entity entity : this.entities){
             if(entity.isMoving()){
                 if(entity.getCollisionBox() == null){
-                    entity.setPosition(Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint());
+                    if(entity.targetReached()){
+                        entity.setPosition(entity.getTargetPosition());
+                        entity.setMovementVector(new Vector(new float[]{0, 0, 0}));
+                    } else {
+                        entity.setPosition(Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint());
+                    }
                 }else {
                     GridPosition newPos = Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint();
                     CollisionBox collidingBox = collisionDetector.getCollidingBox(entity.getCollisionBox(), newPos);
                     if(collidingBox == null){
-                        entity.setPosition(newPos);
-                        entity.setMovementVector(applyGravityToDelta(entity.getMovementVector()));
+                        if(entity.targetReached()){
+                            entity.setPosition(entity.getTargetPosition());
+                            Vector delta = new Vector(new float[]{0, 0, 0});
+                            entity.setMovementVector(applyGravityToDelta(delta));
+                        } else {
+                            entity.setPosition(newPos);
+                            entity.setMovementVector(applyGravityToDelta(entity.getMovementVector()));
+                        }
+                        
                     } else {
                         GridPosition correctedNewPos = collidingBox.getCollisionPos(entity.getCollisionBox(), entity.getPosition(), newPos);
+                        if(entity.targetReached()){
+                            entity.setPosition(entity.getTargetPosition());
+                        } else {
+                            entity.setPosition(newPos);
+                        }
+                        
     
                         entity.setPosition(correctedNewPos);
                         entity.setMovementVector(new Vector(new float[]{entity.getMovementVector().get(0), 0, entity.getMovementVector().get(2)}));

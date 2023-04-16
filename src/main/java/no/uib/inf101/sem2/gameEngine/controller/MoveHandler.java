@@ -19,6 +19,7 @@ public class MoveHandler {
     boolean dKeyPressed;
     boolean spaceKeyPressed;
     boolean ctrlKeyPressed;
+    boolean shiftKeyPressed;
 
     /**
      * Constructor for MoveHandler.
@@ -64,8 +65,7 @@ public class MoveHandler {
             dKeyPressed = true;
             change = true;
         }
-        //The difference here is so that the player jumps continuously while the space key is held down.
-        if(press.getKeyCode() == KeyEvent.VK_SPACE && (!spaceKeyPressed || !noclip)) {
+        if(press.getKeyCode() == KeyEvent.VK_SPACE && !spaceKeyPressed ) {
             spaceKeyPressed = true;
             change = true;
         }
@@ -73,6 +73,15 @@ public class MoveHandler {
             ctrlKeyPressed = true;
             change = true;
         }
+        if(press.getKeyCode() == KeyEvent.VK_SHIFT && !shiftKeyPressed) {
+            this.moveSpeed *= 2;
+            shiftKeyPressed = true;
+            change = true;
+        }
+        if(spaceKeyPressed &&  !noclip){
+            change = true;
+        }
+
 
         return change;
     }
@@ -108,6 +117,11 @@ public class MoveHandler {
         }
         if(release.getKeyCode() == KeyEvent.VK_CONTROL && ctrlKeyPressed) {
             ctrlKeyPressed = false;
+            change = true;
+        }
+        if(release.getKeyCode() == KeyEvent.VK_SHIFT && shiftKeyPressed) {
+            this.moveSpeed /= 2;
+            shiftKeyPressed = false;
             change = true;
         }
 

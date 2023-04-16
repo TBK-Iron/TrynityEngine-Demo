@@ -10,9 +10,7 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
 
-import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
 import no.uib.inf101.sem2.game.model.GameState;
@@ -62,6 +60,12 @@ public class GameView extends JPanel {
         Inf101Graphics.drawCenteredImage(g2, logoImage, x, y, 0.45);
     }
 
+    //TODO: Implement
+    private void drawMainMenu(Graphics2D g2){
+
+    }
+
+    //TODO: add GUI elements
     private void drawActiveGame(Graphics2D g2){
         this.sceneImage = this.engineView.getNextSceneImage();
         g2.drawImage(this.sceneImage, 0, 0, null);
@@ -72,6 +76,7 @@ public class GameView extends JPanel {
         this.setCursor(transparentCursor);
     }
 
+    //TODO: finish
     private void drawPausedGame(Graphics2D g2){
         g2.drawImage(this.sceneImage, 0, 0, null);
 

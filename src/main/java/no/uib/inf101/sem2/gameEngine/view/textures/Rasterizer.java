@@ -122,10 +122,6 @@ public class Rasterizer {
                     textureWidth = texture.getWidth();
                     textureHeight = texture.getHeight();
                     textureData = texture.getRGB(0, 0, textureWidth, textureHeight, null, 0, textureWidth);
-                    
-                    if(face.getTexture().textureKey().equals("trym")){
-                        System.out.println(textureData.length);
-                    }
                 }
 
 

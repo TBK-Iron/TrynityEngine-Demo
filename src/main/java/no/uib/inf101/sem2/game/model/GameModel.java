@@ -28,6 +28,11 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
         loadGame();
     }
+    
+    //TODO: Implement this method
+    private void loadMainMenu(){
+
+    }
 
     private void loadGame(){
         ArrayList<ShapeData> shapesData = this.map.loadShapes();

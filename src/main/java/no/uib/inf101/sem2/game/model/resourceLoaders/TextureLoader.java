@@ -22,10 +22,9 @@ public class TextureLoader {
             textures.put("leaves", ImageIO.read(new File("src/main/resources/textures/leaves.jpg")));
             textures.put("brick", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
 
-            textures.put("zombie_head", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
-            textures.put("zombie_leg", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
-            textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
-            textures.put("zombie_arm", ImageIO.read(new File("src/main/resources/textures/brick.jpg")));
+            textures.put("zombie_head", ImageIO.read(new File("src/main/resources/textures/zombie_head.png")));
+            textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/zombie_torso.png")));
+            textures.put("zombie_appendages", ImageIO.read(new File("src/main/resources/textures/zombie_appendages.png")));
             textures.put("trym", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
             
             /* textures.put("trollface", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
@@ -36,9 +35,8 @@ public class TextureLoader {
             textures.put("brick", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
 
             textures.put("zombie_head", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
-            textures.put("zombie_leg", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
             textures.put("zombie_torso", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
-            textures.put("zombie_arm", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
+            textures.put("zombie_appendages", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg")));
             textures.put("trym", ImageIO.read(new File("src/main/resources/textures/trymImage.jpg"))); */
 
             logoImage = ImageIO.read(new File("src/main/resources/Trynity_Logo.png"));
