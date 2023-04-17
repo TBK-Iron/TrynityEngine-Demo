@@ -2,6 +2,7 @@ package no.uib.inf101.sem2.gameEngine.controller;
 
 import java.awt.event.KeyEvent;
 
+import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 /**
@@ -9,17 +10,15 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
  * calculates the movement delta based on the pressed keys.
  */
 public class MoveHandler {
-    float moveSpeed;
-    boolean noclip;
-    float jumpBurst;
+    private Config config;
 
-    boolean wKeyPressed;
-    boolean aKeyPressed;
-    boolean sKeyPressed;
-    boolean dKeyPressed;
-    boolean spaceKeyPressed;
-    boolean ctrlKeyPressed;
-    boolean shiftKeyPressed;
+    private boolean wKeyPressed;
+    private boolean aKeyPressed;
+    private boolean sKeyPressed;
+    private boolean dKeyPressed;
+    private boolean spaceKeyPressed;
+    private boolean ctrlKeyPressed;
+    private boolean shiftKeyPressed;
 
     /**
      * Constructor for MoveHandler.
@@ -28,10 +27,8 @@ public class MoveHandler {
      * @param noclip Whether noclip mode is enabled or not.
      * @param jumpBurst The burst of movement when jumping.
      */
-    public MoveHandler(float moveSpeed, boolean noclip, float jumpBurst){
-        this.moveSpeed = moveSpeed;
-        this.noclip = noclip;
-        this.jumpBurst = jumpBurst;
+    public MoveHandler(Config config){
+        this.config = config;
 
         wKeyPressed = false;
         aKeyPressed = false;
@@ -74,11 +71,10 @@ public class MoveHandler {
             change = true;
         }
         if(press.getKeyCode() == KeyEvent.VK_SHIFT && !shiftKeyPressed) {
-            this.moveSpeed *= 2;
             shiftKeyPressed = true;
             change = true;
         }
-        if(spaceKeyPressed &&  !noclip){
+        if(spaceKeyPressed &&  !this.config.noclip()){
             change = true;
         }
 
@@ -120,7 +116,6 @@ public class MoveHandler {
             change = true;
         }
         if(release.getKeyCode() == KeyEvent.VK_SHIFT && shiftKeyPressed) {
-            this.moveSpeed /= 2;
             shiftKeyPressed = false;
             change = true;
         }
@@ -157,20 +152,27 @@ public class MoveHandler {
             up += -1;
         }
 
+        float moveSpeed;
+        if(this.shiftKeyPressed){
+            moveSpeed = this.config.cameraSprintSpeed();
+        } else {
+            moveSpeed = this.config.cameraMoveSpeed();
+        }
+
         Vector deltaXZ = new Vector(new float[]{left, forwards});
         Vector normalizedXZ;
         if(left == 0 && forwards == 0){
             normalizedXZ = new Vector(new float[]{0, 0});
         } else {
-            normalizedXZ = deltaXZ.normalized().scaledBy(this.moveSpeed);
+            normalizedXZ = deltaXZ.normalized().scaledBy(moveSpeed);
         }
 
-        if(this.noclip){
-            return new Vector(new float[]{normalizedXZ.get(0), up*this.moveSpeed, normalizedXZ.get(1)});
+        if(this.config.noclip()){
+            return new Vector(new float[]{normalizedXZ.get(0), up*moveSpeed, normalizedXZ.get(1)});
         
         } else {
             if(this.spaceKeyPressed) {
-                return new Vector(new float[]{normalizedXZ.get(0), this.jumpBurst, normalizedXZ.get(1)});
+                return new Vector(new float[]{normalizedXZ.get(0), this.config.jumpBurst(), normalizedXZ.get(1)});
             } else {
                 return new Vector(new float[]{normalizedXZ.get(0), 0, normalizedXZ.get(1)});
             }

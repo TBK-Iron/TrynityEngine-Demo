@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.event.MouseEvent;
 
+import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 /**
@@ -12,11 +13,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
  */
 public class MouseHandler {
 
-    private int width;
-    private int height;
-
-    private int centerX;
-    private int centerY;
+    private Config config;
 
     /**
      * Constructs a new MouseHandler with the specified screen dimensions.
@@ -24,12 +21,9 @@ public class MouseHandler {
      * @param width  The width of the screen.
      * @param height The height of the screen.
      */
-    protected MouseHandler(int width, int height){
-        this.width = width;
-        this.height = height;
+    protected MouseHandler(Config config){
 
-        this.centerX = width / 2;
-        this.centerY = height / 2;
+        this.config = config;
     }
     
     /**
@@ -39,7 +33,7 @@ public class MouseHandler {
         Robot robot;
         try {
             robot = new Robot();
-            robot.mouseMove(centerX, centerY);
+            robot.mouseMove(config.screenWidth()/2, config.screenHeight()/2);
         } catch(AWTException e){
             e.printStackTrace();
         }
@@ -57,11 +51,11 @@ public class MouseHandler {
         int y = e.getY();
         int absY = e.getYOnScreen();
         
-        int dx = -(x + (absX - x) - this.centerX);
-        int dy = y + (absY - y) - this.centerY;
+        int dx = -(x + (absX - x) - config.screenWidth()/2);
+        int dy = y + (absY - y) - config.screenHeight()/2;
 
-        float leftRightRot = ((float) dx / width);
-        float upDownRot = ((float) dy / height);
+        float leftRightRot = ((float) dx / config.screenWidth());
+        float upDownRot = ((float) dy / config.screenHeight());
 
         return new RelativeRotation(upDownRot, leftRightRot);
     }

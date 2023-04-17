@@ -21,6 +21,8 @@ public class Entity extends Shape3D implements EngineEntity {
     public Entity(ShapeData shapeData, CollisionBox collisionBox) {
         super(shapeData);
         this.movementVector = new Vector(new float[]{0, 0, 0});
+        this.targetPosition = this.anchoredPos;
+        System.out.println(this.movementVector);
         this.collisionBox = collisionBox;
     }
 
@@ -64,7 +66,11 @@ public class Entity extends Shape3D implements EngineEntity {
 
     public void setTargetPosition(GridPosition targetPos, float speed){
         Vector newMovementVector = Vector.getVector(this.getPosition(), targetPos);
-        newMovementVector = newMovementVector.normalized().scaledBy(speed);
+        if(newMovementVector.magnitude() == 0){
+            newMovementVector = new Vector(new float[]{0, 0, 0});
+        } else {
+            newMovementVector = newMovementVector.normalized().scaledBy(speed);
+        }
         if(this.collisionBox == null){
             this.movementVector = newMovementVector;
             this.targetPosition = targetPos;

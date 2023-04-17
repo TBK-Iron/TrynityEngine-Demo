@@ -1,5 +1,6 @@
 package no.uib.inf101.sem2.game.view;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -10,10 +11,15 @@ import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 
 import javax.swing.JPanel;
 
+import no.uib.inf101.sem2.game.controller.Button;
 import no.uib.inf101.sem2.game.model.GameState;
+import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
+import no.uib.inf101.sem2.game.view.ColorThemes.ColorTheme;
+import no.uib.inf101.sem2.game.view.ColorThemes.DefaultColorTheme;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
@@ -22,11 +28,15 @@ public class GameView extends JPanel {
     private final SceneMaker engineView;
     private final ViewableGameModel model;
     private BufferedImage sceneImage;
-    private final BufferedImage logoImage;
+    private final TextureLoader images;
     private Config config;
+    private final ColorTheme CTheme;
+
+    private ArrayList<Button> pauseMenuButtons;
+    private ArrayList<Button> mainMenuButtons;
 
 
-    public GameView(ViewableGameModel model, Config config, SceneMaker engineView, BufferedImage logoImage) {
+    public GameView(ViewableGameModel model, Config config, SceneMaker engineView, TextureLoader images) {
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.WHITE);
         this.setFocusable(true);
@@ -35,7 +45,39 @@ public class GameView extends JPanel {
         this.model = model;
         this.engineView = engineView;
         this.config = config;
-        this.logoImage = logoImage;
+        this.images = images;
+        this.CTheme = new DefaultColorTheme();
+
+        this.createPauseMenuButtons();
+        this.createMainMenuButtons();
+    }
+
+    private void createMainMenuButtons(){
+        int sWidth = this.config.screenWidth();
+        int sHeight = this.config.screenHeight();
+
+        this.mainMenuButtons = new ArrayList<>();
+        this.mainMenuButtons.add(new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, "Play"));
+        this.mainMenuButtons.add(new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, "Settings"));
+        this.mainMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Quit"));
+    }
+    
+    private void createPauseMenuButtons(){
+        int sWidth = this.config.screenWidth();
+        int sHeight = this.config.screenHeight();
+
+        this.pauseMenuButtons = new ArrayList<>();
+        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, "Resume"));
+        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, "Settings"));
+        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Main Menu"));    
+    }
+
+    public ArrayList<Button> getPauseMenuButtons(){
+        return this.pauseMenuButtons;
+    }
+
+    public ArrayList<Button> getMainMenuButtons(){
+        return this.mainMenuButtons;
     }
 
     @Override
@@ -44,7 +86,7 @@ public class GameView extends JPanel {
         if(this.model.getGameState() == GameState.LOADING){
             drawLoadingScreen(g2);
         } else if(this.model.getGameState() == GameState.MAIN_MENU){
-
+            drawMainMenu(g2);
         } else if(this.model.getGameState() == GameState.LEVEL_MENU){
 
         } else if(this.model.getGameState() == GameState.ACTIVE){
@@ -57,12 +99,16 @@ public class GameView extends JPanel {
     private void drawLoadingScreen(Graphics2D g2){
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
-        Inf101Graphics.drawCenteredImage(g2, logoImage, x, y, 0.45);
+        Inf101Graphics.drawCenteredImage(g2, this.images.getLogo(), x, y, 0.45);
     }
 
     //TODO: Implement
     private void drawMainMenu(Graphics2D g2){
+        double x = this.config.screenWidth() / 2;
+        double y = this.config.screenHeight() / 2;
+        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
 
+        drawButtons(g2, this.mainMenuButtons, this.CTheme);
     }
 
     //TODO: add GUI elements
@@ -86,12 +132,24 @@ public class GameView extends JPanel {
         double height = this.config.screenHeight();
 
         Rectangle2D transparentMesh = new Rectangle2D.Double(0, 0, width, height);
-        g2.setColor(new Color(128, 128, 128, 128));
+        g2.setColor(this.CTheme.getPauseMenuHue());
         g2.fill(transparentMesh);
 
-        Rectangle2D resumeButton = new Rectangle2D.Double(width*1/4, height*0.25, width*2/4, height*0.1);
-        g2.setColor(Color.GRAY);
-        g2.fill(resumeButton);
+        drawButtons(g2, this.pauseMenuButtons, this.CTheme);
+    }
+
+    private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme){
+        for(Button b : buttons){
+            g2.setColor(CTheme.getButtonColor());
+            g2.fill(b.getRect());
+
+            g2.setColor(CTheme.getButtonBorderColor());
+            g2.setStroke(new BasicStroke(3));
+            g2.draw(b.getRect());
+
+            g2.setColor(CTheme.getTextColor());
+            Inf101Graphics.drawCenteredString(g2, b.getName(), b.getCenterX(), b.getCenterY());
+        }
     }
     
 }

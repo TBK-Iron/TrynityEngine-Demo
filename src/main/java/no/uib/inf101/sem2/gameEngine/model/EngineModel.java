@@ -36,12 +36,16 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         this.collisionDetector = collisionDetector;
     }
 
-    public void createShape(ShapeData shapeData){
-        shapes.add(new Shape3D(shapeData));
+    public void setCamera(Camera camera){
+        this.camera = camera;
     }
 
-    public void createEntity(ShapeData shapeData, CollisionBox collisionBox){
-        entities.add(new Entity(shapeData, collisionBox));
+    public void addShape(Shape3D shape){
+        shapes.add(shape);
+    }
+
+    public void addEntity(Entity entity){
+        entities.add(entity);
     }
 
     public void setCameraCollision(CollisionBox collisionBox){

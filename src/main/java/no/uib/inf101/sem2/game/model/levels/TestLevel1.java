@@ -4,13 +4,24 @@ import java.io.File;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
+import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class TestLevel1 implements Level {
 
-    public TestLevel1() {}
+    @Override
+    public RelativeRotation startRotation(){
+        return new RelativeRotation(0, 0);
+    }
+
+    @Override
+    public Position3D startPosition(){
+        return new Position3D(0, 0, 0);
+    }
 
     @Override
     public ArrayList<ShapeData> loadShapes() {
@@ -29,16 +40,30 @@ public class TestLevel1 implements Level {
     }
 
     @Override
-    public ArrayList<CollisionBox> loadEntityCollision() {
-        ArrayList<CollisionBox> entityCollisionShapes = new ArrayList<>();
-
-        return entityCollisionShapes;
-    }
-
-    @Override
     public ArrayList<CollisionBox> loadCollisionBoxes() {
         ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
 
         return collisionBoxes;
+    }
+
+    @Override
+    public ArrayList<Enemy> loadEnemies() {
+        ArrayList<Enemy> enemies = new ArrayList<>();
+
+        return enemies;
+    }
+
+    @Override
+    public ArrayList<EnemySpawner> loadEnemySpawners() {
+        ArrayList<EnemySpawner> enemySpawners = new ArrayList<>();
+
+        return enemySpawners;
+    }
+
+    @Override
+    public ArrayList<Door> loadDoors() {
+        ArrayList<Door> doors = new ArrayList<>();
+
+        return doors;
     }
 }

@@ -8,7 +8,7 @@ import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
 
-public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener{
+public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener, java.awt.event.MouseListener{
     ControllableGameModel model;
     GameView view;
     Config config;
@@ -22,6 +22,7 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         this.engineController = engineController;
 
         this.view.addMouseMotionListener(this);
+        this.view.addMouseListener(this);
         this.view.addKeyListener(this);
 
     }
@@ -62,5 +63,50 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void keyTyped(KeyEvent arg0) {
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent arg0) {
+        if(this.model.getGameState() == GameState.MAIN_MENU){
+            int x = arg0.getX();
+            int y = arg0.getY();
+            if(this.view.getMainMenuButtons().get(0).isClicked(x, y)){
+                this.model.setGameState(GameState.ACTIVE);
+            } else if(this.view.getMainMenuButtons().get(1).isClicked(x, y)){
+                //TODO: Add settings menu
+            } else if(this.view.getMainMenuButtons().get(2).isClicked(x, y)){
+                System.exit(0);
+            }
+        } else if(this.model.getGameState() == GameState.PAUSED){
+            int x = arg0.getX();
+            int y = arg0.getY();
+            if(this.view.getPauseMenuButtons().get(0).isClicked(x, y)){
+                this.model.setGameState(GameState.ACTIVE);
+            } else if(this.view.getPauseMenuButtons().get(1).isClicked(x, y)){
+                //TODO: Add settings menu
+            } else if(this.view.getPauseMenuButtons().get(2).isClicked(x, y)){
+                this.model.setGameState(GameState.MAIN_MENU);
+            }
+        }
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent arg0) {
+        //Do nothing
+    }
+
+    @Override
+    public void mouseExited(MouseEvent arg0) {
+        //Do nothing
+    }
+
+    @Override
+    public void mousePressed(MouseEvent arg0) {
+        //Do nothing
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent arg0) {
+        //Do nothing
     }
 }

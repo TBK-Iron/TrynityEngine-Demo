@@ -42,6 +42,12 @@ public interface Config {
     float cameraMoveSpeed();
 
     /**
+     * 
+     * @return The speed at which the camera moves when sprinting. (per frame)
+     */
+    public float cameraSprintSpeed();
+
+    /**
      * Resizes the game frame to the specified dimensions.
      *
      * @param width  The new width of the game frame.

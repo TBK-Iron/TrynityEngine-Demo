@@ -17,8 +17,8 @@ public class EngineController {
         this.model = model;
         this.config = config;
         this.view = view;
-        this.mouseHandler = new MouseHandler(config.screenWidth(), config.screenHeight());
-        this.moveHandler = new MoveHandler(config.cameraMoveSpeed(), config.noclip(), config.jumpBurst());
+        this.mouseHandler = new MouseHandler(config);
+        this.moveHandler = new MoveHandler(config);
     }
 
     public void mouseMoved(MouseEvent arg0) {    
