@@ -3,7 +3,6 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.game.model.entities.EngineEntity;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
@@ -11,11 +10,12 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
 
 
-public class Entity extends Shape3D implements EngineEntity {
+public class Entity extends Shape3D {
 
     CollisionBox collisionBox;
     Vector movementVector;
     RelativeRotation rotationDelta;
+    int rotationFrameCount;
     GridPosition targetPosition;
 
     public Entity(ShapeData shapeData, CollisionBox collisionBox) {
@@ -35,7 +35,12 @@ public class Entity extends Shape3D implements EngineEntity {
     }
     
     public void rotate(){
-        this.rotation = this.rotation.add(this.rotationDelta);
+        if(rotationFrameCount > 0){
+            this.rotation = this.rotation.add(this.rotationDelta);
+            rotationFrameCount--;
+        } else if(rotationFrameCount == -1){
+            this.rotation = this.rotation.add(this.rotationDelta);
+        }
     }
 
     public void setPosition(GridPosition position){
@@ -43,13 +48,24 @@ public class Entity extends Shape3D implements EngineEntity {
     }
 
     public boolean targetReached(){
-        this.anchoredPos = Vector.add(new Vector((Position3D) this.anchoredPos), this.movementVector).getPoint();
+        GridPosition target = this.targetPosition;
+        GridPosition current = this.anchoredPos;
+
+        if(Math.abs(target.x() - current.x()) < 0.001f){
+            if(Math.abs(target.y() - current.y()) < 0.001f){
+                if(Math.abs(target.z() - current.z()) < 0.001f){
+                    return true;
+                }
+            }
+        }
+        return false;
+        /* this.anchoredPos = Vector.add(new Vector((Position3D) this.anchoredPos), this.movementVector).getPoint();
         Vector calibratedMovementVector = Vector.getVector(anchoredPos, targetPosition);
         if(Vector.dotProduct(this.movementVector, calibratedMovementVector) < 0){
             return true;
         } else {
             return false;
-        }
+        } */
     }
 
     public GridPosition getTargetPosition(){
@@ -83,8 +99,9 @@ public class Entity extends Shape3D implements EngineEntity {
         }
     }
 
-    public void setRotationDelta(RelativeRotation delta){
-        this.rotation = this.rotation.add(delta);
+    public void setRotationDelta(RelativeRotation delta, int frames){
+       this.rotationDelta = delta;
+       this.rotationFrameCount = frames;
     }
 
     public Vector getMovementVector(){

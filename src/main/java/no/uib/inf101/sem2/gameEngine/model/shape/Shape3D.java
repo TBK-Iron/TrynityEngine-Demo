@@ -41,7 +41,9 @@ public class Shape3D {
             Scanner myReader = new Scanner(file, "UTF-8");
             
             ArrayList<Face> faces = new ArrayList<>();
+            int line = 0;
             while(myReader.hasNextLine()){
+                line++;
                 String[] face = myReader.nextLine().split(":");
                 if(face.length != 0){
                     String[] points = face[0].split(";"); 
@@ -52,7 +54,7 @@ public class Shape3D {
                         String[] sPoint = point.replace("(", "").replace(")", "").split(",");
                         if(sPoint.length != 3){
                             myReader.close();
-                            throw new UnsupportedOperationException("Points must be 3 values long (x, y, z)");
+                            throw new UnsupportedOperationException("Points must be 3 values long (x, y, z), error in file " + file + ", at line " + line);
                         }
                         for(int j = 0; j < 3; j++){
                             dPoint[j] = Float.parseFloat(sPoint[j]);
@@ -81,12 +83,12 @@ public class Shape3D {
                         }
                         if(posisions.size() * 2 != fuv.length){
                             myReader.close();
-                            throw new UnsupportedOperationException("Texture must have the same number of uv values as points");
+                            throw new UnsupportedOperationException("Texture must have the same number of uv values as points, error in file " + file + ", at line " + line);
                         }
                         texture = new FaceTexture(textureKey, fuv);
                     } else {
                         myReader.close();
-                        throw new UnsupportedOperationException("Face must be either COLOR or TEXTURE");
+                        throw new UnsupportedOperationException("Face must be either COLOR or TEXTURE, error in file " + file + ", at line " + line);
                     }
                     
                     

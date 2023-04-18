@@ -15,7 +15,7 @@ public class DefaultConfig implements Config {
     final int skyboxColor = 0xFFADD8E6;
     final float gravity = 0.013f;
     final float jumpBurst = 0.25f;
-    final boolean noclip = true;
+    final boolean noclip = false;
 
     @Override
     public float verticalFOV() {

@@ -15,9 +15,10 @@ public class Door {
     private static final float OPEN_SPEED = 0.1f;
     public static final File DOOR_MODEL = new File("src/main/resources/shapes/door.trym");
 
-    private EngineEntity doorEntity;
+    private Entity doorEntity;
     private boolean isOpen;
-    private GridPosition startPos;
+    private final GridPosition startPos;
+    private final float activationRadius;
 
     public Door(GridPosition position, RelativeRotation rotation, float activationRadius){
         ShapeData doorShape = new ShapeData(position, rotation, DOOR_MODEL);
@@ -25,6 +26,7 @@ public class Door {
         this.isOpen = false;
 
         this.startPos = position;
+        this.activationRadius = activationRadius;
     }
 
     public boolean isWithinRadius(GridPosition camPos){

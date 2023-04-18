@@ -141,7 +141,9 @@ public class Rasterizer {
                 int localSize = 256;
 
                 //Taking the closest multiple of localSize to the number of pixels to process, this avoids an error which makes the kernel not run on the gpu.
-                Range range = Range.create((int) Math.ceil((faceWidth * faceHeight)/localSize)*localSize, localSize); 
+                int globalSize = (int) Math.ceil((double) faceWidth * faceHeight / localSize) * localSize;
+                Range range = Range.create(Math.max(globalSize, localSize), localSize);
+
                 
                 kernel.execute(range);
 

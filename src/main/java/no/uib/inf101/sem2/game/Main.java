@@ -33,7 +33,7 @@ public class Main {
 
     gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
-    Level map = new LegendOfTheBeast();
+    Level map = new GrassWorld();
 
     GameModel model = new GameModel(map, engine.model(), engine.collisionDetector());
     GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker(), textureLoader);

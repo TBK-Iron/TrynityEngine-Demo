@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.game.model;
 
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
 import no.uib.inf101.sem2.game.model.levels.Level;
 
@@ -14,6 +15,7 @@ import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class GameModel implements ViewableGameModel, ControllableGameModel{
@@ -25,7 +27,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
     Camera camera;
 
-    ArrayList<Zombie> zombies;
+    ArrayList<Enemy> enemies;
     ArrayList<Door> doors;
 
     public GameModel(Level map, EngineModel engineModel, CollisionDetector collisionDetector){
@@ -54,6 +56,11 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.engineModel.addEntity(door.getEntity());
         }
 
+        this.enemies = this.map.loadEnemies();
+        for(Enemy enemy : this.enemies){
+            this.engineModel.addEntity(enemy.getEntity());
+        }
+
 
         /* ArrayList<ShapeData> entityData = this.map.loadEntities();
         ArrayList<CollisionBox> entityCollision = null;
@@ -65,17 +72,25 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
         } */
 
         CollisionBox cameraCollisionBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
-        this.engineModel.setCameraCollision(cameraCollisionBox);
         this.camera = new Camera(this.map.startPosition(), this.map.startRotation());
+        this.camera.setCollision(cameraCollisionBox);
         this.engineModel.setCamera(this.camera);
     }
 
     public void updateGame(){
+        GridPosition camPos = this.camera.getPos();
+        GridPosition playerPos = new Position3D(camPos.x(), camPos.y() - 1.999f, camPos.z());
         for(Door door : this.doors){
-            if(door.isWithinRadius(this.camera.getPos())){
+            if(door.isWithinRadius(playerPos)){
                 door.open();
             } else {
                 door.close();
+            }
+        }
+
+        for(Enemy enemy : this.enemies){
+            if(enemy.isWithinRadius(playerPos)){
+                enemy.setTargetPosition(playerPos);
             }
         }
     }

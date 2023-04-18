@@ -79,25 +79,28 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         return maxDistance;
     }
     public void updateCameraPosition(){
+       
         if(this.cameraMoveSpeed.magnitude() != 0){
             if(this.camera.getCollisionBox() == null || this.config.noclip()){
                 this.camera.setPos(Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint());
             } else {
                 GridPosition newPos = Vector.add(new Vector((Position3D) this.camera.getPos()), this.cameraMoveSpeed).getPoint();
                 CollisionBox collidingBox = collisionDetector.getCollidingBox(this.camera.getCollisionBox(), newPos);
-                if(collidingBox == null){
-                    this.camera.setPos(newPos);
-                    this.cameraMoveSpeed = applyGravityToDelta(this.cameraMoveSpeed);
-                } else {     
-                    GridPosition correctedNewPos = collidingBox.getCollisionPos(this.camera.getCollisionBox(), this.camera.getPos(), newPos);
-                    this.camera.setPos(correctedNewPos);
-                    //System.out.println(correctedNewPos);
-                    this.cameraMoveSpeed = new Vector(new float[]{this.cameraMoveSpeed.get(0), 0, this.cameraMoveSpeed.get(2)});
+                
+                int collisions = 0;
+                while(collidingBox != null){
+                    newPos = collidingBox.getCollisionPos(this.camera.getCollisionBox(), this.camera.getPos(), newPos);
+                    collidingBox = collisionDetector.getCollidingBox(this.camera.getCollisionBox(), newPos);
+                    collisions++;
                 }
+                this.camera.setPos(newPos);
+                if(collisions != 0){
+                    this.cameraMoveSpeed = new Vector(new float[]{this.cameraMoveSpeed.get(0), 0, this.cameraMoveSpeed.get(2)});
+                } else {
+                    this.cameraMoveSpeed = applyGravityToDelta(this.cameraMoveSpeed);
+                }              
             }
         }
-        
-        //System.out.println("Camera position set to: " + this.cameraPos);
     }
 
     public void updateEntityPositions(){
@@ -111,30 +114,26 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
                         entity.setPosition(Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint());
                     }
                 }else {
-                    GridPosition newPos = Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint();
-                    CollisionBox collidingBox = collisionDetector.getCollidingBox(entity.getCollisionBox(), newPos);
-                    if(collidingBox == null){
-                        if(entity.targetReached()){
-                            entity.setPosition(entity.getTargetPosition());
-                            Vector delta = new Vector(new float[]{0, 0, 0});
-                            entity.setMovementVector(applyGravityToDelta(delta));
-                        } else {
-                            entity.setPosition(newPos);
-                            entity.setMovementVector(applyGravityToDelta(entity.getMovementVector()));
-                        }
-                        
+                    if(entity.targetReached()){
+                        entity.setPosition(entity.getTargetPosition());
                     } else {
-                        GridPosition correctedNewPos = collidingBox.getCollisionPos(entity.getCollisionBox(), entity.getPosition(), newPos);
-                        if(entity.targetReached()){
-                            entity.setPosition(entity.getTargetPosition());
-                        } else {
-                            entity.setPosition(newPos);
-                        }
+                        GridPosition newPos = Vector.add(new Vector((Position3D) entity.getPosition()), entity.getMovementVector()).getPoint();
+                        CollisionBox collidingBox = collisionDetector.getCollidingBox(entity.getCollisionBox(), newPos);
                         
-    
-                        entity.setPosition(correctedNewPos);
-                        entity.setMovementVector(new Vector(new float[]{entity.getMovementVector().get(0), 0, entity.getMovementVector().get(2)}));
+                        int collisions = 0;
+                        while(collidingBox != null){
+                            newPos = collidingBox.getCollisionPos(entity.getCollisionBox(), entity.getPosition(), newPos);
+                            collidingBox = collisionDetector.getCollidingBox(entity.getCollisionBox(), newPos);
+                            collisions++;
+                        }
+                        entity.setPosition(newPos);
+                        if(collisions != 0){
+                            entity.setMovementVector(new Vector(new float[]{entity.getMovementVector().get(0), 0, entity.getMovementVector().get(2)}));
+                        } else {
+                            entity.setMovementVector(applyGravityToDelta(entity.getMovementVector()));
+                        }  
                     }
+                    
                 }
             }
         }

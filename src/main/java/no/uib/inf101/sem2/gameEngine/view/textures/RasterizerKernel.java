@@ -57,9 +57,11 @@ public class RasterizerKernel extends Kernel{
 
             float zP_inv = alpha * zA_inv + beta * zB_inv + gamma * zC_inv;
 
-            if(1/zP_inv < this.zBuffer[xP + yP * totalWidth]){
+            int pixelNr = xP + yP * totalWidth;
+
+            if(1/zP_inv < this.zBuffer[pixelNr]){
                 //Correct the barycentric coordinates for perspective
-                this.zBuffer[xP + yP * totalWidth] = 1/zP_inv;
+                this.zBuffer[pixelNr] = 1/zP_inv;
 
                 alpha = alpha * zA_inv / zP_inv;
                 beta = beta * zB_inv / zP_inv;
@@ -67,19 +69,19 @@ public class RasterizerKernel extends Kernel{
 
                 //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
                 float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
-                //u = u % 1;
-                u = u - (int) u;
+                u = u % 1;
+                //u = u - (int) u;
 
                 float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
-                //v = v % 1;
-                v = v - (int) v;
+                v = v % 1;
+                //v = v - (int) v;
 
                 //Get the color that corresponds to the texture coordinates
                 int textureX = (int) (u * (this.textureWidth - 1));
                 int textureY = (int) (v * (this.textureHeight - 1));
                 int pixelColor = this.texture[textureX + textureY * this.textureWidth];
 
-                this.output[xP + yP * totalWidth] = pixelColor;
+                this.output[pixelNr] = pixelColor;
             }
 
             
