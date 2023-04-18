@@ -9,6 +9,7 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
+import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.EngineModel;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
@@ -23,6 +24,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     GameState currentState;
     EngineModel engineModel;
     CollisionDetector collisionDetector;
+    CollisionDetector killDetector;
     Level map;
 
     Camera camera;
@@ -30,13 +32,17 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     ArrayList<Enemy> enemies;
     ArrayList<Door> doors;
 
-    public GameModel(Level map, EngineModel engineModel, CollisionDetector collisionDetector){
+    Config config;
+
+    public GameModel(Level map, EngineModel engineModel, CollisionDetector collisionDetector, Config config){
         this.currentState = GameState.MAIN_MENU;
         this.map = map;
 
         this.collisionDetector = collisionDetector;
         this.engineModel = engineModel;
 
+        this.killDetector = new CollisionDetector();
+        this.config = config;
 
         loadGame();
     }
@@ -61,6 +67,9 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.engineModel.addEntity(enemy.getEntity());
         }
 
+        for(CollisionBox killbox : this.map.loadKillBoxes()){
+            this.killDetector.addCollisionBox(killbox);
+        }
 
         /* ArrayList<ShapeData> entityData = this.map.loadEntities();
         ArrayList<CollisionBox> entityCollision = null;
@@ -78,19 +87,23 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     }
 
     public void updateGame(){
-        GridPosition camPos = this.camera.getPos();
-        GridPosition playerPos = new Position3D(camPos.x(), camPos.y() - 1.999f, camPos.z());
-        for(Door door : this.doors){
-            if(door.isWithinRadius(playerPos)){
-                door.open();
-            } else {
-                door.close();
+        if(!this.config.noclip()){
+            GridPosition camPos = this.camera.getPos();
+            GridPosition playerPos = new Position3D(camPos.x(), camPos.y() - 1.999f, camPos.z());
+            for(Door door : this.doors){
+                if(door.isWithinRadius(playerPos)){
+                    door.open();
+                } else {
+                    door.close();
+                }
             }
-        }
-
-        for(Enemy enemy : this.enemies){
-            if(enemy.isWithinRadius(playerPos)){
-                enemy.setTargetPosition(playerPos);
+            if(this.killDetector.getCollidingBox(this.camera.getCollisionBox(), this.camera.getPos()) != null){
+                this.camera.setPos(this.map.startPosition());
+            }
+            for(Enemy enemy : this.enemies){
+                if(enemy.isWithinRadius(playerPos)){
+                    enemy.setTargetPosition(playerPos);
+                }
             }
         }
     }

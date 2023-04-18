@@ -47,6 +47,13 @@ public class TestLevel1 implements Level {
     }
 
     @Override
+    public ArrayList<CollisionBox> loadKillBoxes() {
+        ArrayList<CollisionBox> killBoxes = new ArrayList<>();
+
+        return killBoxes;
+    }
+
+    @Override
     public ArrayList<Enemy> loadEnemies() {
         ArrayList<Enemy> enemies = new ArrayList<>();
 

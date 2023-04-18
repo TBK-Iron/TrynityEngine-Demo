@@ -22,6 +22,8 @@ public interface Level {
 
     public ArrayList<CollisionBox> loadCollisionBoxes();
 
+    public ArrayList<CollisionBox> loadKillBoxes();
+
     public ArrayList<Enemy> loadEnemies();
 
     public ArrayList<EnemySpawner> loadEnemySpawners();

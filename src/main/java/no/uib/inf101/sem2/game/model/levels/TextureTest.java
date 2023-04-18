@@ -22,7 +22,7 @@ public class TextureTest implements Level {
     public Position3D startPosition(){
         return new Position3D(0, 0, 0);
     }
-    
+
     @Override
     public ArrayList<ShapeData> loadShapes() {
         ArrayList<ShapeData> shapes = new ArrayList<>();
@@ -43,6 +43,13 @@ public class TextureTest implements Level {
         ArrayList<CollisionBox> collisionBoxes = new ArrayList<>();
 
         return collisionBoxes;
+    }
+
+    @Override
+    public ArrayList<CollisionBox> loadKillBoxes() {
+        ArrayList<CollisionBox> killBoxes = new ArrayList<>();
+
+        return killBoxes;
     }
 
     @Override
