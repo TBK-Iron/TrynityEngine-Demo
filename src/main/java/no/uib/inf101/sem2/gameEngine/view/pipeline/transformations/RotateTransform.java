@@ -13,11 +13,11 @@ public final class RotateTransform implements Transformation {
     
     private final Matrix matrix;
 
-    public RotateTransform(RelativeRotation rotation){
-        this.matrix = getRotationMatrix(rotation);
+    public RotateTransform(RelativeRotation rotation, boolean inverse){
+        this.matrix = getRotationMatrix(rotation, inverse);
     }
 
-    private static Matrix getRotationMatrix(RelativeRotation rot){
+    private static Matrix getRotationMatrix(RelativeRotation rot, boolean inverse){
         float pivot = rot.getPivot();
         float upDown = -rot.getUpDown();
         float leftRight = rot.getLeftRight();
@@ -40,8 +40,12 @@ public final class RotateTransform implements Transformation {
             {(float) -Math.sin(leftRight), 0f, (float) Math.cos(leftRight)}
         });
 
-        Matrix rotationMatrix = Matrix.multiply(pivotMatrix, Matrix.multiply(updownMatrix, leftRightMatrix));
-
+        Matrix rotationMatrix;
+        if(inverse){
+            rotationMatrix = Matrix.multiply(pivotMatrix, Matrix.multiply(updownMatrix, leftRightMatrix));
+        } else {
+            rotationMatrix = Matrix.multiply(leftRightMatrix, Matrix.multiply(updownMatrix, pivotMatrix));
+        }
         return rotationMatrix;
     }
 

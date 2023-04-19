@@ -27,10 +27,15 @@ public class Shape3D {
      * @param shapeData The ShapeData containing the position, rotation, and file to parse.
      */
     public Shape3D(ShapeData shapeData){
-        this.faces = new ArrayList<>();
         this.anchoredPos = shapeData.position();
         this.rotation = shapeData.rotation();
         this.faces = parseTrymFile(shapeData.file());
+    }
+
+    public Shape3D(Shape3D primaryShape){
+        this.faces = primaryShape.faces;
+        this.anchoredPos = primaryShape.anchoredPos;
+        this.rotation = primaryShape.rotation;
     }
 
     /**

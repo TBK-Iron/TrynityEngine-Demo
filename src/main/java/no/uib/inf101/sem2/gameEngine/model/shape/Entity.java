@@ -15,7 +15,9 @@ public class Entity extends Shape3D {
     private final CollisionBox collisionBox;
     private Vector movementVector;
     private RelativeRotation rotationDelta;
+    private RelativeRotation rotationDeltaDelta;
     private int rotationFrameCount;
+   
     private GridPosition targetPosition;
 
     public Entity(ShapeData shapeData, CollisionBox collisionBox) {
@@ -24,10 +26,26 @@ public class Entity extends Shape3D {
         this.targetPosition = this.anchoredPos;
         System.out.println(this.movementVector);
         this.collisionBox = collisionBox;
+
+        this.rotationDelta = new RelativeRotation(0, 0, 0);
+        this.rotationDeltaDelta = new RelativeRotation(0, 0, 0);
+        this.rotationFrameCount = 0;
     }
 
     public Entity(ShapeData shapeData){
         this(shapeData, null);
+    }
+
+    public Entity(Entity primaryEntity){
+        super(primaryEntity);
+    
+        this.movementVector = primaryEntity.movementVector;
+        this.targetPosition = primaryEntity.targetPosition;
+        this.collisionBox = primaryEntity.collisionBox;
+
+        this.rotationDelta = primaryEntity.rotationDelta;
+        this.rotationDeltaDelta = primaryEntity.rotationDeltaDelta;
+        this.rotationFrameCount = primaryEntity.rotationFrameCount;
     }
 
     public void setRotation(RelativeRotation rotation){
@@ -35,12 +53,12 @@ public class Entity extends Shape3D {
     }
     
     public void rotate(){
-        if(rotationFrameCount > 0){
+        if(rotationFrameCount >= 1){
             this.rotation = this.rotation.add(this.rotationDelta);
             rotationFrameCount--;
-        } else if(rotationFrameCount < 0){
+        } else if(this.rotationFrameCount == -1){
             this.rotation = this.rotation.add(this.rotationDelta);
-            this.rotationDelta = rotationDelta.scaledBy(-rotationFrameCount);
+            this.rotationDelta = this.rotationDelta.add(this.rotationDeltaDelta);
         }
     }
 
@@ -93,9 +111,15 @@ public class Entity extends Shape3D {
         }
     }
 
-    public void setRotationDelta(RelativeRotation delta, int frames){
+    public void setRotationDelta(RelativeRotation delta, int frames, RelativeRotation acceleration){
        this.rotationDelta = delta;
        this.rotationFrameCount = frames;
+
+       if(acceleration == null){
+           this.rotationDeltaDelta = new RelativeRotation(0, 0, 0);
+       } else {
+           this.rotationDeltaDelta = acceleration;
+       }
     }
 
     public Vector getMovementVector(){

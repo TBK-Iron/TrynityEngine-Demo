@@ -17,7 +17,7 @@ public final class View implements Transformation {
     }
 
     private Matrix createViewMatrix(RelativeRotation cameraRotation, GridPosition cameraPos){
-        Matrix rotM = new RotateTransform(cameraRotation.getNegRotation()).getMatrix();
+        Matrix rotM = new RotateTransform(cameraRotation.getNegRotation(), true).getMatrix();
         Matrix expRotationMatrix = new Matrix(new float[][]{
             {rotM.get(0, 0), rotM.get(0, 1), rotM.get(0, 2), 0},
             {rotM.get(1, 0), rotM.get(1, 1), rotM.get(1, 2), 0},

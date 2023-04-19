@@ -155,7 +155,7 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
     public void setMovementDelta(Vector relativeDelta){
         Vector delta;
         if(relativeDelta.magnitude() != 0){
-            Matrix rotationMatrix = new RotateTransform(new RelativeRotation(0, this.camera.getRotation().getLeftRight())).getMatrix();
+            Matrix rotationMatrix = new RotateTransform(new RelativeRotation(0, this.camera.getRotation().getLeftRight()), true).getMatrix();
             delta = rotationMatrix.multiply(relativeDelta);
         } else {
             

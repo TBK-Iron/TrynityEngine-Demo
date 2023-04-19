@@ -20,4 +20,6 @@ public interface Enemy {
     public void setTargetPosition(GridPosition pos);
 
     public GridPosition getPosition();
+
+    public Enemy clone();
 }

@@ -32,10 +32,10 @@ public class Door {
     public boolean isWithinRadius(GridPosition camPos){
         Vector distanceVector = Vector.getVector(camPos, startPos);
         float dist = distanceVector.magnitude();
-        if(dist > 2.5f){
-            return false;
-        } else {
+        if(dist < activationRadius){
             return true;
+        } else {
+            return false;
         }
     }
 

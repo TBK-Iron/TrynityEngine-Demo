@@ -78,7 +78,7 @@ public final class RelativeRotation {
      * @return A vector representing the direction of this rotation.
      */
     public Vector getVector(){
-        Matrix rotMatrix = new RotateTransform(this).getMatrix();
+        Matrix rotMatrix = new RotateTransform(this, false).getMatrix();
         Vector zeroRotationVector = new Vector(new float[]{0, 0, 1});
 
         return rotMatrix.multiply(zeroRotationVector);

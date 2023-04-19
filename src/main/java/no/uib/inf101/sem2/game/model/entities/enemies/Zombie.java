@@ -31,6 +31,15 @@ public class Zombie implements Enemy{
         this.health = Zombie.START_HEALTH;
     }
 
+    private Zombie(Zombie primaryZombie){
+        this.zombieEntity = new Entity(primaryZombie.zombieEntity);
+        this.health = primaryZombie.health;
+    }
+
+    public Enemy clone(){
+        return new Zombie(this);
+    }
+
     @Override
     public boolean isWithinRadius(GridPosition camPos){
         Vector distanceVector = Vector.getVector(camPos, this.zombieEntity.getPosition());
@@ -60,9 +69,9 @@ public class Zombie implements Enemy{
     public void kill(){
         float randomVal = (float) Math.random();
         if(randomVal > 0.5f){
-            this.zombieEntity.setRotationDelta(new RelativeRotation((float) Math.PI/50, 0), 25);
+            this.zombieEntity.setRotationDelta(new RelativeRotation((float) Math.PI/50, 0), 25, null);
         } else {
-            this.zombieEntity.setRotationDelta(new RelativeRotation((float) -Math.PI/50, 0), 25);
+            this.zombieEntity.setRotationDelta(new RelativeRotation((float) -Math.PI/50, 0), 25, null);
         }
         
         this.zombieEntity.setTargetPosition(getPosition(), Zombie.MOVE_SPEED);
@@ -78,7 +87,7 @@ public class Zombie implements Enemy{
     public float damageTo(GridPosition entityPos){
         Vector distanceVector = Vector.getVector(entityPos, this.zombieEntity.getPosition());
         float dist = distanceVector.magnitude();
-        if(dist < Zombie.damageRadius){
+        if(dist < Zombie.damageRadius && isAlive()){
             return Zombie.damage;
         } else {
             return 0;

@@ -15,7 +15,7 @@ public class RotateTransformTest {
         Vector testV = new Vector(new float[]{1, 1, 1});
 
         //Test no rotation
-        RotateTransform rotTrans1 = new RotateTransform(new RelativeRotation(0, 0));
+        RotateTransform rotTrans1 = new RotateTransform(new RelativeRotation(0, 0), false);
         Matrix expectedMatrix1 = new Matrix(new float[][]{
             {1, 0, 0},
             {0, 1, 0},
@@ -26,7 +26,7 @@ public class RotateTransformTest {
         assertEquals(expectedMatrix1.multiply(testV), rotTrans1.getMatrix().multiply(testV));
 
         //Test 90 degrees rotation
-        RotateTransform rotTrans2 = new RotateTransform(new RelativeRotation(0, (float) Math.PI/2));
+        RotateTransform rotTrans2 = new RotateTransform(new RelativeRotation(0, (float) Math.PI/2), false);
         Matrix expectedMatrix2 = new Matrix(new float[][]{
             {0, 0, 1},
             {0, 1, 0},
@@ -37,7 +37,7 @@ public class RotateTransformTest {
         assertEquals(expectedMatrix2.multiply(testV), rotTrans2.getMatrix().multiply(testV));
 
         //Test 90 degrees up rotation
-        RotateTransform rotTrans3 = new RotateTransform(new RelativeRotation((float) Math.PI/2, 0));
+        RotateTransform rotTrans3 = new RotateTransform(new RelativeRotation((float) Math.PI/2, 0), false);
         Matrix expectedMatrix3 = new Matrix(new float[][]{
             {1, 0, 0},
             {0, 0, 1},
@@ -49,7 +49,7 @@ public class RotateTransformTest {
 
 
         //Test 45 degree leftright and 45 degree updown rotation
-        RotateTransform rotTrans4 = new RotateTransform(new RelativeRotation((float) Math.PI/4, (float) Math.PI/4));
+        RotateTransform rotTrans4 = new RotateTransform(new RelativeRotation((float) Math.PI/4, (float) Math.PI/4), false);
         //Fix this matrix
         Matrix expectedMatrix4 = new Matrix(new float[][]{
             {0.70710677f, 0, 0.70710677f},

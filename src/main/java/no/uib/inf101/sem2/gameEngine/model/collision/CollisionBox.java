@@ -18,6 +18,12 @@ public final class CollisionBox {
         this.maxPos = new Position3D(Math.max(pos1.x(), pos2.x()), Math.max(pos1.y(), pos2.y()), Math.max(pos1.z(), pos2.z()));
     }
 
+    public CollisionBox translatedBy(Vector vector){
+        GridPosition newMinPos = Vector.add(new Vector((Position3D) minPos), vector).getPoint();
+        GridPosition newMaxPos = Vector.add(new Vector((Position3D) maxPos), vector).getPoint();
+        return new CollisionBox(newMinPos, newMaxPos);
+    }
+
     /**
      * Checks if this collision box is colliding with another collision box.
      *
@@ -113,6 +119,8 @@ public final class CollisionBox {
      * @return true if the ray intersects with the AABB, false otherwise.
      * @author Partially ChatGPT
      */
+
+    //TODO: Fix this method
     public boolean rayIntersection(GridPosition rayOrigin, Vector normalizedDirectionVector){
         Vector minVectorBox = new Vector((Position3D) minPos);
         Vector maxVectorBox = new Vector((Position3D) maxPos);
@@ -129,9 +137,9 @@ public final class CollisionBox {
         float tFar = Math.min(Math.min(t2.get(0), t2.get(1)), t2.get(2));
 
         if(tFar >= tNear && tFar > 0){
-            return true;
-        } else {
             return false;
+        } else {
+            return true;
         }
     }
 }

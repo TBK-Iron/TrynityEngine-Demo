@@ -102,7 +102,6 @@ public class GameView extends JPanel {
         Inf101Graphics.drawCenteredImage(g2, this.images.getLogo(), x, y, 0.45);
     }
 
-    //TODO: Implement
     private void drawMainMenu(Graphics2D g2){
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
