@@ -1,10 +1,22 @@
-package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
-
+/**
+ * Represents a matrix of floating point numbers.
+ * Provides methods to perform basic matrix operations such as addition, multiplication, and scaling.
+ */
 public final class Matrix {
     
+    /**
+     * The 2D array of float values representing the elements of the matrix.
+     */
     private final float[][] value;
 
+    /**
+     * Constructs a new Matrix with the specified 2D array of values.
+     * 
+     * @param value the 2D array of float values representing the elements of the matrix
+     * @throws IllegalArgumentException if the number of rows is not consistent
+     */
     public Matrix(float[][] value){
         if(!isValid(value)){
             throw new IllegalArgumentException("Number of rows not consistent");
@@ -12,6 +24,12 @@ public final class Matrix {
         this.value = value;
     }
 
+    /**
+     * Checks if the given matrix is valid, i.e., if all rows have the same number of columns.
+     * 
+     * @param matrix the 2D array of float values to be checked
+     * @return true if the matrix is valid, false otherwise
+     */
     private static boolean isValid(float[][] matrix){
         int cols = matrix[0].length;
         for(float[] row : matrix){
@@ -22,10 +40,25 @@ public final class Matrix {
         return true;
     }
 
+    /**
+     * Returns the value at the specified row and column.
+     * 
+     * @param row the row index
+     * @param col the column index
+     * @return the value at the specified row and column
+     */
     public float get(int row, int col){
         return this.value[row][col];
     }
 
+    /**
+     * Multiplies two matrices and returns the result.
+     * 
+     * @param m1 the first matrix
+     * @param m2 the second matrix
+     * @return the resulting matrix after multiplication
+     * @throws IllegalArgumentException if the matrices can't be multiplied
+     */
     public static Matrix multiply(Matrix m1, Matrix m2) {
         //Matrix multiplication
         if (m1.value[0].length != m2.value.length) {
@@ -45,6 +78,13 @@ public final class Matrix {
         }
     }
 
+    /**
+     * Transforms a vector by multiplying it with this matrix.
+     * 
+     * @param vector the vector to be multiplied with this matrix
+     * @return the resulting vector after multiplication
+     * @throws IllegalArgumentException if the vector can't be multiplied with this matrix
+     */
     public Vector multiply(Vector vector){
         if(this.getCols() != vector.getDims()){
             throw new IllegalArgumentException("Vector can't be multiplied with matrix");
@@ -62,6 +102,15 @@ public final class Matrix {
         }
         
     }
+
+    /**
+     * Adds two matrices and returns the result.
+     * 
+     * @param m1 the first matrix
+     * @param m2 the second matrix
+     * @return the resulting matrix after addition
+     * @throws IllegalArgumentException if the matrices can't be added
+     */
     public static Matrix add(Matrix m1, Matrix m2){
         if(m1.getRows() != m2.getRows() || m1.getCols() != m2.getCols()){
             throw new IllegalArgumentException("Matrices can't be added");
@@ -76,6 +125,12 @@ public final class Matrix {
         }
     }
 
+    /**
+     * Returns a new matrix with all elements scaled by the given scalar.
+     * 
+     * @param scalar the scaling factor
+     * @return the resulting matrix after scaling
+     */
     public Matrix scaledBy(float scalar){
         float[][] newMatrix = new float[this.getRows()][this.getCols()];
         for (int i = 0; i < this.getRows(); i++) {
@@ -86,6 +141,12 @@ public final class Matrix {
         return new Matrix(newMatrix);
     }
 
+    /**
+     * Creates an identity matrix of the specified dimensions.
+     * 
+     * @param dimensions the number of rows and columns of the identity matrix
+     * @return the identity matrix
+     */
     public static Matrix identityMatrix(int dimensions){
         float[][] newMatrix = new float[dimensions][dimensions];
         for (int i = 0; i < dimensions; i++) {
@@ -100,10 +161,20 @@ public final class Matrix {
         return new Matrix(newMatrix);
     }
 
+    /**
+     * Returns the number of rows in this matrix.
+     * 
+     * @return the number of rows in this matrix
+     */
     public int getRows(){
         return this.value.length;
     }
 
+    /**
+     * Returns the number of columns in this matrix.
+     * 
+     * @return the number of columns in this matrix
+     */
     public int getCols(){
         return this.value[0].length;
     }

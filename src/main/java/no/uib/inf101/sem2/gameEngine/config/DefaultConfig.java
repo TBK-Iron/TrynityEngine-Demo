@@ -8,14 +8,14 @@ public class DefaultConfig implements Config {
     int screenWidth = 854;
     int screenHeight = 480;
     final float nearPlane = 0.5f;
-    final float farPlane = 500f;
+    final float farPlane = 100f;
     final float fps = 60f;
     final float cameraMoveSpeed = 0.09f;
     final float cameraSprintSpeed = 0.20f;
     final int skyboxColor = 0xFFADD8E6;
     final float gravity = 0.013f;
     final float jumpBurst = 0.25f;
-    final boolean noclip = false;
+    final boolean noclip = true;
 
     @Override
     public float verticalFOV() {

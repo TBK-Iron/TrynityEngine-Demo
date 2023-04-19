@@ -6,8 +6,8 @@ import java.util.Comparator;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Frustum;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 public class Culling {
     /**

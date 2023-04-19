@@ -1,7 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.transformations;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Matrix;
 
 public interface Transformation {
 

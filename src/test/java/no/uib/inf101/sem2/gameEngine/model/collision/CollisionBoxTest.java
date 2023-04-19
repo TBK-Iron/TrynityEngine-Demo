@@ -14,8 +14,8 @@ class CollisionBoxTest {
         GridPosition pos2 = new Position3D(1, 1, 1);
         CollisionBox box = new CollisionBox(pos1, pos2);
 
-        assertEquals(pos1, box.pos1);
-        assertEquals(pos2, box.pos2);
+        assertEquals(pos1, box.minPos);
+        assertEquals(pos2, box.maxPos);
     }
 
     @Test

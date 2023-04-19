@@ -2,19 +2,20 @@ package no.uib.inf101.sem2.gameEngine.model.collision;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 /**
  * This class represents a collision box in 3D space for detecting and resolving collisions between game objects.
- * The collision box is defined by two opposite corners, pos1 and pos2.
+ * The collision box is defined by two opposite corners, minPos and maxPos.
  */
 public final class CollisionBox {
-    final GridPosition pos1;
-    final GridPosition pos2;
+    final GridPosition minPos;
+    final GridPosition maxPos;
     static final float MARGIN = 0.001f;
 
     public CollisionBox(GridPosition pos1, GridPosition pos2){
-        this.pos1 = pos1;
-        this.pos2 = pos2;
+        this.minPos = new Position3D(Math.min(pos1.x(), pos2.x()), Math.min(pos1.y(), pos2.y()), Math.min(pos1.z(), pos2.z()));
+        this.maxPos = new Position3D(Math.max(pos1.x(), pos2.x()), Math.max(pos1.y(), pos2.y()), Math.max(pos1.z(), pos2.z()));
     }
 
     /**
@@ -26,12 +27,12 @@ public final class CollisionBox {
      */
     public boolean isColliding(CollisionBox otherBox, GridPosition dispPosOther) {
 
-        GridPosition other1 = new Position3D(otherBox.pos1.x() + dispPosOther.x(), otherBox.pos1.y() + dispPosOther.y(), otherBox.pos1.z() + dispPosOther.z());
-        GridPosition other2 = new Position3D(otherBox.pos2.x() + dispPosOther.x(), otherBox.pos2.y() + dispPosOther.y(), otherBox.pos2.z() + dispPosOther.z());
+        GridPosition other1 = new Position3D(otherBox.minPos.x() + dispPosOther.x(), otherBox.minPos.y() + dispPosOther.y(), otherBox.minPos.z() + dispPosOther.z());
+        GridPosition other2 = new Position3D(otherBox.maxPos.x() + dispPosOther.x(), otherBox.maxPos.y() + dispPosOther.y(), otherBox.maxPos.z() + dispPosOther.z());
 
-        return isCollidingAxis(pos1.x(), pos2.x(), other1.x(), other2.x()) &&
-                isCollidingAxis(pos1.y(), pos2.y(), other1.y(), other2.y()) &&
-                isCollidingAxis(pos1.z(), pos2.z(), other1.z(), other2.z());
+        return isCollidingAxis(minPos.x(), maxPos.x(), other1.x(), other2.x()) &&
+                isCollidingAxis(minPos.y(), maxPos.y(), other1.y(), other2.y()) &&
+                isCollidingAxis(minPos.z(), maxPos.z(), other1.z(), other2.z());
     }
 
     /**
@@ -62,38 +63,38 @@ public final class CollisionBox {
      */
     public GridPosition getCollisionPos(CollisionBox otherBox, GridPosition beforePos, GridPosition afterPos){
         
-        GridPosition otherPos1bef = new Position3D(otherBox.pos1.x() + beforePos.x(), otherBox.pos1.y() + beforePos.y(), otherBox.pos1.z() + beforePos.z());
-        GridPosition otherPos2bef = new Position3D(otherBox.pos2.x() + beforePos.x(), otherBox.pos2.y() + beforePos.y(), otherBox.pos2.z() + beforePos.z());
+        GridPosition otherminPosbef = new Position3D(otherBox.minPos.x() + beforePos.x(), otherBox.minPos.y() + beforePos.y(), otherBox.minPos.z() + beforePos.z());
+        GridPosition othermaxPosbef = new Position3D(otherBox.maxPos.x() + beforePos.x(), otherBox.maxPos.y() + beforePos.y(), otherBox.maxPos.z() + beforePos.z());
 
-        GridPosition otherPos1Aft = new Position3D(otherBox.pos1.x() + afterPos.x(), otherBox.pos1.y() + afterPos.y(), otherBox.pos1.z() + afterPos.z());
-        GridPosition otherPos2Aft = new Position3D(otherBox.pos2.x() + afterPos.x(), otherBox.pos2.y() + afterPos.y(), otherBox.pos2.z() + afterPos.z());
+        GridPosition otherminPosAft = new Position3D(otherBox.minPos.x() + afterPos.x(), otherBox.minPos.y() + afterPos.y(), otherBox.minPos.z() + afterPos.z());
+        GridPosition othermaxPosAft = new Position3D(otherBox.maxPos.x() + afterPos.x(), otherBox.maxPos.y() + afterPos.y(), otherBox.maxPos.z() + afterPos.z());
 
         GridPosition collisionPos;
 
-        if(isCollidingAxis(pos1.x(), pos2.x(), otherPos1bef.x(), otherPos2bef.x()) != isCollidingAxis(pos1.x(), pos2.x(), otherPos1Aft.x(), otherPos2Aft.x())){
+        if(isCollidingAxis(minPos.x(), maxPos.x(), otherminPosbef.x(), othermaxPosbef.x()) != isCollidingAxis(minPos.x(), maxPos.x(), otherminPosAft.x(), othermaxPosAft.x())){
             float collX;
             if(beforePos.x() < afterPos.x()){
-                collX = afterPos.x() - Math.abs(Math.max(otherPos1Aft.x(), otherPos2Aft.x()) - Math.min(this.pos1.x(), this.pos2.x())) - CollisionBox.MARGIN;
+                collX = afterPos.x() - Math.abs(Math.max(otherminPosAft.x(), othermaxPosAft.x()) - Math.min(this.minPos.x(), this.maxPos.x())) - CollisionBox.MARGIN;
             } else {
-                collX = afterPos.x() + Math.abs(Math.min(otherPos1Aft.x(), otherPos2Aft.x()) - Math.max(this.pos1.x(), this.pos2.x())) + CollisionBox.MARGIN;
+                collX = afterPos.x() + Math.abs(Math.min(otherminPosAft.x(), othermaxPosAft.x()) - Math.max(this.minPos.x(), this.maxPos.x())) + CollisionBox.MARGIN;
                 
             }
             collisionPos = new Position3D(collX, afterPos.y(), afterPos.z());
-        } else if(isCollidingAxis(pos1.y(), pos2.y(), otherPos1bef.y(), otherPos2bef.y()) != isCollidingAxis(pos1.y(), pos2.y(), otherPos1Aft.y(), otherPos2Aft.y())){
+        } else if(isCollidingAxis(minPos.y(), maxPos.y(), otherminPosbef.y(), othermaxPosbef.y()) != isCollidingAxis(minPos.y(), maxPos.y(), otherminPosAft.y(), othermaxPosAft.y())){
             float collY;
             if(beforePos.y() < afterPos.y()){
-                collY = afterPos.y() - Math.abs(Math.max(otherPos1Aft.y(), otherPos2Aft.y()) - Math.min(this.pos1.y(), this.pos2.y())) - CollisionBox.MARGIN;
+                collY = afterPos.y() - Math.abs(Math.max(otherminPosAft.y(), othermaxPosAft.y()) - Math.min(this.minPos.y(), this.maxPos.y())) - CollisionBox.MARGIN;
             } else {
-                collY = afterPos.y() + Math.abs(Math.min(otherPos1Aft.y(), otherPos2Aft.y()) - Math.max(this.pos1.y(), this.pos2.y())) + CollisionBox.MARGIN;
+                collY = afterPos.y() + Math.abs(Math.min(otherminPosAft.y(), othermaxPosAft.y()) - Math.max(this.minPos.y(), this.maxPos.y())) + CollisionBox.MARGIN;
                 
             }
             collisionPos = new Position3D(afterPos.x(), collY, afterPos.z());
-        } else if(isCollidingAxis(pos1.z(), pos2.z(), otherPos1bef.z(), otherPos2bef.z()) != isCollidingAxis(pos1.z(), pos2.z(), otherPos1Aft.z(), otherPos2Aft.z())){
+        } else if(isCollidingAxis(minPos.z(), maxPos.z(), otherminPosbef.z(), othermaxPosbef.z()) != isCollidingAxis(minPos.z(), maxPos.z(), otherminPosAft.z(), othermaxPosAft.z())){
             float collZ;
             if(beforePos.z() < afterPos.z()){
-                collZ = afterPos.z() - Math.abs(Math.max(otherPos1Aft.z(), otherPos2Aft.z()) - Math.min(this.pos1.z(), this.pos2.z())) - CollisionBox.MARGIN;
+                collZ = afterPos.z() - Math.abs(Math.max(otherminPosAft.z(), othermaxPosAft.z()) - Math.min(this.minPos.z(), this.maxPos.z())) - CollisionBox.MARGIN;
             } else {
-                collZ = afterPos.z() + Math.abs(Math.min(otherPos1Aft.z(), otherPos2Aft.z()) - Math.max(this.pos1.z(), this.pos2.z())) + CollisionBox.MARGIN;
+                collZ = afterPos.z() + Math.abs(Math.min(otherminPosAft.z(), othermaxPosAft.z()) - Math.max(this.minPos.z(), this.maxPos.z())) + CollisionBox.MARGIN;
                 
             }
             collisionPos = new Position3D(afterPos.x(), afterPos.y(), collZ);
@@ -104,4 +105,34 @@ public final class CollisionBox {
         return collisionPos;
     }
     
+    /**
+     * Tests if a ray intersects with an axis-aligned bounding box (AABB) defined by the object's minPos and maxPos.
+     *
+     * @param rayOrigin           The starting point of the ray, represented as a GridPosition.
+     * @param normalizedDirectionVector The normalized direction vector of the ray, pointing in the camera's direction.
+     * @return true if the ray intersects with the AABB, false otherwise.
+     * @author Partially ChatGPT
+     */
+    public boolean rayIntersection(GridPosition rayOrigin, Vector normalizedDirectionVector){
+        Vector minVectorBox = new Vector((Position3D) minPos);
+        Vector maxVectorBox = new Vector((Position3D) maxPos);
+        
+        Vector vectorOrigin = new Vector((Position3D) rayOrigin);
+
+        Vector tMin = Vector.divide(Vector.subtract(minVectorBox, vectorOrigin), normalizedDirectionVector);
+        Vector tMax = Vector.divide(Vector.subtract(maxVectorBox, vectorOrigin), normalizedDirectionVector);
+
+        Vector t1 = Vector.minVector(tMin, tMax);
+        Vector t2 = Vector.maxVector(tMin, tMax);
+
+        float tNear = Math.max(Math.max(t1.get(0), t1.get(1)), t1.get(2));
+        float tFar = Math.min(Math.min(t2.get(0), t2.get(1)), t2.get(2));
+
+        if(tFar >= tNear && tFar > 0){
+            return true;
+        } else {
+            return false;
+        }
+    }
 }
+

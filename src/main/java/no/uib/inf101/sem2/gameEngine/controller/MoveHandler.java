@@ -3,7 +3,7 @@ package no.uib.inf101.sem2.gameEngine.controller;
 import java.awt.event.KeyEvent;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 /**
  * Handles movement input from the user through keyboard events and

@@ -2,17 +2,29 @@ package no.uib.inf101.sem2.gameEngine.model.shape;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
+/**
+ * Represents a single face of a 3D shape, composed of a list of vertices.
+ * A face can have a texture, and various methods are provided for
+ * manipulating and querying the face properties.
+ */
 public class Face {
-    ArrayList<GridPosition> points;
-    Vector nVector;
-    FaceTexture texture;
+    private final List<GridPosition> points;
+    private Vector nVector;
+    private final FaceTexture texture;
 
-    public Face(ArrayList<GridPosition> points, FaceTexture texture){
+    /**
+     * Constructs a new Face with the specified list of vertices and texture.
+     * @param points List of vertices forming the face
+     * @param texture Texture applied to the face
+     * @throws IllegalArgumentException if the number of vertices doesn't match the number of UV coordinates
+     */
+    public Face(List<GridPosition> points, FaceTexture texture){
         if(points.size() * 2 != texture.uvMap().length){
             throw new IllegalArgumentException("Each vertex must have a corresponding UV coordinate");
         }
@@ -21,11 +33,7 @@ public class Face {
         this.texture = texture;
     }
 
-    public GridPosition get(int i){
-        return this.points.get(i);
-    }
-
-    public ArrayList<GridPosition> getPoints(){
+    public List<GridPosition> getPoints(){
         return this.points;
     }
 
@@ -37,10 +45,10 @@ public class Face {
         return this.points.size();
     }
 
-    public void set(int i, GridPosition newPos){
-        points.set(i, newPos);
-    }
-
+    /**
+     * Returns the normal vector of the face.
+     * @return Normal vector of the face
+     */
     public Vector getNormalVector(){
         if(nVector != null){
             return nVector;
@@ -52,6 +60,10 @@ public class Face {
         }
     }
 
+    /**
+     * Returns the minimum and maximum points of the axis-aligned bounding box in the XY plane.
+     * @return An array of two Vectors: {minVector, maxVector}
+     */
     public Vector[] getAABB_xy(){
         float[] minVals = new float[] {999999999, 999999999};
         float[] maxVals = new float[] {-999999999, -999999999};
@@ -77,39 +89,6 @@ public class Face {
 
         return new Vector[] {minVector, maxVector};
     }
-
-    /* public Vector[] getAABB_xyz(){
-        float[] minVals = new float[] {999999999, 999999999, 999999999};
-        float[] maxVals = new float[] {-999999999, -999999999, -999999999};
-
-        for(GridPosition point : this.points){
-            //X
-            if(point.x() < minVals[0]){
-                minVals[0] = point.x();
-            }
-            if (point.x() > maxVals[0]){
-                maxVals[0] = point.x();
-            }
-            //Y
-            if(point.y() < minVals[1]){
-                minVals[1] = point.y();
-            }
-            if (point.y() > maxVals[1]){
-                maxVals[1] = point.y();
-            }
-            //Z
-            if(point.z() < minVals[2]){
-                minVals[2] = point.z();
-            }
-            if (point.z() > maxVals[2]){
-                maxVals[2] = point.z();
-            }
-        }
-        Vector minVector = new Vector(minVals);
-        Vector maxVector = new Vector(maxVals);
-
-        return new Vector[] {minVector, maxVector};
-    } */
 
 
     @Override
@@ -171,22 +150,11 @@ public class Face {
         return true;
     }
 
-    public void removeDuplicatePoints(){
-        for(int i = 0; i < this.points.size(); i++){
-            GridPosition currentPos = this.points.get(i);
-            GridPosition nextPos = this.points.get((i + 1) % (this.points.size()));
-
-            if(Math.abs(currentPos.x() - nextPos.x()) < 0.0001){
-                if(Math.abs(currentPos.y() - nextPos.y()) < 0.0001){
-                    if(Math.abs(currentPos.z() - nextPos.z()) < 0.0001){
-                        this.points.remove(i);
-                        i--;
-                    }
-                }
-            }
-        }
-    }
-
+    /**
+     * Returns the point in the face that is closest to the origin, 
+     * note: this is not the vertex that is closest to the origin.
+     * @return Point closest to the origin
+     */
     public GridPosition getPointClosestToOrigin(){
         GridPosition closestPoint = this.points.get(0);
         for(int i = 1; i < this.points.size(); i++){
@@ -206,7 +174,11 @@ public class Face {
         return closestPoint;
     }
 
-    //TODO: Fix this, there is something very wrong
+    /**
+     * Returns a list of new faces, each composed of three vertices, by splitting the original face.
+     * @return A list of faces, each with three vertices
+     * @throws IllegalArgumentException if the face has less than 3 vertices
+     */
     public ArrayList<Face> getThreeVertexFaces(){
         ArrayList<Face> faces = new ArrayList<>();
         if(this.points.size() < 3){
@@ -242,6 +214,10 @@ public class Face {
         return faces;
     }
 
+    /**
+     * Returns the center of the face.
+     * @return The center position of the face
+     */
     public GridPosition getCenter() {
         float x = 0;
         float y = 0;

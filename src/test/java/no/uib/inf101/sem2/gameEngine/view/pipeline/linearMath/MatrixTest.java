@@ -1,8 +1,5 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
-
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

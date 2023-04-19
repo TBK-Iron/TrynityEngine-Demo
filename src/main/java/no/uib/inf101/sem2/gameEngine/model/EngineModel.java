@@ -14,8 +14,8 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.ViewableEngineModel;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransform;
 
 public class EngineModel implements ViewableEngineModel, ControllableEngineModel {

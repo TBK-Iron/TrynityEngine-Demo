@@ -1,69 +1,104 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
+import no.uib.inf101.sem2.gameEngine.model.collision.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
+import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
+import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Frustum;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Projection;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.awt.Color;
-import java.util.ArrayList;
+class FrustumTest {
 
+    private Frustum frustum;
+    private Matrix projectionMatrix;
+    private float near = 0.1f;
+    private float far = 1000.0f;
 
-public class FrustumTest {
+    @BeforeEach
+    void setUp() {
+        projectionMatrix = new Projection(60, 16.0f / 9.0f, near, far).getMatrix();
+        frustum = new Frustum(projectionMatrix, near, far);
+    }
 
     @Test
-    public void testClipFace(){
-        
-        /* float fov = (float) Math.toRadians(60);
-        float aspectRatio = 16f / 9f;
-        float near = 0.1f;
-        float far = 100f;
-        Rotation rotation = new Rotation(0, 0, 0);
-        ViewProjectionMatrix vpMatrix = new ViewProjectionMatrix(fov, aspectRatio, near, far, rotation);
+    public void testIsShapeVisible() {
 
-        Matrix viewProjectionMatrix = vpMatrix.getViewProjectionMatrix();
+        // Create vertices for a cube
+        ArrayList<GridPosition> vertices = new ArrayList<>();
+        vertices.add(new Position3D(-1, -1, -1));
+        vertices.add(new Position3D(1, -1, -1));
+        vertices.add(new Position3D(1, 1, -1));
+        vertices.add(new Position3D(-1, 1, -1));
+        vertices.add(new Position3D(-1, -1, 1));
+        vertices.add(new Position3D(1, -1, 1));
+        vertices.add(new Position3D(1, 1, 1));
+        vertices.add(new Position3D(-1, 1, 1));
 
-        
-        Frustum frustum = new Frustum(viewProjectionMatrix, near, far);
+        // Create faces for the cube
+        ArrayList<Face> faces = new ArrayList<>();
+        float[] uv = new float[]{0, 0, 1, 0, 1, 1, 0, 1};
+        FaceTexture texture = new FaceTexture("COLOR", uv);
 
-        ArrayList<GridPosition> points1 = new ArrayList<>();
-            points1.add(new Position3D(-1.0f, -1.0f, 5.0f));
-            points1.add(new Position3D(1.0f, -1.0f, 5.0f));
-            points1.add(new Position3D(1.0f, 1.0f, 5.0f));
-            points1.add(new Position3D(-1.0f, 1.0f, 5.0f));
-        
-        Face inputFace1 = new Face(points1, Color.BLACK);
-        Face clippedFace1 = frustum.clipFace(inputFace1);
+        faces.add(new Face(Arrays.asList(vertices.get(0), vertices.get(1), vertices.get(2), vertices.get(3)), texture));
+        faces.add(new Face(Arrays.asList(vertices.get(4), vertices.get(5), vertices.get(6), vertices.get(7)), texture));
+        faces.add(new Face(Arrays.asList(vertices.get(0), vertices.get(1), vertices.get(5), vertices.get(4)), texture));
+        faces.add(new Face(Arrays.asList(vertices.get(2), vertices.get(3), vertices.get(7), vertices.get(6)), texture));
+        faces.add(new Face(Arrays.asList(vertices.get(0), vertices.get(3), vertices.get(7), vertices.get(4)), texture));
+        faces.add(new Face(Arrays.asList(vertices.get(1), vertices.get(2), vertices.get(6), vertices.get(5)), texture));
 
-        //Test where the face shouldn't be clipped
-        assertEquals(inputFace1, clippedFace1);
+        // Create a Shape3D object
+        Shape3D cube = new Shape3D(faces);
 
-        ArrayList<GridPosition> points2 = new ArrayList<>();
-            points2.add(new Position3D(2, 1, 1));
-            points2.add(new Position3D(-2, 1, 1));
-            points2.add(new Position3D(-2, -1, 1));
-            points2.add(new Position3D(2, -1, 1));
+        // Test if a visible shape is reported as visible
+        assertTrue(frustum.isShapeVisible(cube));
+    }
 
 
-        Face inputFace2 = new Face(points2, null);
-        Face clippedFace2 = frustum.clipFace(inputFace2);
+    @Test
+    void testClipFace() {
+        FaceTexture textureInside = new FaceTexture("test", new float[]{0, 0, 1, 0, 1, 1, 0, 1});
 
-        ArrayList<GridPosition> desiredClipPoints = new ArrayList<>();
-            desiredClipPoints.add(new Position3D(1.343f, 0.57732f, 1f));
-            desiredClipPoints.add(new Position3D(-1.343f, 0.57732f, 1f));
-            desiredClipPoints.add(new Position3D(-1.343f, -0.57732f, 1f));
-            desiredClipPoints.add(new Position3D(1.343f, -0.57732f, 1f));
+        // Test face entirely outside the frustum
+        ArrayList<GridPosition> facePointsInside = new ArrayList<>();
+        facePointsInside.add(new Position3D(-1, -1, -5));
+        facePointsInside.add(new Position3D(1, -1, -5));
+        facePointsInside.add(new Position3D(1, 1, -5));
+        facePointsInside.add(new Position3D(-1, 1, -5));
+        Face faceInside = new Face(facePointsInside, textureInside);
+        Face clippedFaceInside = frustum.clipFace(faceInside);
+        ArrayList<GridPosition> expected = new ArrayList<>();
+        assertEquals(expected, clippedFaceInside.getPoints());
 
-        Face desiredClippedFace = new Face(desiredClipPoints, null);
-        
-        //Test where the all points and sides in face are outside the frustum, and the result should be a square that are in all the corners of the
-        //frustum.
-        assertEquals(clippedFace2, desiredClippedFace); */
+        // Test face partially within the frustum
+        ArrayList<GridPosition> facePointsPartiallyInside = new ArrayList<>();
+        facePointsPartiallyInside.add(new Position3D(-1, -1, -5));
+        facePointsPartiallyInside.add(new Position3D(1, -1, -5));
+        facePointsPartiallyInside.add(new Position3D(10, 1, -5));
+        facePointsPartiallyInside.add(new Position3D(-1, 1, -5));
+        Face facePartiallyInside = new Face(facePointsPartiallyInside, textureInside);
+        Face clippedFacePartiallyInside = frustum.clipFace(facePartiallyInside);
+        assertFalse(clippedFacePartiallyInside.getPoints().size() > faceInside.getPoints().size());
+
+        // Test face partially within the frustum
+        ArrayList<GridPosition> facePointsOutside = new ArrayList<>();
+        facePointsOutside.add(new Position3D(-1, -1, 1));
+        facePointsOutside.add(new Position3D(1, -1, 1));
+        facePointsOutside.add(new Position3D(1, 1, 1));
+        facePointsOutside.add(new Position3D(-1, 1, 1));
+        FaceTexture textureOutside = new FaceTexture("test", new float[]{0, 0, 1, 0, 1, 1, 0, 1});
+        Face faceOutside = new Face(facePointsOutside, textureOutside);
+        Face clippedFaceOutside = frustum.clipFace(faceOutside);
+        assertFalse(clippedFaceOutside.getPoints().isEmpty());
     }
 }
+

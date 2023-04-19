@@ -13,7 +13,7 @@ import com.aparapi.Range;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;

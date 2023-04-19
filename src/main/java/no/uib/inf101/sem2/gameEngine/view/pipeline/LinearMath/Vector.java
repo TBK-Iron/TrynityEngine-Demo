@@ -1,4 +1,4 @@
-package no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath;
+package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position2D;
@@ -6,13 +6,28 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position4D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
+/**
+ * A class representing an n-dimensional vector with various vector operations.
+ * This class supports basic operations such as addition, subtraction, multiplication, and division,
+ * as well as more advanced operations like dot product, cross product, and vector normalization.
+ */
 public final class Vector {
     private final float[] value;
 
+    /**
+     * Constructs a new Vector with the given float array.
+     *
+     * @param value The float array representing the vector.
+     */
     public Vector(float[] value){
         this.value = value;
     }
 
+    /**
+     * Constructs a new Vector from the given Position3D.
+     *
+     * @param value The Position3D object representing the vector.
+     */
     public Vector(Position3D value){
         this.value = new float[]{
             value.x(),
@@ -21,6 +36,13 @@ public final class Vector {
         };
     }
 
+    /**
+     * Returns a new Vector representing the difference between two GridPositions.
+     *
+     * @param p1 The first GridPosition.
+     * @param p2 The second GridPosition.
+     * @return A new Vector representing the difference between p1 and p2.
+     */
     public static Vector getVector(GridPosition p1, GridPosition p2){
         float x = p2.x() - p1.x();
         float y = p2.y() - p1.y();
@@ -29,6 +51,14 @@ public final class Vector {
         return new Vector(new float[] {x, y, z});
     }
 
+    /**
+     * Returns a new Vector representing the component-wise addition of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector representing the component-wise addition of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
     public static Vector add(Vector v1, Vector v2){
         if(v1.getDims() != v2.getDims()){
             throw new IllegalArgumentException();
@@ -40,7 +70,110 @@ public final class Vector {
         return new Vector(result);
     }
 
-    //Made by chatGPT
+    /**
+     * Returns a new Vector representing the component-wise subtraction of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector representing the component-wise subtraction of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
+    public static Vector subtract(Vector v1, Vector v2){
+        if(v1.getDims() != v2.getDims()){
+            throw new IllegalArgumentException();
+        }
+        float[] result = new float[v1.getDims()];
+        for(int i = 0; i < v1.getDims(); i++){
+            result[i] = v1.get(i) - v2.get(i);
+        }
+        return new Vector(result);
+    }
+
+    /**
+     * Returns a new Vector representing the component-wise multiplication of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector representing the component-wise multiplication of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
+    public static Vector multiply(Vector v1, Vector v2){
+        if(v1.getDims() != v2.getDims()){
+            throw new IllegalArgumentException();
+        }
+        float[] result = new float[v1.getDims()];
+        for(int i = 0; i < v1.getDims(); i++){
+            result[i] = v1.get(i) * v2.get(i);
+        }
+        return new Vector(result);
+    }
+
+    /**
+     * Returns a new Vector representing the component-wise division of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector representing the component-wise division of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
+    public static Vector divide(Vector v1, Vector v2){
+        if(v1.getDims() != v2.getDims()){
+            throw new IllegalArgumentException();
+        }
+        float[] result = new float[v1.getDims()];
+        for(int i = 0; i < v1.getDims(); i++){
+            result[i] = v1.get(i) / v2.get(i);
+        }
+        return new Vector(result);
+    }
+
+    /**
+     * Returns a new Vector with the minimum component-wise values of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector with the minimum component-wise values of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
+    public static Vector minVector(Vector v1, Vector v2){
+        if(v1.getDims() != v2.getDims()){
+            throw new IllegalArgumentException();
+        }
+        float[] result = new float[v1.getDims()];
+        for(int i = 0; i < v1.getDims(); i++){
+            result[i] = Math.min(v1.get(i), v2.get(i));
+        }
+        return new Vector(result);
+    }
+
+    /**
+     * Returns a new Vector with the maximum component-wise values of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector with the maximum component-wise values of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     */
+    public static Vector maxVector(Vector v1, Vector v2){
+        if(v1.getDims() != v2.getDims()){
+            throw new IllegalArgumentException();
+        }
+        float[] result = new float[v1.getDims()];
+        for(int i = 0; i < v1.getDims(); i++){
+            result[i] = Math.max(v1.get(i), v2.get(i));
+        }
+        return new Vector(result);
+    }
+
+    /**
+     * Returns a new Vector representing the cross product of two 3-dimensional vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return A new Vector representing the cross product of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors are not 3-dimensional.
+     * @author ChatGPT
+     */
     public static Vector crossProduct(Vector v1, Vector v2) {
         if (v1.getDims() != 3 || v2.getDims() != 3) {
             throw new IllegalArgumentException("Cross product is only supported for 3-dimensional vectors.");
@@ -52,7 +185,16 @@ public final class Vector {
         return new Vector(result);
     }
 
-    //Made by chatGPT
+
+    /**
+     * Returns the dot product of two vectors.
+     *
+     * @param v1 The first Vector.
+     * @param v2 The second Vector.
+     * @return The dot product of v1 and v2.
+     * @throws IllegalArgumentException If the input vectors have different dimensions.
+     * @author ChatGPT
+     */
     public static float dotProduct(Vector v1, Vector v2) {
         if (v1.getDims() != v2.getDims()) {
             throw new IllegalArgumentException("Vectors must have the same dimensions for dot product.");
@@ -64,15 +206,32 @@ public final class Vector {
         return result;
     }
 
+    
+    /**
+     * Returns the value at the specified index in the Vector.
+     *
+     * @param i The index of the value to be retrieved.
+     * @return The float value at the specified index.
+     */
     public float get(int i){
         return this.value[i];
     }
 
+    /**
+     * Returns the number of dimensions of the Vector.
+     *
+     * @return The number of dimensions of the Vector.
+     */
     public int getDims(){
         return value.length;
     }
 
 
+    /**
+     * Returns a new RelativeRotation object representing the rotation of the Vector.
+     *
+     * @return A new RelativeRotation object representing the rotation of the Vector.
+     */
     public static RelativeRotation getVectorRotation(Vector vector){
         vector = vector.normalized();
         float upDown = (float) Math.asin(vector.value[1]);
@@ -83,12 +242,22 @@ public final class Vector {
         return new RelativeRotation(upDown, leftRight);
     }
 
-
+    /**
+     * Returns a new Vector representing the normalized version of the current Vector.
+     *
+     * @return A new Vector representing the normalized version of the current Vector.
+     */
     public Vector normalized(){
         float vectorMagnitude = this.magnitude();
         return this.scaledBy(1/vectorMagnitude);
     }
 
+    /**
+     * Returns a new Vector obtained by scaling the current Vector by a scalar value.
+     *
+     * @param scalar The scalar value to scale the Vector by.
+     * @return A new Vector obtained by scaling the current Vector by the scalar value.
+     */
     public Vector scaledBy(float scalar){
         float[] scaledVector = new float[this.value.length];
         for(int i = 0; i < this.value.length; i++){
@@ -97,6 +266,11 @@ public final class Vector {
         return new Vector(scaledVector);
     }
 
+    /**
+     * Returns the magnitude (length) of the Vector.
+     *
+     * @return The magnitude (length) of the Vector.
+     */
     public float magnitude(){
         float magnitude = 0;
         for(int i = 0; i < this.getDims(); i++){
@@ -105,6 +279,14 @@ public final class Vector {
         return (float) Math.sqrt(magnitude);
     }
 
+
+    /**
+     * Returns a GridPosition object representing the current Vector as a point.
+     * The Vector must have 2, 3, or 4 dimensions to be converted to a point.
+     *
+     * @return A GridPosition object representing the current Vector as a point.
+     * @throws UnsupportedOperationException If the Vector has an unsupported number of dimensions.
+     */
     public GridPosition getPoint(){
         if(getDims() == 2){
             return new Position2D(this.value[0], this.value[1]);
@@ -118,6 +300,11 @@ public final class Vector {
         
     }
 
+    /**
+     * Returns a string representation of the current Vector.
+     *
+     * @return A string representation of the current Vector.
+     */
     @Override
     public String toString(){
         String[] sPoints = new String[getDims()];
@@ -129,6 +316,12 @@ public final class Vector {
         return result;
     }
 
+    /**
+     * Compares the current Vector with another object for equality.
+     *
+     * @param o2 The other object to compare with the current Vector.
+     * @return A boolean value indicating whether the current Vector and the other object are equal.
+     */
     @Override
     public boolean equals(Object o2){
         Vector v2 = (Vector) o2;

@@ -1,81 +1,130 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
-
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.*;
 import org.junit.jupiter.api.Test;
-
 import static org.junit.jupiter.api.Assertions.*;
 
-public class VectorTest {
-    
+class VectorTest {
     @Test
-    public void testGetVectorRotation(){
-        Vector v1 = new Vector(new float[] {0, 0, 1});
-        RelativeRotation r1 = new RelativeRotation(0, 0);
-        assertEquals(Vector.getVectorRotation(v1), r1);
-
-        Vector v2 = new Vector(new float[] {0, 1, 0});
-        RelativeRotation r2 = new RelativeRotation((float) Math.PI/2, 0);
-        assertEquals(Vector.getVectorRotation(v2), r2);
-
-        Vector v3 = new Vector(new float[] {0, 1, -1});
-        RelativeRotation r3 = new RelativeRotation((float) Math.PI/4, (float) Math.PI);
-        assertEquals(Vector.getVectorRotation(v3), r3);
-
+    void testAdd() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{5, 7, 9});
+        assertEquals(expectedResult, Vector.add(v1, v2));
     }
 
     @Test
-    public void testAdd() {
-        Vector v1 = new Vector(new float[] {1, 2, 3});
-        Vector v2 = new Vector(new float[] {4, 5, 6});
-        Vector v = Vector.add(v1, v2);
-        assertEquals(new Vector(new float[] {5, 7, 9}), v);
+    void testSubtract() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{-3, -3, -3});
+        assertEquals(expectedResult, Vector.subtract(v1, v2));
     }
 
     @Test
-    public void testCrossProduct() {
-        Vector v1 = new Vector(new float[] {1, 2, 3});
-        Vector v2 = new Vector(new float[] {4, 5, 6});
-        Vector v = Vector.crossProduct(v1, v2);
-        assertEquals(new Vector(new float[] {-3, 6, -3}), v);
+    void testMultiply() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{4, 10, 18});
+        assertEquals(expectedResult, Vector.multiply(v1, v2));
     }
 
     @Test
-    public void testDotProduct() {
-        Vector v1 = new Vector(new float[] {1, 2, 3});
-        Vector v2 = new Vector(new float[] {4, 5, 6});
-        float result = Vector.dotProduct(v1, v2);
-        assertEquals(32, result, 0.0001f);
+    void testDivide() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{0.25f, 0.4f, 0.5f});
+        assertEquals(expectedResult, Vector.divide(v1, v2));
     }
 
     @Test
-    public void testNormalized() {
-        Vector v = new Vector(new float[] {3, 4, 5});
-        Vector normalized = v.normalized();
-        assertEquals(1.0, normalized.magnitude(), 0.0001f);
+    void testMinVector() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{1, 2, 3});
+        assertEquals(expectedResult, Vector.minVector(v1, v2));
     }
 
     @Test
-    public void testScaledBy() {
-        Vector v = new Vector(new float[] {1, 2, 3});
-        Vector scaled = v.scaledBy(2);
-        assertEquals(new Vector(new float[] {2, 4, 6}), scaled);
+    void testMaxVector() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{4, 5, 6});
+        assertEquals(expectedResult, Vector.maxVector(v1, v2));
     }
 
     @Test
-    public void testMagnitude() {
-        Vector v = new Vector(new float[] {3, 4, 5});
-        float magnitude = v.magnitude();
-        assertEquals(Math.sqrt(50), magnitude, 0.0001);
+    void testCrossProduct() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        Vector expectedResult = new Vector(new float[]{-3, 6, -3});
+        assertEquals(expectedResult, Vector.crossProduct(v1, v2));
     }
 
     @Test
-    public void testGetPoint() {
-        Vector v = new Vector(new float[] {1, 2, 3});
-        GridPosition p = v.getPoint();
-        assertEquals(new Position3D(1, 2, 3), p);
+    void testDotProduct() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{4, 5, 6});
+        float expectedResult = 32;
+        assertEquals(expectedResult, Vector.dotProduct(v1, v2), 0.001);
+    }
+
+    @Test
+    void testScaledBy() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        float scalar = 2;
+        Vector expectedResult = new Vector(new float[]{2, 4, 6});
+        assertEquals(expectedResult, v1.scaledBy(scalar));
+    }
+
+    @Test
+    void testMagnitude() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        float expectedResult = (float) Math.sqrt(14);
+        assertEquals(expectedResult, v1.magnitude(), 0.001);
+    }
+
+    @Test
+    void testNormalized() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        float magnitude = v1.magnitude();
+        Vector expectedResult = new Vector(new float[]{1 / magnitude, 2 / magnitude, 3 / magnitude});
+        assertEquals(expectedResult, v1.normalized());
+    }
+
+    @Test
+    void testGetPoint2D() {
+        Vector v1 = new Vector(new float[]{1, 2});
+        GridPosition expectedResult = new Position2D(1, 2);
+        assertEquals(expectedResult, v1.getPoint());
+    }
+
+    @Test
+    void testGetPoint3D() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        GridPosition expectedResult = new Position3D(1, 2, 3);
+        assertEquals(expectedResult, v1.getPoint());
+    }
+
+    @Test
+    void testGetPoint4D() {
+        Vector v1 = new Vector(new float[]{1, 2, 3, 4});
+        GridPosition expectedResult = new Position4D(1, 2, 3, 4);
+        assertEquals(expectedResult, v1.getPoint());
+    }
+
+    @Test
+    void testEquals() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{1, 2, 3});
+        assertTrue(v1.equals(v2));
+    }
+
+    @Test
+    void testNotEquals() {
+        Vector v1 = new Vector(new float[]{1, 2, 3});
+        Vector v2 = new Vector(new float[]{1, 2, 4});
+        assertFalse(v1.equals(v2));
     }
 }
+
