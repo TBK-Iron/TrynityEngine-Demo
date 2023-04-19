@@ -5,22 +5,23 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class GrassWorld implements Level {
 
     @Override
-    public RelativeRotation startRotation(){
-        return new RelativeRotation(0, 0);
-    }
-
-    @Override
-    public Position3D startPosition(){
-        return new Position3D(0, 0, 0);
+    public Player getPlayer(){
+        GridPosition startPos = new Position3D(0, 0, 0);
+        RelativeRotation startRot = new RelativeRotation(0, 0);
+        CollisionBox playerBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
+        
+        return new Player(startPos, startRot, playerBox);
     }
 
     @Override
@@ -31,8 +32,8 @@ public class GrassWorld implements Level {
         shapes.add(new ShapeData(new Position3D(5, 0, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_A.trym")));
         shapes.add(new ShapeData(new Position3D(20, 0, 5), new RelativeRotation(0, 0), new File("src/main/resources/shapes/building_B.trym")));
         shapes.add(new ShapeData(new Position3D(-5, -2, 0), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
-        shapes.add(new ShapeData(new Position3D(-8, -2, 10), new RelativeRotation(0, (float) Math.PI/8), new File("src/main/resources/shapes/tree.trym")));
-        shapes.add(new ShapeData(new Position3D(1, -2, -7), new RelativeRotation((float) Math.PI/4, 0), new File("src/main/resources/shapes/tree.trym")));
+        shapes.add(new ShapeData(new Position3D(-8, -2, 10), new RelativeRotation(0, (float) -Math.PI/8), new File("src/main/resources/shapes/tree.trym")));
+        shapes.add(new ShapeData(new Position3D(1, -2, -7), new RelativeRotation((float) -Math.PI/4, 0), new File("src/main/resources/shapes/tree.trym")));
         shapes.add(new ShapeData(new Position3D(4, -2, 15), new RelativeRotation(0, 0), new File("src/main/resources/shapes/tree.trym")));
         shapes.add(new ShapeData(new Position3D(4, -2, -5), new RelativeRotation(0, 0, 0), new File("src/main/resources/shapes/zombie_A.trym")));
         return shapes;

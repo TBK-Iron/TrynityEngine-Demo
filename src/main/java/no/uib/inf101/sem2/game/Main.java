@@ -58,6 +58,7 @@ public class Main {
         if(model.getGameState() == GameState.ACTIVE){
           engine.model().updateCameraPosition();
           engine.model().updateEntityPositions();
+          engine.model().updateEntityRotations();
           model.updateGame();
         }
   

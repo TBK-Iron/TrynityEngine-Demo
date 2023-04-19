@@ -7,16 +7,14 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class EngineController {
-    ControllableEngineModel model;
-    SceneMaker view;
-    Config config;
-    MouseHandler mouseHandler;
-    MoveHandler moveHandler;
+    private ControllableEngineModel model;
+    private Config config;
+    private MouseHandler mouseHandler;
+    private MoveHandler moveHandler;
 
-    public EngineController(ControllableEngineModel model, SceneMaker view, Config config) {
+    public EngineController(ControllableEngineModel model, Config config) {
         this.model = model;
         this.config = config;
-        this.view = view;
         this.mouseHandler = new MouseHandler(config);
         this.moveHandler = new MoveHandler(config);
     }

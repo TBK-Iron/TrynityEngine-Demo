@@ -12,11 +12,11 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 public class Entity extends Shape3D {
 
-    CollisionBox collisionBox;
-    Vector movementVector;
-    RelativeRotation rotationDelta;
-    int rotationFrameCount;
-    GridPosition targetPosition;
+    private final CollisionBox collisionBox;
+    private Vector movementVector;
+    private RelativeRotation rotationDelta;
+    private int rotationFrameCount;
+    private GridPosition targetPosition;
 
     public Entity(ShapeData shapeData, CollisionBox collisionBox) {
         super(shapeData);
@@ -38,8 +38,9 @@ public class Entity extends Shape3D {
         if(rotationFrameCount > 0){
             this.rotation = this.rotation.add(this.rotationDelta);
             rotationFrameCount--;
-        } else if(rotationFrameCount == -1){
+        } else if(rotationFrameCount < 0){
             this.rotation = this.rotation.add(this.rotationDelta);
+            this.rotationDelta = rotationDelta.scaledBy(-rotationFrameCount);
         }
     }
 
@@ -59,13 +60,6 @@ public class Entity extends Shape3D {
             }
         }
         return false;
-        /* this.anchoredPos = Vector.add(new Vector((Position3D) this.anchoredPos), this.movementVector).getPoint();
-        Vector calibratedMovementVector = Vector.getVector(anchoredPos, targetPosition);
-        if(Vector.dotProduct(this.movementVector, calibratedMovementVector) < 0){
-            return true;
-        } else {
-            return false;
-        } */
     }
 
     public GridPosition getTargetPosition(){

@@ -6,4 +6,8 @@ public interface ControllableGameModel {
     public GameState getGameState();
 
     public void setGameState(GameState state);
+
+    public void shoot();
+
+    public void updateGame();
 }

@@ -1,6 +1,7 @@
 package no.uib.inf101.sem2.game.model;
 
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
 import no.uib.inf101.sem2.game.model.levels.Level;
@@ -27,7 +28,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     CollisionDetector killDetector;
     Level map;
 
-    Camera camera;
+    Player player;
 
     ArrayList<Enemy> enemies;
     ArrayList<Door> doors;
@@ -71,24 +72,14 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.killDetector.addCollisionBox(killbox);
         }
 
-        /* ArrayList<ShapeData> entityData = this.map.loadEntities();
-        ArrayList<CollisionBox> entityCollision = null;
-        if(entityData.size() != entityCollision.size()){
-            throw new Error("Every entity must have a corresponding collision shape");
-        }
-        for(int i = 0; i < entityData.size(); i++){
-            this.engineModel.createEntity(entityData.get(i), entityCollision.get(i));
-        } */
-
-        CollisionBox cameraCollisionBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
-        this.camera = new Camera(this.map.startPosition(), this.map.startRotation());
-        this.camera.setCollision(cameraCollisionBox);
-        this.engineModel.setCamera(this.camera);
+        this.player = this.map.getPlayer();
+        this.engineModel.setCamera(this.player.getCamera());
     }
 
+    @Override
     public void updateGame(){
         if(!this.config.noclip()){
-            GridPosition camPos = this.camera.getPos();
+            GridPosition camPos = this.player.getCamera().getPos();
             GridPosition playerPos = new Position3D(camPos.x(), camPos.y() - 1.999f, camPos.z());
             for(Door door : this.doors){
                 if(door.isWithinRadius(playerPos)){
@@ -97,21 +88,45 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
                     door.close();
                 }
             }
-            if(this.killDetector.getCollidingBox(this.camera.getCollisionBox(), this.camera.getPos()) != null){
-                this.camera.setPos(this.map.startPosition());
-            }
             for(Enemy enemy : this.enemies){
                 if(enemy.isWithinRadius(playerPos)){
                     enemy.setTargetPosition(playerPos);
+                    this.player.takeDamage(enemy.damageTo(playerPos));
+                }
+            }
+            if(this.killDetector.getCollidingBox(this.player.getCamera().getCollisionBox(), this.player.getCamera().getPos()) != null){
+                this.player.resetPlayer();
+            } else if(!player.isAlive()){
+                this.player.resetPlayer();
+            }
+        }
+    }
+
+    @Override
+    public void shoot(){
+        for(Enemy enemy : this.enemies){
+            if(enemy.isAlive()){
+                if(player.shoot(enemy)){
+                    //HIT
+                    if(!enemy.isAlive()){
+                        enemy.kill();
+                    }
                 }
             }
         }
     }
 
+    @Override
     public GameState getGameState(){
         return this.currentState;
     }
 
+    @Override
+    public float getPlayerHealthPercent(){
+        return this.player.getHealthPercent();
+    }
+
+    @Override
     public void setGameState(GameState state){
         this.currentState = state;
     }

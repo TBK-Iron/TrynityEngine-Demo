@@ -10,4 +10,12 @@ public interface ColorTheme {
     public Color getButtonColor();
 
     public Color getButtonBorderColor();
+
+    public Color getCrosshairColor();
+
+    public Color getHealthColor();
+
+    public Color getHealthBackgroundColor();
+
+    public Color getHealthBorderColor();
 }

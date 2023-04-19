@@ -17,10 +17,9 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
  * getting its bounding sphere, and calculating its distance to the origin.
  */
 public class Shape3D {
-    ArrayList<Face> faces;
-    ArrayList<GridPosition> uniquePoints;
-    GridPosition anchoredPos;
-    RelativeRotation rotation;
+    protected ArrayList<Face> faces;
+    protected GridPosition anchoredPos;
+    protected RelativeRotation rotation;
 
     /**
      * Constructs a new Shape3D from the provided ShapeData.

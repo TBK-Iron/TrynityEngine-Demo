@@ -19,7 +19,7 @@ public final class TrynityEngine implements gameEngine {
         this.collisionDetector = new CollisionDetector();
         this.model = new EngineModel(config, collisionDetector);
         this.sceneMaker = new SceneMaker(model, config, textures);
-        this.controller = new EngineController(model, sceneMaker, config);
+        this.controller = new EngineController(model, config);
     }
 
     public EngineController controller(){

@@ -48,10 +48,6 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
         entities.add(entity);
     }
 
-    public void setCameraCollision(CollisionBox collisionBox){
-        this.camera.setCollision(collisionBox);
-    }
-
     public ArrayList<Shape3D> getRenderShapes(){
         ArrayList<Shape3D> allShapes = new ArrayList<>();
 
@@ -136,6 +132,12 @@ public class EngineModel implements ViewableEngineModel, ControllableEngineModel
                     
                 }
             }
+        }
+    }
+
+    public void updateEntityRotations(){
+        for(Entity entity : this.entities){
+            entity.rotate();
         }
     }
 

@@ -115,11 +115,36 @@ public class GameView extends JPanel {
     private void drawActiveGame(Graphics2D g2){
         this.sceneImage = this.engineView.getNextSceneImage();
         g2.drawImage(this.sceneImage, 0, 0, null);
+        drawCrosshair(g2, CTheme, config.screenWidth()/2, config.screenHeight()/2, 15);
+        drawHealthBar(g2, this.model.getPlayerHealthPercent(), CTheme, config.screenHeight(), config.screenHeight()/20);
+
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
         Image transparentImage = new BufferedImage(1, 1, BufferedImage.TYPE_INT_ARGB);
         Cursor transparentCursor = toolkit.createCustomCursor(transparentImage, new Point(0, 0), "transparentCursor");
         this.setCursor(transparentCursor);
+    }
+
+    private static void drawCrosshair(Graphics2D g2, ColorTheme CTheme, int x, int y, int size){
+        g2.setColor(CTheme.getCrosshairColor());
+        g2.setStroke(new BasicStroke(size/6));
+        g2.drawLine(x - size, y, x + size, y);
+        g2.drawLine(x, y - size, x, y + size);
+    }
+
+    private static void drawHealthBar(Graphics2D g2, float healthPercent, ColorTheme CTheme, int screenHeight, int size){
+        
+        Rectangle2D healthBarBackground = new Rectangle2D.Double(0, screenHeight - size, size*5, size);
+        Rectangle2D healthBar = new Rectangle2D.Double(0, screenHeight - size, size*5*healthPercent, size);
+
+        g2.setColor(CTheme.getHealthBackgroundColor());
+        g2.fill(healthBarBackground);
+
+        g2.setColor(CTheme.getHealthColor());
+        g2.fill(healthBar);
+
+        g2.setColor(CTheme.getHealthBorderColor());
+        g2.draw(healthBarBackground);
     }
 
     //TODO: finish

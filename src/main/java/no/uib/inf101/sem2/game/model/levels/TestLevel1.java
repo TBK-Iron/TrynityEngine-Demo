@@ -5,22 +5,23 @@ import java.util.ArrayList;
 
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 
 public class TestLevel1 implements Level {
 
     @Override
-    public RelativeRotation startRotation(){
-        return new RelativeRotation(0, 0);
-    }
-
-    @Override
-    public Position3D startPosition(){
-        return new Position3D(0, 0, 0);
+    public Player getPlayer(){
+        GridPosition startPos = new Position3D(0, 0, 0);
+        RelativeRotation startRot = new RelativeRotation(0, 0);
+        CollisionBox playerBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
+        
+        return new Player(startPos, startRot, playerBox);
     }
 
     @Override

@@ -15,18 +15,20 @@ public class Zombie implements Enemy{
     private static final float START_HEALTH = 50;
     private static final float MOVE_SPEED = 0.03f;
     private static final File ZOMBIE_MODEL = new File("src/main/resources/shapes/zombie_A.trym");
-    private static final CollisionBox ZOMBIE_COLLISION_BOX = new CollisionBox(new Position3D(0.5f, 2, 0.5f), new Position3D(-0.5f, 0, -0.5f));
+    private static final CollisionBox ZOMBIE_COLLISION_BOX = new CollisionBox(new Position3D(0.5f, 2.25f, 0.5f), new Position3D(-0.5f, 0, -0.5f));
+    private static final float activationRadius = 7;
+    private static final float damageRadius = 0.75f;
+    private static final float damage = 0.2f; //Damage per tick
+
 
     private Entity zombieEntity;
     private float health;
-    private final float activationRadius;
 
-    public Zombie(GridPosition startPosition, RelativeRotation startRotation, float activationRadius){
+    public Zombie(GridPosition startPosition, RelativeRotation startRotation){
         ShapeData shapeData = new ShapeData(startPosition, startRotation, Zombie.ZOMBIE_MODEL);
         zombieEntity = new Entity(shapeData, Zombie.ZOMBIE_COLLISION_BOX);
         //zombieEntity = new Entity(shapeData);
         this.health = Zombie.START_HEALTH;
-        this.activationRadius = activationRadius;
     }
 
     @Override
@@ -56,20 +58,41 @@ public class Zombie implements Enemy{
 
     @Override
     public void kill(){
-        this.zombieEntity.setRotationDelta(new RelativeRotation((float) Math.PI/90, 0), 90);
+        float randomVal = (float) Math.random();
+        if(randomVal > 0.5f){
+            this.zombieEntity.setRotationDelta(new RelativeRotation((float) Math.PI/50, 0), 25);
+        } else {
+            this.zombieEntity.setRotationDelta(new RelativeRotation((float) -Math.PI/50, 0), 25);
+        }
+        
+        this.zombieEntity.setTargetPosition(getPosition(), Zombie.MOVE_SPEED);
     }
 
     @Override
     public void damage(float amount) {
         this.health -= amount;
+        System.out.println("Remaining zombie health: " + this.health);
+    }
+
+    @Override
+    public float damageTo(GridPosition entityPos){
+        Vector distanceVector = Vector.getVector(entityPos, this.zombieEntity.getPosition());
+        float dist = distanceVector.magnitude();
+        if(dist < Zombie.damageRadius){
+            return Zombie.damage;
+        } else {
+            return 0;
+        }
     }
 
     @Override
     public void setTargetPosition(GridPosition targetPos) {
-        this.zombieEntity.setTargetPosition(targetPos, Zombie.MOVE_SPEED);
+        if(this.isAlive()){
+            this.zombieEntity.setTargetPosition(targetPos, Zombie.MOVE_SPEED);
 
-        RelativeRotation rotation =new RelativeRotation(0, -Vector.getVectorRotation(this.zombieEntity.getMovementVector()).getLeftRight());
-        this.zombieEntity.setRotation(rotation);
+            RelativeRotation rotation =new RelativeRotation(0, Vector.getVectorRotation(this.zombieEntity.getMovementVector()).getLeftRight());
+            this.zombieEntity.setRotation(rotation);
+        }
     }
 
     @Override

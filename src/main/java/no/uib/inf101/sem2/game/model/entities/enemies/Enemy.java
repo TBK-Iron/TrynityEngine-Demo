@@ -15,6 +15,8 @@ public interface Enemy {
 
     public void damage(float amount);
 
+    public float damageTo(GridPosition entityPos);
+
     public void setTargetPosition(GridPosition pos);
 
     public GridPosition getPosition();

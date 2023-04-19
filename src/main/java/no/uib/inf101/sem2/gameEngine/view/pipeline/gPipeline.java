@@ -46,7 +46,7 @@ public class gPipeline implements IPipeline {
     public ArrayList<Shape3D> worldTransform(ArrayList<Shape3D> shapes){
         ArrayList<Shape3D> worldSpaceShapes = new ArrayList<>();
         for(Shape3D shape : shapes){
-            Transformation rTrans = new RotateTransform(shape.getRotation().getNegRotation());
+            Transformation rTrans = new RotateTransform(shape.getRotation());
             Transformation posTrans = new TranslateTransform(new Vector((Position3D) shape.getPosition()));
             ArrayList<Face> worldSpaceFaces = new ArrayList<>();
 

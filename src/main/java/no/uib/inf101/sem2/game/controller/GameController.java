@@ -102,7 +102,9 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void mousePressed(MouseEvent arg0) {
-        //Do nothing
+        if(this.model.getGameState() == GameState.ACTIVE){
+            this.model.shoot();
+        }
     }
 
     @Override

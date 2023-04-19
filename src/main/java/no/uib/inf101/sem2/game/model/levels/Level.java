@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.game.model.levels;
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
@@ -12,9 +13,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public interface Level {
 
-    public RelativeRotation startRotation();
-
-    public GridPosition startPosition();
+    public Player getPlayer();
 
     public ArrayList<ShapeData> loadShapes();
 

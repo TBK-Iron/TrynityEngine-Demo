@@ -4,25 +4,25 @@ import java.util.ArrayList;
 import java.io.File;
 
 import no.uib.inf101.sem2.game.model.entities.Door;
+import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
-
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class LegendOfTheBeast implements Level{
 
     @Override
-    public RelativeRotation startRotation(){
-        return new RelativeRotation(0, -(float) Math.PI/2);
-    }
-
-    @Override
-    public Position3D startPosition(){
-        return new Position3D(0, 0, 0);
+    public Player getPlayer(){
+        GridPosition startPos = new Position3D(0, 0, 0);
+        RelativeRotation startRot = new RelativeRotation(0, -(float) Math.PI/2);
+        CollisionBox playerBox = new CollisionBox(new Position3D(-0.5f, 0.5f, -0.5f), new Position3D(0.5f, -1.999f, 0.5f));
+        
+        return new Player(startPos, startRot, playerBox);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class LegendOfTheBeast implements Level{
 
         //First corridor
         shapes.add(new ShapeData(new Position3D(-14, -2, -2), new RelativeRotation(0, 0), new File("src/main/resources/shapes/hallway_L.trym")));
-        shapes.add(new ShapeData(new Position3D(2, -2, -2), new RelativeRotation(0, (float) -Math.PI/2), new File("src/main/resources/shapes/hallway_cap.trym")));
+        shapes.add(new ShapeData(new Position3D(2, -2, -2), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/hallway_cap.trym")));
         shapes.add(new ShapeData(new Position3D(-12, -2, 8), new RelativeRotation(0, 0), new File("src/main/resources/shapes/door_frame.trym")));
 
         //Parkour room
@@ -45,7 +45,7 @@ public class LegendOfTheBeast implements Level{
         shapes.add(new ShapeData(new Position3D(-12, -3f, 18f), new RelativeRotation(0, 0), new File("src/main/resources/shapes/metal_cube.trym")));
         shapes.add(new ShapeData(new Position3D(-14f, -2.8f, 16f), new RelativeRotation(0, 0), new File("src/main/resources/shapes/metal_cube.trym")));
         
-        shapes.add(new ShapeData(new Position3D(-12, -1.3f, 13), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/wallrun_block.trym")));
+        shapes.add(new ShapeData(new Position3D(-12, -1.3f, 13), new RelativeRotation(0, (float) -Math.PI/2), new File("src/main/resources/shapes/wallrun_block.trym")));
         shapes.add(new ShapeData(new Position3D(-17f, -2.8f, 15f), new RelativeRotation(0, 0), new File("src/main/resources/shapes/metal_cube.trym")));
         shapes.add(new ShapeData(new Position3D(-19f, -2.4f, 18f), new RelativeRotation(0, 0), new File("src/main/resources/shapes/metal_cube.trym")));
         
@@ -55,11 +55,11 @@ public class LegendOfTheBeast implements Level{
         shapes.add(new ShapeData(new Position3D(-12, -2, 30), new RelativeRotation(0, (float) Math.PI), new File("src/main/resources/shapes/door_frame.trym")));
         shapes.add(new ShapeData(new Position3D(-10, -2, 38), new RelativeRotation(0, (float) Math.PI), new File("src/main/resources/shapes/hallway_small_L.trym")));
         shapes.add(new ShapeData(new Position3D(-18, -2, 34), new RelativeRotation(0, 0), new File("src/main/resources/shapes/hallway_special.trym")));
-        shapes.add(new ShapeData(new Position3D(-18, -2, 54), new RelativeRotation(0, (float) -Math.PI/2), new File("src/main/resources/shapes/hallway_small_L.trym")));
-        shapes.add(new ShapeData(new Position3D(-10, -2, 52), new RelativeRotation(0, (float) -Math.PI/2), new File("src/main/resources/shapes/door_frame.trym")));
+        shapes.add(new ShapeData(new Position3D(-18, -2, 54), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/hallway_small_L.trym")));
+        shapes.add(new ShapeData(new Position3D(-10, -2, 52), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/door_frame.trym")));
         
         //Boss room
-        shapes.add(new ShapeData(new Position3D(-9, -2, 62), new RelativeRotation(0, (float) -Math.PI/2), new File("src/main/resources/shapes/large_room_B.trym")));
+        shapes.add(new ShapeData(new Position3D(-9, -2, 62), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/large_room_B.trym")));
 
         return shapes;
     }
@@ -114,7 +114,7 @@ public class LegendOfTheBeast implements Level{
     public ArrayList<Enemy> loadEnemies(){
         ArrayList<Enemy> enemies = new ArrayList<>();
 
-        //enemies.add(new Zombie(new Position3D(-12, -1.5f, 0), new RelativeRotation(0, (float) -Math.PI/2), 5));
+        enemies.add(new Zombie(new Position3D(-12, -1.5f, 0), new RelativeRotation(0, (float) Math.PI/2)));
 
         return enemies;
     }
@@ -131,8 +131,8 @@ public class LegendOfTheBeast implements Level{
         ArrayList<Door> doors = new ArrayList<>();
 
         doors.add(new Door(new Position3D(-12, -2, 8), new RelativeRotation(0, 0), 5));
-        doors.add(new Door(new Position3D(-12, -2, 30), new RelativeRotation(0, (float) Math.PI), 5));
-        doors.add(new Door(new Position3D(-10, -2, 52), new RelativeRotation(0, (float) -Math.PI/2), 5));
+        doors.add(new Door(new Position3D(-12, -2, 30), new RelativeRotation(0, (float) -Math.PI), 5));
+        doors.add(new Door(new Position3D(-10, -2, 52), new RelativeRotation(0, (float) Math.PI/2), 5));
         
         return doors;
     }
