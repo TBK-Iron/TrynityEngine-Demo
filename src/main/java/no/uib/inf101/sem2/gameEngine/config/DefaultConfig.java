@@ -9,12 +9,12 @@ public class DefaultConfig implements Config {
     private int screenHeight = 480;
     private final float nearPlane = 0.5f;
     private final float farPlane = 100f;
-    private final float fps = 60f;
+    private final float fps = 45f;
     private final float cameraMoveSpeed = 0.09f;
-    private final float cameraSprintSpeed = 0.20f;
+    private final float cameraSprintSpeed = 0.17f;
     private final int skyboxColor = 0xFFADD8E6;
-    private final float gravity = 0.013f;
-    private final float jumpBurst = 0.25f;
+    private final float gravity = (float) (25 / Math.pow(fps, 2));
+    private final float jumpBurst = (float) Math.sqrt(2 * gravity * 1.25);
     private final boolean noclip = false;
 
     @Override

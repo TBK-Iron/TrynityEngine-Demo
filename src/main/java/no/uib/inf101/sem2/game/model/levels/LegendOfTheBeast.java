@@ -79,17 +79,24 @@ public class LegendOfTheBeast implements Level{
         collisionBoxes.add(new CollisionBox(new Position3D(2,1.5f,-2), new Position3D(-14,5.5f,9)));
         
         //Parkour room
-        //-12, -2, 9
+
+            //Walls 
+            
+            //Ceiling
+        collisionBoxes.add(new CollisionBox(new Position3D(-4, 7, 9), new Position3D(-20, 11, 29)));
+        
+            //Ledges
         collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 9), new Position3D(-17,-5,12)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 26), new Position3D(-17,-5,29)));
 
             //Wallrun blocks
         collisionBoxes.add(new CollisionBox(new Position3D(-6, -2.1f, 14), new Position3D(-4.5f,7,20)));
-        collisionBoxes.add(new CollisionBox(new Position3D(-12, -1.3f, 13), new Position3D(-11.5f,7,14.5f)));
-        collisionBoxes.add(new CollisionBox(new Position3D(-17, -2, 20), new Position3D(-11,7,21.5f)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-12, -1.3f, 13), new Position3D(-18f,7,14.5f)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-17, -2, 20), new Position3D(-15.5f,7,26f)));
             //Metal cubes
         collisionBoxes.add(new CollisionBox(new Position3D(-8, -3.5f, 12.5f), new Position3D(-6.5f,-2,14)));
         collisionBoxes.add(new CollisionBox(new Position3D(-8.5f, -3.5f, 20.5f), new Position3D(-7,-2,22)));
-        collisionBoxes.add(new CollisionBox(new Position3D(-12, -3f, 18f), new Position3D(-11.5f,-1.5f,19.5f)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-12, -3f, 18f), new Position3D(-10.5f,-1.5f,19.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-14f, -2.8f, 16f), new Position3D(-12.5f,-1.3f,17.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-17f, -2.8f, 15f), new Position3D(-15.5f,-1.3f,16.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-19f, -2.4f, 18f), new Position3D(-17.5f,-0.9f,19.5f)));
@@ -114,7 +121,7 @@ public class LegendOfTheBeast implements Level{
     public ArrayList<Enemy> loadEnemies(){
         ArrayList<Enemy> enemies = new ArrayList<>();
 
-        enemies.add(new Zombie(new Position3D(-12, -1.5f, 0), new RelativeRotation(0, (float) Math.PI/2)));
+        //enemies.add(new Zombie(new Position3D(-12, -1.5f, 0), new RelativeRotation(0, (float) Math.PI/2)));
 
         return enemies;
     }

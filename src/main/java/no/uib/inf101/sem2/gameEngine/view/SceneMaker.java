@@ -40,7 +40,7 @@ public class SceneMaker{
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        //System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + duration/1000000);
+        System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + duration/1000000);
         
         return nextScene;
     }
