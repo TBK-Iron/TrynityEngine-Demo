@@ -20,15 +20,24 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
+/**
+ * Rasterizer is a class that handles rasterization of 3D objects in the game engine.
+ * It takes a list of faces and rasterizes them into a BufferedImage, handling
+ * texture mapping, mipmapping, and multithreading for performance.
+ */
 public class Rasterizer {
 
-    private static final int KERNEL_POOL_SIZE = 128; 
+    private static int KERNEL_POOL_SIZE = 256; 
     private final RasterizerKernel[] kernelPool = new RasterizerKernel[KERNEL_POOL_SIZE];
     Mipmapper mipmapper;
     Config config;
 
-
-
+    /**
+     * Constructs a Rasterizer with a map of textures and a configuration object.
+     *
+     * @param textures A map containing texture keys and their corresponding BufferedImages.
+     * @param config   A configuration object containing game engine settings.
+     */
     public Rasterizer(Map<String, BufferedImage> textures, Config config){
         this.mipmapper = new Mipmapper(textures);
         this.config = config;
@@ -38,11 +47,13 @@ public class Rasterizer {
         }
     }
 
-    //TODO: optimize this method to make each face only use as many pixels as it actually needs.
-    //TODO: implement a z-buffer
+    /**
+     * Rasterizes a list of faces into a BufferedImage.
+     *
+     * @param faces A list of faces to be rasterized.
+     * @return A BufferedImage containing the rasterized faces.
+     */
     public BufferedImage rastarize(ArrayList<Face> faces) {
-
-        long startTime = System.nanoTime();
 
         int[] rastarizedImageData = new int[this.config.screenWidth() * this.config.screenHeight()];
         Arrays.fill(rastarizedImageData, this.config.skyboxColor());
@@ -55,8 +66,6 @@ public class Rasterizer {
             kernel.setZBuffer(zBuffer);
         }
         
-
-        //System.out.println("\nRASTARIZING:\n");
 
         int numThreads = Runtime.getRuntime().availableProcessors(); // Get the number of available CPU cores
         ExecutorService executor = Executors.newFixedThreadPool(numThreads); // Create a fixed thread pool
@@ -152,7 +161,6 @@ public class Rasterizer {
                 return null;
             });
         }
-        //System.out.println("\n\n\n");
 
         try {
             executor.invokeAll(tasks);
@@ -168,12 +176,6 @@ public class Rasterizer {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-
-        //kernel.get(rastarizedImageData);
-        
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime) / 1000000;
-        //System.out.print("Rastarization time: " + duration + "ms, facecount: " + faces.size() + ", ");
 
         BufferedImage rastarizedImage = new BufferedImage(this.config.screenWidth(), this.config.screenHeight(), BufferedImage.TYPE_INT_ARGB);
         rastarizedImage.setRGB(0, 0, this.config.screenWidth(), this.config.screenHeight(), rastarizedImageData, 0, this.config.screenWidth());

@@ -19,6 +19,7 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 public class GameModel implements ViewableGameModel, ControllableGameModel{
     
@@ -104,14 +105,28 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
     @Override
     public void shoot(){
+        Enemy closestHitEnemy = null;
+        float distToClosestHitEnemy = Float.MAX_VALUE;
         for(Enemy enemy : this.enemies){
             if(enemy.isAlive()){
-                if(player.shoot(enemy)){
-                    //HIT
-                    if(!enemy.isAlive()){
-                        enemy.kill();
-                    }
+                CollisionBox enemyHitBox = enemy.getEntity().getCollisionBox().translatedBy(new Vector((Position3D) enemy.getPosition()));
+                float dist = player.distanceToHit(enemyHitBox);
+                if(dist < distToClosestHitEnemy){
+                    distToClosestHitEnemy = dist;
+                    closestHitEnemy = enemy;
                 }
+            }
+        }
+        if(closestHitEnemy != null){
+            for(CollisionBox obstruction : this.collisionDetector.getFixedCollisionBoxes()){
+                float dist = player.distanceToHit(obstruction);
+                if(dist < distToClosestHitEnemy){
+                    return;
+                }
+            }
+            player.giveDamageTo(closestHitEnemy);
+            if(!closestHitEnemy.isAlive()){
+                closestHitEnemy.kill();
             }
         }
     }

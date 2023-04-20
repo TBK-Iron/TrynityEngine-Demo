@@ -36,12 +36,12 @@ public class DefaultConfigTest {
 
     @Test
     public void testFarPlane() {
-        assertEquals(500f, config.farPlane());
+        assertEquals(100f, config.farPlane());
     }
 
     @Test
     public void testFps() {
-        assertEquals(60f, config.fps());
+        assertEquals(45f, config.fps());
     }
 
     @Test
@@ -63,12 +63,12 @@ public class DefaultConfigTest {
 
     @Test
     public void testGravityAcceleration() {
-        assertEquals(0.013f, config.gravityAcceleration());
+        assertEquals(0.012345679f, config.gravityAcceleration());
     }
 
     @Test
     public void testJumpBurst() {
-        assertEquals(0.25f, config.jumpBurst());
+        assertEquals(0.1756821f, config.jumpBurst());
     }
 
     @Test

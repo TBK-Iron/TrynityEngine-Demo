@@ -221,12 +221,14 @@ public class Shape3D {
     
 
     /**
-     * Calculates and returns the squared distance from the origin to the closest point in the 3D shape.
-     * The reason it is not the real distance is because it is faster to not calculate a square root.
+     * Calculates and returns the distance from the origin to the closest point in the 3D shape.
+     * 
+     * Note: this method does not take into account the position or rotation of the 3D shape, only the 
+     * vertices of the faces.
      *
-     * @return The squared distance from the origin to the closest point in the 3D shape.
+     * @return The distance from the origin to the closest point in the 3D shape.
      */
-    public float getDistanceToOriginSquared(){
+    public float getDistanceToOrigin(){
         float minDist = Float.MAX_VALUE;
         for(Face face : this.faces){
             GridPosition point = face.getPointClosestToOrigin();
@@ -236,6 +238,6 @@ public class Shape3D {
             }
         }
 
-        return minDist;
+        return (float) Math.sqrt(minDist);
     }
 }

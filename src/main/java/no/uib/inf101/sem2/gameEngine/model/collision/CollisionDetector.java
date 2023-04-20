@@ -44,4 +44,8 @@ public class CollisionDetector {
         }
         return null;
     }
+
+    public ArrayList<CollisionBox> getFixedCollisionBoxes(){
+        return fixedCollisionBoxes;
+    }
 }

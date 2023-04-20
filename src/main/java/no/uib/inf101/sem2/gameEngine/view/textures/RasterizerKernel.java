@@ -1,7 +1,12 @@
 package no.uib.inf101.sem2.gameEngine.view.textures;
 
 import com.aparapi.Kernel;
-
+/**
+ * RasterizerKernel is a class that extends the Kernel class and implements
+ * rasterization of triangles with texture mapping using Aparapi.
+ * The class calculates the color of each pixel in the output buffer based on
+ * the given triangle vertices, texture coordinates, and texture image.
+ */
 public class RasterizerKernel extends Kernel{
 
     private float[] vertices; // Triangle vertices (xA, yA, xB, yB, xC, yC)
@@ -17,8 +22,6 @@ public class RasterizerKernel extends Kernel{
 
     private int dispX;
     private int dispY;
-
-    public RasterizerKernel() {}
 
     @Override
     public void run() {
@@ -88,31 +91,66 @@ public class RasterizerKernel extends Kernel{
         }
     }
 
+    /**
+     * Sets the texture image data, width, and height.
+     *
+     * @param texture      Texture image as a 1D int array (width * height).
+     * @param textureWidth The width of the texture image.
+     * @param textureHeight The height of the texture image.
+     */
     public void setTexture(int[] texture, int textureWidth, int textureHeight) {
         this.texture = texture;
         this.textureWidth = textureWidth;
         this.textureHeight = textureHeight;
     }
 
+    /**
+     * Sets the triangle vertices and texture coordinates.
+     *
+     * @param vertices  Triangle vertices (xA, yA, xB, yB, xC, yC) as a float array.
+     * @param texCoords Texture coordinates (uA, vA, uB, vB, uC, vC) as a float array.
+     */
     public void setVertices(float[] vertices, float[] texCoords) {
         this.vertices = vertices;
         this.texCoords = texCoords;
     }
 
+    /**
+     * Sets the output color buffer and the total width of the output buffer.
+     *
+     * @param output     Output color buffer as a 1D int array (width * height).
+     * @param totalWidth The total width of the output buffer.
+     */
     public void setOutput(int[] output, int totalWidth) {
         this.output = output;
         this.totalWidth = totalWidth;
     }
 
+    /**
+     * Sets the width of the rasterized face.
+     *
+     * @param width The width of the face.
+     */
     public void setWidth(int width) {
         this.faceWidth = width;
     }
 
+    /**
+     * Sets the displacement of the rasterized face on the x and y axes.
+     *
+     * @param dispX Displacement on the x-axis.
+     * @param dispY Displacement on the y-axis.
+     */
     public void setDisp(int dispX, int dispY) {
         this.dispX = dispX;
         this.dispY = dispY;
     }
 
+    /**
+     * Sets the z-buffer as a 1D float array (width * height).
+     *
+     * @param zBuffer Z buffer as a 1D float array.
+     */
     public void setZBuffer(float[] zBuffer) {
         this.zBuffer = zBuffer;
     }

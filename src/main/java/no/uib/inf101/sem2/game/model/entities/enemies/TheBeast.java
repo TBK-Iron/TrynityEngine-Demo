@@ -1,6 +1,9 @@
 package no.uib.inf101.sem2.game.model.entities.enemies;
 
 import java.io.File;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
@@ -12,8 +15,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 
 public class TheBeast implements Enemy{
-    private static final float START_HEALTH = 500;
-    private static final float MOVE_SPEED = 0.04f;
+    private static final float START_HEALTH = 50;
+    private static final float MOVE_SPEED = 0.03f;
     private static final File BEAST_MODEL = new File("src/main/resources/shapes/the_beast.trym");
     private static final CollisionBox BEAST_COLLISION_BOX = new CollisionBox(new Position3D(5, 10, 5), new Position3D(-5, 0, -5));
     private static final float activationRadius = 15;
@@ -24,8 +27,9 @@ public class TheBeast implements Enemy{
     private float health;
 
 
-    public TheBeast(GridPosition startPosition, RelativeRotation startRotation, float activationRadius){
-        this.beastEntity = new Entity(new ShapeData(startPosition, startRotation, TheBeast.BEAST_MODEL), TheBeast.BEAST_COLLISION_BOX);
+    public TheBeast(GridPosition startPosition, RelativeRotation startRotation){
+        this.beastEntity = new Entity(new ShapeData(startPosition, startRotation, TheBeast.BEAST_MODEL));
+        this.beastEntity.setCollision(TheBeast.BEAST_COLLISION_BOX);
         this.health = TheBeast.START_HEALTH;
     }
 
@@ -65,16 +69,30 @@ public class TheBeast implements Enemy{
 
     @Override
     public void kill() {
+        this.beastEntity.setTargetPosition(this.beastEntity.getPosition(), 0);
+        this.beastEntity.setCollision(null);
 
         RelativeRotation startRotationSpeed = new RelativeRotation( 0, 0);
-        RelativeRotation rotationAcceleration = new RelativeRotation( 0, 0.5f);
+        RelativeRotation rotationAcceleration = new RelativeRotation( 0, 0.02f);
 
         this.beastEntity.setRotationDelta(startRotationSpeed, -1, rotationAcceleration);
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            float x = this.beastEntity.getPosition().x();
+            float y = this.beastEntity.getPosition().y() + 400;
+            float z = this.beastEntity.getPosition().z();
+
+            this.beastEntity.setTargetPosition(new Position3D(x, y, z), MOVE_SPEED*50);
+        };
+
+        executor.schedule(task, 3, TimeUnit.SECONDS);
     }
 
     @Override
     public void damage(float amount) {
         this.health -= amount;
+        System.out.println(this.health);
     }
 
     @Override

@@ -2,7 +2,6 @@ package no.uib.inf101.sem2.gameEngine.view.pipeline;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.util.Map;
 
 import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;

@@ -110,18 +110,19 @@ public final class CollisionBox {
 
         return collisionPos;
     }
-    
-    /**
-     * Tests if a ray intersects with an axis-aligned bounding box (AABB) defined by the object's minPos and maxPos.
-     *
-     * @param rayOrigin           The starting point of the ray, represented as a GridPosition.
-     * @param normalizedDirectionVector The normalized direction vector of the ray, pointing in the camera's direction.
-     * @return true if the ray intersects with the AABB, false otherwise.
-     * @author Partially ChatGPT
-     */
 
-    //TODO: Fix this method
-    public boolean rayIntersection(GridPosition rayOrigin, Vector normalizedDirectionVector){
+     /**
+     * Calculates the distance from the ray's origin to the intersection point with the axis-aligned bounding box (AABB).
+     * Returns -1 if the ray does not intersect the AABB.
+     * Note that this collisionbox should be translated by the position of the object if it is not anchored.
+     *
+     * @param rayOrigin    The origin of the ray, represented as a Vector3f (x, y, z).
+     * @param rayDirection The normalized direction of the ray, represented as a Vector3f (x, y, z).
+     * @param aabbMin      The minimum corner point of the AABB, represented as a Vector3f (minX, minY, minZ).
+     * @param aabbMax      The maximum corner point of the AABB, represented as a Vector3f (maxX, maxY, maxZ).
+     * @return The distance from the ray's origin to the intersection point with the AABB, or -1 if the ray does not intersect the AABB.
+     */
+    public float rayIntersection(GridPosition rayOrigin, Vector normalizedDirectionVector){
         Vector minVectorBox = new Vector((Position3D) minPos);
         Vector maxVectorBox = new Vector((Position3D) maxPos);
         
@@ -137,9 +138,9 @@ public final class CollisionBox {
         float tFar = Math.min(Math.min(t2.get(0), t2.get(1)), t2.get(2));
 
         if(tFar >= tNear && tFar > 0){
-            return false;
+            return tNear;
         } else {
-            return true;
+            return Float.MAX_VALUE;
         }
     }
 }

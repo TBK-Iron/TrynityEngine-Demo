@@ -59,11 +59,13 @@ public class Culling {
      * @param shapes The list of 3D shapes to be culled.
      * @return A new list of 3D shapes containing only the visible shapes after occlusion culling.
      */
+
+    //This does not work
     protected static ArrayList<Shape3D> occlusionCull(ArrayList<Shape3D> shapes) {
         ArrayList<Shape3D> notCulledShapes = new ArrayList<>();
 
         // Sort the shapes by their distance to the camera
-        shapes.sort(Comparator.comparingDouble(shape -> shape.getDistanceToOriginSquared()));
+        shapes.sort(Comparator.comparingDouble(shape -> shape.getDistanceToOrigin()));
 
         // Create a depth buffer
         DepthBuffer depthBuffer = new DepthBuffer();

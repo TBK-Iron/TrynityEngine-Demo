@@ -10,6 +10,11 @@ import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.gPipeline;
 
+/**
+ * SceneMaker is responsible for managing the rendering process by coordinating the gPipeline
+ * and the ViewableEngineModel. It takes care of the entire rendering pipeline from world space
+ * transformation to rasterization, generating a BufferedImage for each frame in the scene.
+ */
 public class SceneMaker{
     
     private final gPipeline pipeline;
@@ -18,6 +23,12 @@ public class SceneMaker{
 
     private final Config config;
 
+    /**
+     * Constructs a new SceneMaker instance with the specified model, configuration, and texture map.
+     * @param model The ViewableEngineModel instance that provides the necessary information for rendering.
+     * @param config The configuration containing information about the screen dimensions and other rendering settings.
+     * @param textures A map of texture names to their corresponding BufferedImage instances.
+     */
     public SceneMaker(ViewableEngineModel model, Config config, Map<String, BufferedImage> textures){
         this.config = config;
         this.model = model;
@@ -26,6 +37,10 @@ public class SceneMaker{
         pipeline = new gPipeline(this.config, this.textures);
     }
 
+    /**
+     * Generates the next scene image by running the entire rendering pipeline.
+     * @return A BufferedImage representing the next frame in the scene.
+     */
     public BufferedImage getNextSceneImage(){
         long startTime = System.nanoTime();
         ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getRenderShapes());
@@ -40,7 +55,7 @@ public class SceneMaker{
 
         long endTime = System.nanoTime();
         long duration = (endTime - startTime);
-        System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + duration/1000000);
+        //System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + (float)duration/1000000);
         
         return nextScene;
     }

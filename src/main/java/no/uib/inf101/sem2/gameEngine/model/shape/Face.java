@@ -155,22 +155,35 @@ public class Face {
      * note: this is not the vertex that is closest to the origin.
      * @return Point closest to the origin
      */
-    public GridPosition getPointClosestToOrigin(){
-        GridPosition closestPoint = this.points.get(0);
-        for(int i = 1; i < this.points.size(); i++){
-            GridPosition currentPoint = this.points.get(i);
-            Vector v = Vector.getVector(closestPoint, currentPoint);
-          
-            float t = -Vector.dotProduct(v, new Vector((Position3D) closestPoint))/((float) Math.pow(v.get(0), 2) + (float) Math.pow(v.get(1), 2)+ (float) Math.pow(v.get(2), 2));
-            
-            if(t < 0){
-                //closestPoint = closestPoint;
-            } else if (t > 1){
-                closestPoint = currentPoint;
-            } else {
-                closestPoint = new Position3D(v.get(0)*t + closestPoint.x(), v.get(1)*t + closestPoint.y(), v.get(2)*t + closestPoint.z());
+    public GridPosition getPointClosestToOrigin() {
+        if (points.isEmpty()) {
+            return null;
+        }
+    
+        GridPosition closestPoint = points.get(0);
+    
+        for (int i = 0; i < points.size(); i++) {
+            GridPosition startPoint = points.get(i);
+            GridPosition endPoint = points.get((i + 1) % points.size());
+    
+            Vector v = Vector.getVector(startPoint, endPoint);
+            Vector w = new Vector((Position3D) startPoint);
+    
+            float t = -Vector.dotProduct(w, v) / Vector.dotProduct(v, v);
+    
+            if (t < 0) {
+                t = 0;
+            } else if (t > 1) {
+                t = 1;
+            }
+    
+            Vector projection = Vector.add(w, v.scaledBy(t));
+    
+            if (projection.magnitude() < new Vector((Position3D) closestPoint).magnitude()) {
+                closestPoint = new Position3D(projection.get(0), projection.get(1), projection.get(2));
             }
         }
+    
         return closestPoint;
     }
 

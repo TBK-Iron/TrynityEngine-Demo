@@ -9,19 +9,38 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position4D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Matrix;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
+/**
+ * This class represents a 3D projection transformation to be applied to faces.
+ * It is responsible for creating a projection matrix and transforming faces
+ * using that matrix.
+ */
 public final class Projection implements Transformation {
     
     private final Matrix matrix;
 
+    /**
+     * Constructs a new Projection transformation.
+     *
+     * @param fov        the field of view angle in radians
+     * @param aspectRatio the aspect ratio of the screen
+     * @param near       the near clipping plane distance
+     * @param far        the far clipping plane distance
+     */
     public Projection(float fov, float aspectRatio, float near, float far){
         this.matrix = createProjectionMatrix(fov, aspectRatio, near, far);
-        //System.out.println("Projection matrix: " + this.matrix);
     }
 
+    /**
+     * Creates a projection matrix using the specified parameters.
+     *
+     * @param fov        the field of view angle in radians
+     * @param aspectRatio the aspect ratio of the screen
+     * @param near       the near clipping plane distance
+     * @param far        the far clipping plane distance
+     * @return the projection matrix
+     */
     private Matrix createProjectionMatrix(float fov, float aspectRatio, float near, float far){
         float tanHalfFov = (float) Math.tan(fov / 2); 
-
-        //System.out.println("aspectRatio: " + aspectRatio + ", fov: " + fov + ", near: " + near + ", far: " + far);
 
         Matrix pMatrix = new Matrix( new float[][] {
             {1/(aspectRatio*tanHalfFov), 0           , 0                         , 0 },
@@ -33,11 +52,22 @@ public final class Projection implements Transformation {
         return pMatrix;
     }
 
+    /**
+     * Returns the projection matrix.
+     *
+     * @return the projection matrix
+     */
     @Override
     public Matrix getMatrix() {
         return this.matrix;
     }
 
+    /**
+     * Transforms the input face using the projection matrix.
+     *
+     * @param face the face to be transformed
+     * @return the transformed face
+     */
     @Override
     public Face transform(Face face) {
         ArrayList<GridPosition> newVertices = new ArrayList<GridPosition>();

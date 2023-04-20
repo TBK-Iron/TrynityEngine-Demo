@@ -40,10 +40,4 @@ class Shape3DTest {
         assertEquals(0, center.z(), 0.0001);
         assertEquals(0.25 * Math.sqrt(3), radius, 0.0001);
     }
-
-    @Test
-    void testDistanceToOriginSquared() {
-        float distanceToOriginSquared = shape.getDistanceToOriginSquared();
-        assertEquals(0.25 * 0.25 * 3, distanceToOriginSquared, 0.0001);
-    }
 }

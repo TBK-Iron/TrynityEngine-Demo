@@ -26,7 +26,8 @@ public class Zombie implements Enemy{
 
     public Zombie(GridPosition startPosition, RelativeRotation startRotation){
         ShapeData shapeData = new ShapeData(startPosition, startRotation, Zombie.ZOMBIE_MODEL);
-        zombieEntity = new Entity(shapeData, Zombie.ZOMBIE_COLLISION_BOX);
+        zombieEntity = new Entity(shapeData);
+        zombieEntity.setCollision(ZOMBIE_COLLISION_BOX);
         //zombieEntity = new Entity(shapeData);
         this.health = Zombie.START_HEALTH;
     }

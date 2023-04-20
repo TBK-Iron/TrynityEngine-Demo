@@ -7,6 +7,7 @@ import no.uib.inf101.sem2.game.model.entities.Door;
 import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
+import no.uib.inf101.sem2.game.model.entities.enemies.TheBeast;
 import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
@@ -62,7 +63,7 @@ public class LegendOfTheBeast implements Level{
         shapes.add(new ShapeData(new Position3D(-9, -2, 62), new RelativeRotation(0, (float) Math.PI/2), new File("src/main/resources/shapes/large_room_B.trym")));
 
         return shapes;
-    }
+    }  
 
     @Override
     public ArrayList<CollisionBox> loadCollisionBoxes() {
@@ -79,20 +80,28 @@ public class LegendOfTheBeast implements Level{
         collisionBoxes.add(new CollisionBox(new Position3D(2,1.5f,-2), new Position3D(-14,5.5f,9)));
         
         //Parkour room
-
             //Walls 
+        collisionBoxes.add(new CollisionBox(new Position3D(-20, -5, 9), new Position3D(-24, 7, 29)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-4, -5, 9), new Position3D(0, 7, 29)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-20, -5, 9), new Position3D(-13, 7, 8)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-11, -5, 9), new Position3D(-4, 7, 8)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-13, 0.7f, 9), new Position3D(-11, 7, 8)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-20, -5, 29), new Position3D(-13, 7, 30)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-11, -5, 29), new Position3D(-4, 7, 30)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-13, 0.7f, 29), new Position3D(-11, 7, 30)));
             
             //Ceiling
         collisionBoxes.add(new CollisionBox(new Position3D(-4, 7, 9), new Position3D(-20, 11, 29)));
         
             //Ledges
-        collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 9), new Position3D(-17,-5,12)));
-        collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 26), new Position3D(-17,-5,29)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 8), new Position3D(-17,-5,12)));
+        collisionBoxes.add(new CollisionBox(new Position3D(-7, -2, 26), new Position3D(-17,-5,30)));
 
             //Wallrun blocks
         collisionBoxes.add(new CollisionBox(new Position3D(-6, -2.1f, 14), new Position3D(-4.5f,7,20)));
         collisionBoxes.add(new CollisionBox(new Position3D(-12, -1.3f, 13), new Position3D(-18f,7,14.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-17, -2, 20), new Position3D(-15.5f,7,26f)));
+            
             //Metal cubes
         collisionBoxes.add(new CollisionBox(new Position3D(-8, -3.5f, 12.5f), new Position3D(-6.5f,-2,14)));
         collisionBoxes.add(new CollisionBox(new Position3D(-8.5f, -3.5f, 20.5f), new Position3D(-7,-2,22)));
@@ -101,9 +110,19 @@ public class LegendOfTheBeast implements Level{
         collisionBoxes.add(new CollisionBox(new Position3D(-17f, -2.8f, 15f), new Position3D(-15.5f,-1.3f,16.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-19f, -2.4f, 18f), new Position3D(-17.5f,-0.9f,19.5f)));
         collisionBoxes.add(new CollisionBox(new Position3D(-19.2f, -3.5f, 26f), new Position3D(-17.7f,-2,27.5f)));
+        
+        //Boss room and corridor floor
+        collisionBoxes.add(new CollisionBox(new Position3D(-20, -2, 30), new Position3D(19, -6, 62)));
+        
         //Second corridor
+            //Walls
+
+            //Ceiling
 
         //Boss room
+            //Walls
+        
+        
 
         return collisionBoxes;
     }
@@ -121,8 +140,10 @@ public class LegendOfTheBeast implements Level{
     public ArrayList<Enemy> loadEnemies(){
         ArrayList<Enemy> enemies = new ArrayList<>();
 
-        //enemies.add(new Zombie(new Position3D(-12, -1.5f, 0), new RelativeRotation(0, (float) Math.PI/2)));
+        enemies.add(new Zombie(new Position3D(-12, -1.9989f, 0), new RelativeRotation(0, (float) Math.PI/2)));
+        enemies.add(new TheBeast(new Position3D(5, -1.9989f, 52), new RelativeRotation(0, (float) -Math.PI/2)));
 
+         // 5, -2.001, 52
         return enemies;
     }
 

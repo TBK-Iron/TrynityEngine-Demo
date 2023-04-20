@@ -65,14 +65,6 @@ public final class RelativeRotation {
         return new RelativeRotation(newPivot, newUpDown, newLeftRight);
     }
 
-    public RelativeRotation scaledBy(float scalar){
-        float newPivot = this.pivot * scalar;
-        float newLeftRight = this.leftRight * scalar;
-        float newUpDown = this.upDown * scalar;
-
-        return new RelativeRotation(newPivot, newUpDown, newLeftRight);
-    }
-
     /**
      * Returns a vector representing the direction of this rotation.
      * @return A vector representing the direction of this rotation.

@@ -4,18 +4,19 @@ import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.gameEngine.model.Camera;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
+import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 public class Player {
     private static final float MAX_HEALTH = 100;
     private static final float DAMAGE = 5; 
 
-    private GridPosition startPos;
-    private RelativeRotation startRot;
+    private final GridPosition startPos;
+    private final RelativeRotation startRot;
 
     private Camera playerCam;
     private float health;
-    private float damage;
 
     public Player(GridPosition startPos, RelativeRotation startRot, CollisionBox hitBox){
         this.startPos = startPos;
@@ -26,7 +27,6 @@ public class Player {
             this.playerCam.setCollision(hitBox);
         }
         this.health = MAX_HEALTH;
-        this.damage = DAMAGE;
     }
 
     public void resetPlayer(){
@@ -55,14 +55,12 @@ public class Player {
         }
     }
 
-    public boolean shoot(Enemy enemy){
-        CollisionBox hitBox = enemy.getEntity().getCollisionBox();
-        System.out.println(playerCam.getPos() + " " + playerCam.getRotation().getVector());
-        if(hitBox.rayIntersection(playerCam.getPos(), playerCam.getRotation().getVector().normalized())){
-            enemy.damage(this.damage);
-            return true;
-        } else {
-            return false;
-        }
+    public float distanceToHit(CollisionBox hitBox){
+        float dist = hitBox.rayIntersection(playerCam.getPos(), playerCam.getRotation().getVector().normalized());
+        return dist;
+    }
+
+    public void giveDamageTo(Enemy enemy){
+        enemy.damage(DAMAGE);
     }
 }
