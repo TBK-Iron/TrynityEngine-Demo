@@ -3,16 +3,16 @@ package no.uib.inf101.sem2.game.model;
 import no.uib.inf101.sem2.game.model.entities.Door;
 import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
-import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
+import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.game.model.levels.Level;
+import no.uib.inf101.sem2.game.model.resourceLoaders.SoundPlayer;
 
 import java.util.ArrayList;
 
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.model.Camera;
-import no.uib.inf101.sem2.gameEngine.model.EngineModel;
+import no.uib.inf101.sem2.gameEngine.model.ConfigurableEngineModel;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
@@ -21,62 +21,88 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
+/**
+ * Represents the game model that handles game logic, entities, and level data.
+ * Implements both ViewableGameModel and ControllableGameModel interfaces.
+ */
 public class GameModel implements ViewableGameModel, ControllableGameModel{
     
     GameState currentState;
-    EngineModel engineModel;
+    ConfigurableEngineModel engineModel;
     CollisionDetector collisionDetector;
     CollisionDetector killDetector;
-    Level map;
+    SoundPlayer soundPlayer;
 
     Player player;
 
     ArrayList<Enemy> enemies;
+    ArrayList<EnemySpawner> enemySpawners;
     ArrayList<Door> doors;
 
     Config config;
 
-    public GameModel(Level map, EngineModel engineModel, CollisionDetector collisionDetector, Config config){
-        this.currentState = GameState.MAIN_MENU;
-        this.map = map;
+    /**
+     * Constructs a new GameModel.
+     *
+     * @param engineModel The EngineModel object handling the game engine.
+     * @param collisionDetector The CollisionDetector object responsible for detecting collisions.
+     * @param config The game and model configuration.
+     */
+    public GameModel(ConfigurableEngineModel engineModel, CollisionDetector collisionDetector,SoundPlayer soundPlayer, Config config){
+        this.currentState = GameState.LOADING;
 
         this.collisionDetector = collisionDetector;
         this.engineModel = engineModel;
+        this.soundPlayer = soundPlayer;
 
         this.killDetector = new CollisionDetector();
         this.config = config;
-
-        loadGame();
     }
 
-    private void loadGame(){
-        ArrayList<ShapeData> shapesData = this.map.loadShapes();
+    /**
+     * Loads the game, including shapes, collision boxes, doors, enemies, and enemy spawners from the map.
+     * 
+     * @param map The Level object containing the map data.
+     */
+    @Override
+    public void loadMap(Level map){
+        this.engineModel.resetModel();
+
+
+        ArrayList<ShapeData> shapesData = map.loadShapes();
         for(ShapeData shapeData : shapesData){
             this.engineModel.addShape(new Shape3D(shapeData));
         }
-        ArrayList<CollisionBox> collisionBoxes = this.map.loadCollisionBoxes();
+        ArrayList<CollisionBox> collisionBoxes = map.loadCollisionBoxes();
         for(CollisionBox box : collisionBoxes){
             this.collisionDetector.addCollisionBox(box);
         }
 
-        this.doors = this.map.loadDoors();
+        this.doors = map.loadDoors();
         for(Door door : this.doors){
             this.engineModel.addEntity(door.getEntity());
         }
 
-        this.enemies = this.map.loadEnemies();
+        this.enemies = map.loadEnemies();
         for(Enemy enemy : this.enemies){
             this.engineModel.addEntity(enemy.getEntity());
         }
 
-        for(CollisionBox killbox : this.map.loadKillBoxes()){
+        this.enemySpawners = map.loadEnemySpawners();
+
+        for(CollisionBox killbox : map.loadKillBoxes()){
             this.killDetector.addCollisionBox(killbox);
         }
 
-        this.player = this.map.getPlayer();
+        this.player = map.getPlayer();
         this.engineModel.setCamera(this.player.getCamera());
     }
 
+    /**
+     * Updates the game state, handling door and enemy interactions, player damage, and enemy spawning.
+     * 
+     * This method should be run every frame the game is active
+     */
     @Override
     public void updateGame(){
         if(!this.config.noclip()){
@@ -94,6 +120,14 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
                     enemy.setTargetPosition(playerPos);
                     this.player.takeDamage(enemy.damageTo(playerPos));
                 }
+                if(enemy.isAlive()){
+                    float randomVal = (float) Math.random();
+                    if(randomVal < 0.005){
+                        float volume = enemy.getNoiseVolumeRelativeTo(playerPos);
+                        System.out.println(enemy.getAmbientSound() + " " + volume);
+                        this.soundPlayer.playSoundOnce(enemy.getAmbientSound(), volume);
+                    }
+                } 
             }
             if(this.killDetector.getCollidingBox(this.player.getCamera().getCollisionBox(), this.player.getCamera().getPos()) != null){
                 this.player.resetPlayer();
@@ -101,8 +135,19 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
                 this.player.resetPlayer();
             }
         }
+
+        for(EnemySpawner spawner : this.enemySpawners){
+            if(spawner.canSpawn()){
+                Enemy newEnemy = spawner.getNextEnemy();
+                this.enemies.add(newEnemy);
+                this.engineModel.addEntity(newEnemy.getEntity());
+            }
+        }
     }
 
+    /**
+     * Shoots at the closest enemy within range, considering obstructions.
+     */
     @Override
     public void shoot(){
         Enemy closestHitEnemy = null;
@@ -111,7 +156,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             if(enemy.isAlive()){
                 CollisionBox enemyHitBox = enemy.getEntity().getCollisionBox().translatedBy(new Vector((Position3D) enemy.getPosition()));
                 float dist = player.distanceToHit(enemyHitBox);
-                if(dist < distToClosestHitEnemy){
+                if(dist < Math.min(1000, distToClosestHitEnemy)){
                     distToClosestHitEnemy = dist;
                     closestHitEnemy = enemy;
                 }
@@ -125,22 +170,41 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
                 }
             }
             player.giveDamageTo(closestHitEnemy);
+            float volume = closestHitEnemy.getNoiseVolumeRelativeTo(player.getCamera().getPos());
             if(!closestHitEnemy.isAlive()){
                 closestHitEnemy.kill();
+                soundPlayer.playSoundOnce(closestHitEnemy.getDeathSound(), volume);
+            } else {
+                soundPlayer.playSoundOnce(closestHitEnemy.getHurtSound(), volume);
             }
         }
     }
 
+    /**
+     * Returns the current game state.
+     *
+     * @return The current GameState.
+     */
     @Override
     public GameState getGameState(){
         return this.currentState;
     }
 
+    /**
+     * Returns the player's health percentage.
+     *
+     * @return The player's health as a percentage of their maximum health.
+     */
     @Override
     public float getPlayerHealthPercent(){
         return this.player.getHealthPercent();
     }
 
+    /**
+     * Sets the current game state.
+     * 
+     * @param state The new GameState.
+     */
     @Override
     public void setGameState(GameState state){
         this.currentState = state;

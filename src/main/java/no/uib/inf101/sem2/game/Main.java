@@ -1,24 +1,26 @@
 package no.uib.inf101.sem2.game;
 
+import no.uib.inf101.sem2.game.controller.ButtonsHandler;
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.controller.GameController;
 import no.uib.inf101.sem2.game.model.GameModel;
 import no.uib.inf101.sem2.game.model.GameState;
-import no.uib.inf101.sem2.game.model.levels.GrassWorld;
-import no.uib.inf101.sem2.game.model.levels.LegendOfTheBeast;
-import no.uib.inf101.sem2.game.model.levels.Level;
-import no.uib.inf101.sem2.game.model.levels.TestLevel1;
-import no.uib.inf101.sem2.game.model.levels.TextureTest;
+import no.uib.inf101.sem2.game.model.resourceLoaders.SoundPlayer;
 import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
+import no.uib.inf101.sem2.game.settings.DefaultSettings;
+import no.uib.inf101.sem2.game.settings.Settings;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.TrynityEngine;
 import no.uib.inf101.sem2.gameEngine.gameEngine;
 import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
+import no.uib.inf101.sem2.gameEngine.model.ConfigurableEngineModel;
 
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.awt.event.ComponentAdapter;
 
 import javax.swing.JFrame;
@@ -27,16 +29,19 @@ import javax.swing.Timer;
 public class Main {
   public static void main(String[] args) {
 
-    Config config = new DefaultConfig();
+    Settings settings = new DefaultSettings();
+    Config config = (Config) settings;
+
+    SoundPlayer soundPlayer = new SoundPlayer();
     TextureLoader textureLoader = new TextureLoader();
 
 
     gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
-    Level map = new LegendOfTheBeast();
+    ButtonsHandler buttonsHandler = new ButtonsHandler(config);
 
-    GameModel model = new GameModel(map, engine.model(), engine.collisionDetector(), config);
-    GameView view = new GameView((ViewableGameModel) model, config, engine.sceneMaker(), textureLoader);
+    GameModel model = new GameModel((ConfigurableEngineModel) engine.model(), engine.collisionDetector(), soundPlayer, config);
+    GameView view = new GameView((ViewableGameModel) model, buttonsHandler, config, engine.sceneMaker(), textureLoader);
     GameController controller = new GameController((ControllableGameModel) model, view, config, engine.controller());
 
     JFrame frame = new JFrame();
@@ -48,7 +53,7 @@ public class Main {
 
     frame.getRootPane().addComponentListener(new ComponentAdapter() {
       public void componentResized(ComponentEvent componentEvent) {
-        config.resizeFrame(componentEvent.getComponent().getWidth(), componentEvent.getComponent().getHeight());
+        settings.setScreenSize(componentEvent.getComponent().getWidth(), componentEvent.getComponent().getHeight());
       }
     });
 
@@ -68,6 +73,11 @@ public class Main {
  
     timer.start();
 
-    
+    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+    Runnable task = () -> {
+        model.setGameState(GameState.MAIN_MENU);
+    };
+
+    executor.schedule(task, 2500, TimeUnit.MILLISECONDS);
   }
 }

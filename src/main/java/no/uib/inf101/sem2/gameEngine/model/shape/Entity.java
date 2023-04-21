@@ -1,10 +1,6 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
-import java.util.ArrayList;
-
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
-import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
@@ -32,7 +28,6 @@ public class Entity extends Shape3D {
         super(shapeData);
         this.movementVector = new Vector(new float[]{0, 0, 0});
         this.targetPosition = this.anchoredPos;
-        System.out.println(this.movementVector);
         this.collisionBox = null;
 
         this.rotationDelta = new RelativeRotation(0, 0, 0);
@@ -196,6 +191,33 @@ public class Entity extends Shape3D {
             return false;
         } else {
             return true;
+        }
+    }
+
+    @Override
+    public boolean equals(Object object){
+        if(!(object instanceof Entity)){
+            return false;
+        } else {
+            Entity otherEntity = (Entity) (object);
+            if(this.anchoredPos.equals(otherEntity.anchoredPos)){
+                if(this.rotation.equals(otherEntity.rotation)){
+                    if(this.movementVector.equals(otherEntity.movementVector)){
+                        if(this.targetPosition.equals(otherEntity.targetPosition)){
+                            if(this.collisionBox.equals(otherEntity.collisionBox)){
+                                if(this.rotationDelta.equals(otherEntity.rotationDelta)){
+                                    if(this.rotationDeltaDelta.equals(otherEntity.rotationDeltaDelta)){
+                                        if(this.rotationFrameCount == otherEntity.rotationFrameCount){
+                                            return true;
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
         }
     }
 }

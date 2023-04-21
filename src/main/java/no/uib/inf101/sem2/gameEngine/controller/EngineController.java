@@ -1,20 +1,17 @@
 package no.uib.inf101.sem2.gameEngine.controller;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
-import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class EngineController {
     private ControllableEngineModel model;
-    private Config config;
     private MouseHandler mouseHandler;
     private MoveHandler moveHandler;
 
     public EngineController(ControllableEngineModel model, Config config) {
         this.model = model;
-        this.config = config;
         this.mouseHandler = new MouseHandler(config);
         this.moveHandler = new MoveHandler(config);
     }

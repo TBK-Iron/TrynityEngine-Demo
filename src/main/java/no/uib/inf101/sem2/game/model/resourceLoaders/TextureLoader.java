@@ -33,18 +33,8 @@ public class TextureLoader {
         textures.put("zombie_appendages", readFile("src/main/resources/textures/zombie_appendages.png"));
         textures.put("trym", readFile("src/main/resources/textures/trymImage.jpg"));
         
-
-        /* textures.put("trollface", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("checkered", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("grass", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("bark", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("leaves", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("brick", readFile("src/main/resources/textures/trymImage.jpg")));
-
-        textures.put("zombie_head", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("zombie_torso", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("zombie_appendages", readFile("src/main/resources/textures/trymImage.jpg")));
-        textures.put("trym", readFile("src/main/resources/textures/trymImage.jpg"))); */
+        textures.put("gravel", readFile("src/main/resources/textures/gravel.jpg"));
+        textures.put("arena_wall", readFile("src/main/resources/textures/arena_wall.jpg"));
 
         logoImage = readFile("src/main/resources/Trynity_Logo.png");
         menuBackgroundImage = readFile("src/main/resources/background.png");

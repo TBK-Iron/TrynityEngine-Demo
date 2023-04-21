@@ -5,6 +5,11 @@ import java.awt.Color;
 public class DefaultColorTheme implements ColorTheme {
 
     @Override
+    public Color getLoadingScreenBackgroundColor(){
+        return new Color(224, 224, 224);
+    }
+
+    @Override
     public Color getTextColor() {
         return new Color(50, 50, 60);
     }

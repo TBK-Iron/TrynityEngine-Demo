@@ -45,6 +45,10 @@ public class CollisionDetector {
         return null;
     }
 
+    public void resetCollisionDetector(){
+        this.fixedCollisionBoxes = new ArrayList<>();
+    }
+
     public ArrayList<CollisionBox> getFixedCollisionBoxes(){
         return fixedCollisionBoxes;
     }

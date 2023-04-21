@@ -6,7 +6,6 @@ import java.io.File;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
-import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;

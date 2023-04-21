@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import javax.swing.JPanel;
 
 import no.uib.inf101.sem2.game.controller.Button;
+import no.uib.inf101.sem2.game.controller.ButtonsHandler;
 import no.uib.inf101.sem2.game.model.GameState;
 import no.uib.inf101.sem2.game.model.resourceLoaders.TextureLoader;
 import no.uib.inf101.sem2.game.view.ColorThemes.ColorTheme;
@@ -32,11 +33,11 @@ public class GameView extends JPanel {
     private Config config;
     private final ColorTheme CTheme;
 
-    private ArrayList<Button> pauseMenuButtons;
-    private ArrayList<Button> mainMenuButtons;
+    
+    private ButtonsHandler buttons;
 
 
-    public GameView(ViewableGameModel model, Config config, SceneMaker engineView, TextureLoader images) {
+    public GameView(ViewableGameModel model, ButtonsHandler buttons, Config config, SceneMaker engineView, TextureLoader images) {
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.WHITE);
         this.setFocusable(true);
@@ -46,39 +47,14 @@ public class GameView extends JPanel {
         this.engineView = engineView;
         this.config = config;
         this.images = images;
+        this.buttons = buttons;
         this.CTheme = new DefaultColorTheme();
-
-        this.createPauseMenuButtons();
-        this.createMainMenuButtons();
     }
 
-    private void createMainMenuButtons(){
-        int sWidth = this.config.screenWidth();
-        int sHeight = this.config.screenHeight();
-
-        this.mainMenuButtons = new ArrayList<>();
-        this.mainMenuButtons.add(new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, "Play"));
-        this.mainMenuButtons.add(new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, "Settings"));
-        this.mainMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Quit"));
-    }
-    
-    private void createPauseMenuButtons(){
-        int sWidth = this.config.screenWidth();
-        int sHeight = this.config.screenHeight();
-
-        this.pauseMenuButtons = new ArrayList<>();
-        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, "Resume"));
-        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, "Settings"));
-        this.pauseMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Main Menu"));    
+    public ButtonsHandler getButtons(){
+        return this.buttons;
     }
 
-    public ArrayList<Button> getPauseMenuButtons(){
-        return this.pauseMenuButtons;
-    }
-
-    public ArrayList<Button> getMainMenuButtons(){
-        return this.mainMenuButtons;
-    }
 
     @Override
     protected void paintComponent(Graphics g) {
@@ -88,7 +64,7 @@ public class GameView extends JPanel {
         } else if(this.model.getGameState() == GameState.MAIN_MENU){
             drawMainMenu(g2);
         } else if(this.model.getGameState() == GameState.LEVEL_MENU){
-
+            drawLevelMenu(g2);
         } else if(this.model.getGameState() == GameState.ACTIVE){
             drawActiveGame(g2);
         } else if(this.model.getGameState() == GameState.PAUSED){
@@ -97,6 +73,9 @@ public class GameView extends JPanel {
     }
 
     private void drawLoadingScreen(Graphics2D g2){
+        Rectangle2D rect = new Rectangle2D.Double(0, 0, this.config.screenWidth(), this.config.screenHeight());
+        g2.setColor(this.CTheme.getLoadingScreenBackgroundColor());
+        g2.fill(rect);
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
         Inf101Graphics.drawCenteredImage(g2, this.images.getLogo(), x, y, 0.45);
@@ -107,13 +86,22 @@ public class GameView extends JPanel {
         double y = this.config.screenHeight() / 2;
         Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
 
-        drawButtons(g2, this.mainMenuButtons, this.CTheme);
+        drawButtons(g2, this.buttons.getMainMenuButtons(), this.CTheme);
+    }
+
+    private void drawLevelMenu(Graphics2D g2){
+        double x = this.config.screenWidth() / 2;
+        double y = this.config.screenHeight() / 2;
+        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
+
+        drawButtons(g2, this.buttons.getLevelMenuButtons(), this.CTheme);
     }
 
     //TODO: add GUI elements
     private void drawActiveGame(Graphics2D g2){
         this.sceneImage = this.engineView.getNextSceneImage();
         g2.drawImage(this.sceneImage, 0, 0, null);
+
         drawCrosshair(g2, CTheme, config.screenWidth()/2, config.screenHeight()/2, 15);
         drawHealthBar(g2, this.model.getPlayerHealthPercent(), CTheme, config.screenHeight(), config.screenHeight()/20);
 
@@ -133,8 +121,8 @@ public class GameView extends JPanel {
 
     private static void drawHealthBar(Graphics2D g2, float healthPercent, ColorTheme CTheme, int screenHeight, int size){
         
-        Rectangle2D healthBarBackground = new Rectangle2D.Double(0, screenHeight - size, size*5, size);
-        Rectangle2D healthBar = new Rectangle2D.Double(0, screenHeight - size, size*5*healthPercent, size);
+        Rectangle2D healthBarBackground = new Rectangle2D.Double(screenHeight/20, screenHeight - size - screenHeight/20, size*8, size);
+        Rectangle2D healthBar = new Rectangle2D.Double(screenHeight/20, screenHeight - size - screenHeight/20, size*8*healthPercent, size);
 
         g2.setColor(CTheme.getHealthBackgroundColor());
         g2.fill(healthBarBackground);
@@ -146,7 +134,6 @@ public class GameView extends JPanel {
         g2.draw(healthBarBackground);
     }
 
-    //TODO: finish
     private void drawPausedGame(Graphics2D g2){
         g2.drawImage(this.sceneImage, 0, 0, null);
 
@@ -159,7 +146,7 @@ public class GameView extends JPanel {
         g2.setColor(this.CTheme.getPauseMenuHue());
         g2.fill(transparentMesh);
 
-        drawButtons(g2, this.pauseMenuButtons, this.CTheme);
+        drawButtons(g2, this.buttons.getPauseMenuButtons(), this.CTheme);
     }
 
     private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme){

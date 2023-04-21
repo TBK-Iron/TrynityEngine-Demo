@@ -48,14 +48,6 @@ public interface Config {
     public float cameraSprintSpeed();
 
     /**
-     * Resizes the game frame to the specified dimensions.
-     *
-     * @param width  The new width of the game frame.
-     * @param height The new height of the game frame.
-     */
-    void resizeFrame(int width, int height);
-
-    /**
      * @return The color of the skybox in ARGB format.
      */
     int skyboxColor();

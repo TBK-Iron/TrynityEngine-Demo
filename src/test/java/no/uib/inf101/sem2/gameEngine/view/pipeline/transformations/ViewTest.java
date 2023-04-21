@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 

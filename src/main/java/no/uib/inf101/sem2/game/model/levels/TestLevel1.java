@@ -16,6 +16,11 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 public class TestLevel1 implements Level {
 
     @Override
+    public String getLevelName() {
+        return "Test Level 1";
+    }
+
+    @Override
     public Player getPlayer(){
         GridPosition startPos = new Position3D(0, 0, 0);
         RelativeRotation startRot = new RelativeRotation(0, 0);

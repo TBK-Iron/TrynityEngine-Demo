@@ -1,13 +1,11 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
-import no.uib.inf101.sem2.gameEngine.model.collision.BoundingSphere;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Projection;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

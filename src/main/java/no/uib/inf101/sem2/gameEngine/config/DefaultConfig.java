@@ -5,17 +5,17 @@ public class DefaultConfig implements Config {
     final float verticalFOV = 75;
     /* int screenWidth = 1366;
     int screenHeight = 768; */
-    private int screenWidth = 854;
-    private int screenHeight = 480;
-    private final float nearPlane = 0.5f;
-    private final float farPlane = 100f;
-    private final float fps = 45f;
-    private final float cameraMoveSpeed = 0.09f;
-    private final float cameraSprintSpeed = 0.17f;
-    private final int skyboxColor = 0xFFADD8E6;
-    private final float gravity = (float) (25 / Math.pow(fps, 2));
-    private final float jumpBurst = (float) Math.sqrt(2 * gravity * 1.25);
-    private final boolean noclip = false;
+    protected int screenWidth = 854;
+    protected int screenHeight = 480;
+    protected final float nearPlane = 0.5f;
+    protected float farPlane = 100f;
+    protected final float fps = 45f;
+    protected float cameraMoveSpeed = 0.09f;
+    protected float cameraSprintSpeed = 0.17f;
+    protected final int skyboxColor = 0xFFADD8E6;
+    protected final float gravity = (float) (25 / Math.pow(fps, 2));
+    protected final float jumpBurst = (float) Math.sqrt(2 * gravity * 1.25);
+    protected boolean noclip = false;
 
     @Override
     public float verticalFOV() {
@@ -51,13 +51,6 @@ public class DefaultConfig implements Config {
     @Override
     public float cameraSprintSpeed() {
         return this.cameraSprintSpeed;
-    }
-
-    @Override
-    public void resizeFrame(int width, int height) {
-        System.out.println("Resizing frame to: " + width + "x" + height);
-        this.screenWidth = width;
-        this.screenHeight = height;
     }
 
     @Override

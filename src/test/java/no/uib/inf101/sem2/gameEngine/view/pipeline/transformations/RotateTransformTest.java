@@ -52,12 +52,12 @@ public class RotateTransformTest {
         RotateTransform rotTrans4 = new RotateTransform(new RelativeRotation((float) Math.PI/4, (float) Math.PI/4), false);
         //Fix this matrix
         Matrix expectedMatrix4 = new Matrix(new float[][]{
-            {0.70710677f, 0, 0.70710677f},
-            {0.35355338f, 0.70710677f, -0.35355338f},
-            {-0.6123724f, 0.70710677f, 0.6123724f}
+            {0.70710677f, -0.49999997f, 0.49999997f},
+            {0.0f, 0.70710677f, 0.70710677f},
+            {-0.70710677f, -0.49999997f, 0.49999997f}
         });
 
-        assertEquals(expectedMatrix3, rotTrans3.getMatrix());
-        assertEquals(expectedMatrix3.multiply(testV), rotTrans3.getMatrix().multiply(testV));
+        assertEquals(expectedMatrix4, rotTrans4.getMatrix());
+        assertEquals(expectedMatrix4.multiply(testV), rotTrans4.getMatrix().multiply(testV));
     }
 }

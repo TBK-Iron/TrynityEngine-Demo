@@ -1,6 +1,5 @@
 package no.uib.inf101.sem2.game.controller;
 
-import java.awt.Color;
 import java.awt.geom.Rectangle2D;
 
 public final class Button{

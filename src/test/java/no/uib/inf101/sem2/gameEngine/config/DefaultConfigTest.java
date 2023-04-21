@@ -50,13 +50,6 @@ public class DefaultConfigTest {
     }
 
     @Test
-    public void testResizeFrame() {
-        config.resizeFrame(1920, 1080);
-        assertEquals(1920, config.screenWidth());
-        assertEquals(1080, config.screenHeight());
-    }
-
-    @Test
     public void testSkyboxColor() {
         assertEquals(0xFFADD8E6, config.skyboxColor());
     }

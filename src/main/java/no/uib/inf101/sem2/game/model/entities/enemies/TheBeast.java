@@ -15,22 +15,27 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 
 
 public class TheBeast implements Enemy{
-    private static final float START_HEALTH = 50;
+    public static final float START_HEALTH = 200;
     private static final float MOVE_SPEED = 0.03f;
     private static final File BEAST_MODEL = new File("src/main/resources/shapes/the_beast.trym");
     private static final CollisionBox BEAST_COLLISION_BOX = new CollisionBox(new Position3D(5, 10, 5), new Position3D(-5, 0, -5));
-    private static final float activationRadius = 15;
     private static final float damageRadius = 6;
     private static final float damage = 1f; //Damage per tick
 
+    private static final String ambientSound = null;
+    private static final String hurtSound = null;
+    private static final String deathSound = null;
+
     private Entity beastEntity;
     private float health;
+    private float activationRadius;
 
 
-    public TheBeast(GridPosition startPosition, RelativeRotation startRotation){
+    public TheBeast(GridPosition startPosition, RelativeRotation startRotation, float activationRadius){
         this.beastEntity = new Entity(new ShapeData(startPosition, startRotation, TheBeast.BEAST_MODEL));
         this.beastEntity.setCollision(TheBeast.BEAST_COLLISION_BOX);
         this.health = TheBeast.START_HEALTH;
+        this.activationRadius = activationRadius;
     }
 
     private TheBeast(TheBeast primaryBeast){
@@ -119,5 +124,34 @@ public class TheBeast implements Enemy{
     @Override
     public GridPosition getPosition() {
         return this.beastEntity.getPosition();
+    }
+
+    @Override
+    public String getAmbientSound(){
+        return TheBeast.ambientSound;
+    }
+
+    @Override
+    public String getHurtSound(){
+        return TheBeast.hurtSound;
+    }
+
+    @Override
+    public String getDeathSound(){
+        return TheBeast.deathSound;
+    }
+
+    @Override
+    public float getNoiseVolumeRelativeTo(GridPosition pos){
+        Vector distanceVector = Vector.getVector(pos, this.beastEntity.getPosition());
+        float dist = distanceVector.magnitude();
+        if(dist > 20){
+            return 0;
+        } else {
+            float attenuationFactor = 1 - (dist/20);
+            float volume = (float) (Math.log10(attenuationFactor) * 20);
+
+            return volume;
+        }
     }
 }

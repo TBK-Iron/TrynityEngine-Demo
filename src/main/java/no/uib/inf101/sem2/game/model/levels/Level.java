@@ -8,10 +8,10 @@ import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
-import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public interface Level {
+
+    public String getLevelName();
 
     public Player getPlayer();
 
