@@ -42,7 +42,7 @@ public class Main {
 
     GameModel model = new GameModel((ConfigurableEngineModel) engine.model(), engine.collisionDetector(), soundPlayer, config);
     GameView view = new GameView((ViewableGameModel) model, buttonsHandler, config, engine.sceneMaker(), textureLoader);
-    GameController controller = new GameController((ControllableGameModel) model, view, config, engine.controller());
+    GameController controller = new GameController((ControllableGameModel) model, view, settings, engine.controller());
 
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -54,6 +54,7 @@ public class Main {
     frame.getRootPane().addComponentListener(new ComponentAdapter() {
       public void componentResized(ComponentEvent componentEvent) {
         settings.setScreenSize(componentEvent.getComponent().getWidth(), componentEvent.getComponent().getHeight());
+        buttonsHandler.resetButtonHandler();
       }
     });
 

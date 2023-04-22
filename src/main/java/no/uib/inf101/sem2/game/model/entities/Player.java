@@ -12,6 +12,8 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 public class Player {
     private static final float MAX_HEALTH = 100;
     private static final float DAMAGE = 15; 
+    public static final String PLAYER_SHOOT_SOUND = "player_shoot";
+    public static final String PLAYER_DEATH_SOUND = "player_death";
 
     private final GridPosition startPos;
     private final RelativeRotation startRot;

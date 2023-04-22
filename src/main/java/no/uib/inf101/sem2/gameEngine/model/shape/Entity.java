@@ -1,5 +1,7 @@
 package no.uib.inf101.sem2.gameEngine.model.shape;
 
+import java.util.Objects;
+
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
@@ -163,14 +165,20 @@ public class Entity extends Shape3D {
      * @param acceleration The RelativeRotation object representing the rotation acceleration.
      */
     public void setRotationDelta(RelativeRotation delta, int frames, RelativeRotation acceleration){
-       this.rotationDelta = delta;
-       this.rotationFrameCount = frames;
+        this.rotationDelta = delta;
+        this.rotationFrameCount = frames;
 
-       if(acceleration == null){
-           this.rotationDeltaDelta = new RelativeRotation(0, 0, 0);
-       } else {
-           this.rotationDeltaDelta = acceleration;
-       }
+        this.rotationDeltaDelta = acceleration;
+    }
+
+    /**
+     * Sets the rotation delta and frame count for the entity.
+     * @param delta The RelativeRotation object representing the rotation delta.
+     * @param frames The number of frames for the rotation,
+     * if it is -1, the rotation will continue indefinitely.
+     */
+    public void setRotationDelta(RelativeRotation delta, int frames){
+        this.setRotationDelta(delta, frames, new RelativeRotation(0, 0, 0));
     }
 
     /**
@@ -198,15 +206,17 @@ public class Entity extends Shape3D {
     public boolean equals(Object object){
         if(!(object instanceof Entity)){
             return false;
+        } else if(object == this){
+            return true;
         } else {
             Entity otherEntity = (Entity) (object);
-            if(this.anchoredPos.equals(otherEntity.anchoredPos)){
-                if(this.rotation.equals(otherEntity.rotation)){
-                    if(this.movementVector.equals(otherEntity.movementVector)){
-                        if(this.targetPosition.equals(otherEntity.targetPosition)){
-                            if(this.collisionBox.equals(otherEntity.collisionBox)){
-                                if(this.rotationDelta.equals(otherEntity.rotationDelta)){
-                                    if(this.rotationDeltaDelta.equals(otherEntity.rotationDeltaDelta)){
+            if(Objects.equals(this.anchoredPos, otherEntity.anchoredPos)){
+                if(Objects.equals(this.rotation, otherEntity.rotation)){
+                    if(Objects.equals(this.movementVector, otherEntity.movementVector)){
+                        if(Objects.equals(this.targetPosition, otherEntity.targetPosition)){
+                            if(Objects.equals(this.collisionBox, otherEntity.collisionBox)){
+                                if(Objects.equals(this.rotationDelta, otherEntity.rotationDelta)){
+                                    if(Objects.equals(this.rotationDeltaDelta, otherEntity.rotationDeltaDelta)){
                                         if(this.rotationFrameCount == otherEntity.rotationFrameCount){
                                             return true;
                                         }
@@ -217,6 +227,7 @@ public class Entity extends Shape3D {
                     }
                 }
             }
+
             return false;
         }
     }

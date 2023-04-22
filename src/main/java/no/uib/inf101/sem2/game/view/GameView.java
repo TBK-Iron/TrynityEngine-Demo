@@ -65,10 +65,14 @@ public class GameView extends JPanel {
             drawMainMenu(g2);
         } else if(this.model.getGameState() == GameState.LEVEL_MENU){
             drawLevelMenu(g2);
+        } else if (this.model.getGameState() == GameState.SETTINGS_MENU){
+            drawSettingsMenu(g2);
         } else if(this.model.getGameState() == GameState.ACTIVE){
             drawActiveGame(g2);
         } else if(this.model.getGameState() == GameState.PAUSED){
             drawPausedGame(g2);
+        } else if(this.model.getGameState() == GameState.SETTINGS_GAME){
+            drawSettingsGame(g2);
         }
     }
 
@@ -97,7 +101,15 @@ public class GameView extends JPanel {
         drawButtons(g2, this.buttons.getLevelMenuButtons(), this.CTheme);
     }
 
-    //TODO: add GUI elements
+    private void drawSettingsMenu(Graphics2D g2){
+        double x = this.config.screenWidth() / 2;
+        double y = this.config.screenHeight() / 2;
+        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
+
+        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme);
+    }
+
+    //TODO: add more GUI elements
     private void drawActiveGame(Graphics2D g2){
         this.sceneImage = this.engineView.getNextSceneImage();
         g2.drawImage(this.sceneImage, 0, 0, null);
@@ -149,6 +161,19 @@ public class GameView extends JPanel {
         drawButtons(g2, this.buttons.getPauseMenuButtons(), this.CTheme);
     }
 
+    private void drawSettingsGame(Graphics2D g2){
+        g2.drawImage(this.sceneImage, 0, 0, null);
+
+        double width = this.config.screenWidth();
+        double height = this.config.screenHeight();
+
+        Rectangle2D transparentMesh = new Rectangle2D.Double(0, 0, width, height);
+        g2.setColor(this.CTheme.getPauseMenuHue());
+        g2.fill(transparentMesh);
+
+        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme);
+    }
+
     private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme){
         for(Button b : buttons){
             g2.setColor(CTheme.getButtonColor());
@@ -159,7 +184,7 @@ public class GameView extends JPanel {
             g2.draw(b.getRect());
 
             g2.setColor(CTheme.getTextColor());
-            Inf101Graphics.drawCenteredString(g2, b.getName(), b.getCenterX(), b.getCenterY());
+            Inf101Graphics.drawCenteredString(g2, b.getText(), b.getCenterX(), b.getCenterY());
         }
     }
     

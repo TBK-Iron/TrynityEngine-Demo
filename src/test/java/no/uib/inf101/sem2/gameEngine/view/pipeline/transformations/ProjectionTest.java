@@ -33,13 +33,18 @@ class ProjectionTest {
         // Transform the face
         Face transformedFace = projection.transform(face);
 
+        // Calculate the expected values
+        float expectedX = 0.974278f;
+        float expectedY = 1.732050f;
+        float expectedZ = 1.0f;
+
         // Check if the transformed face has the correct number of vertices
         assertEquals(face.getPoints().size(), transformedFace.getPoints().size());
 
-        //TODO: Add assertions for the transformed vertices
-        // Add assertions for the transformed vertices if necessary, e.g.:
-        // assertEquals(expectedX, transformedFace.getPoints().get(0).x(), 0.001);
-        // assertEquals(expectedY, transformedFace.getPoints().get(0).y(), 0.001);
-        // assertEquals(expectedZ, transformedFace.getPoints().get(0).z(), 0.001);
+        assertEquals(expectedX, transformedFace.getPoints().get(0).x(), 0.001);
+        assertEquals(expectedY, transformedFace.getPoints().get(0).y(), 0.001);
+        assertEquals(expectedZ, transformedFace.getPoints().get(0).z(), 0.001);
     }
+
+    //TODO: make test for get matrix
 }

@@ -51,4 +51,6 @@ public class ViewTest {
         );
         assertEquals(expectedVertices, transformedFace.getPoints());
     }
+
+    //TODO make test for get matrix
 }

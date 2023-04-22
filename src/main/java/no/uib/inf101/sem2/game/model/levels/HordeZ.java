@@ -21,6 +21,11 @@ public class HordeZ implements Level {
     }
 
     @Override
+    public String getLevelMusic(){
+        return "ravenholm_reprise";
+    }
+
+    @Override
     public Player getPlayer(){
         GridPosition startPos = new Position3D(0, 2f, 0);
         RelativeRotation startRot = new RelativeRotation(0, 0);

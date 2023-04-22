@@ -8,6 +8,8 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import no.uib.inf101.sem2.game.model.GameState;
+import no.uib.inf101.sem2.game.settings.DefaultSettings;
+import no.uib.inf101.sem2.game.settings.Settings;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
@@ -15,13 +17,13 @@ import no.uib.inf101.sem2.gameEngine.controller.EngineController;
 public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener, java.awt.event.MouseListener{
     ControllableGameModel model;
     GameView view;
-    Config config;
+    Settings settings;
     EngineController engineController;
 
 
-    public GameController(ControllableGameModel model, GameView view, Config config, EngineController engineController) {
+    public GameController(ControllableGameModel model, GameView view, Settings settings, EngineController engineController) {
         this.model = model;
-        this.config = config;
+        this.settings = settings;
         this.view = view;
         this.engineController = engineController;
 
@@ -33,7 +35,7 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void mouseDragged(MouseEvent arg0) {
-        
+        //Do nothing
     }
 
     @Override
@@ -45,7 +47,15 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void keyPressed(KeyEvent arg0) {
-        if(this.model.getGameState() == GameState.ACTIVE){
+        if (this.model.getGameState() == GameState.LEVEL_MENU){
+            if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+                this.model.setGameState(GameState.MAIN_MENU);
+            }
+        } else if (this.model.getGameState() == GameState.SETTINGS_MENU){
+            if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+                this.model.setGameState(GameState.MAIN_MENU);
+            }
+        } else if(this.model.getGameState() == GameState.ACTIVE){
             this.engineController.keyPressed(arg0);
             if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
                 this.model.setGameState(GameState.PAUSED);
@@ -54,10 +64,11 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
             if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
                 this.model.setGameState(GameState.ACTIVE);
             }
+        } else if(this.model.getGameState() == GameState.SETTINGS_GAME){
+            if(arg0.getKeyCode() == KeyEvent.VK_ESCAPE){
+                this.model.setGameState(GameState.ACTIVE);
+            }
         }
-        
-
-        
     }
 
     @Override
@@ -67,53 +78,109 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
 
     @Override
     public void keyTyped(KeyEvent arg0) {
+        //Do nothing
     }
 
     @Override
     public void mouseClicked(MouseEvent arg0) {
         if(this.model.getGameState() == GameState.MAIN_MENU){
-            ArrayList<Button> mainMenuButtons = this.view.getButtons().getMainMenuButtons();
-            int x = arg0.getX();
-            int y = arg0.getY();
-            if(mainMenuButtons.get(0).isClicked(x, y)){
-                this.model.setGameState(GameState.LEVEL_MENU);
-
-            } else if(mainMenuButtons.get(1).isClicked(x, y)){
-                //TODO: Add settings menu
-            } else if(mainMenuButtons.get(2).isClicked(x, y)){
-                System.exit(0);
+            Button clickedButton = clickedButton(this.view.getButtons().getMainMenuButtons(), arg0.getX(), arg0.getY());
+            if(clickedButton != null){
+                if(clickedButton.getText().equals("Play")){
+                    this.model.setGameState(GameState.LEVEL_MENU);
+                } else if(clickedButton.getText().equals("Settings")){
+                    this.model.setGameState(GameState.SETTINGS_MENU);
+                } else if(clickedButton.getText().equals("Exit")){
+                    System.exit(0);
+                }
             }
         } else if(this.model.getGameState() == GameState.LEVEL_MENU){
-            ArrayList<Button> levelMenuButtons = this.view.getButtons().getLevelMenuButtons();
-            int x = arg0.getX();
-            int y = arg0.getY();
+            Button clickedButton = clickedButton(this.view.getButtons().getLevelMenuButtons(), arg0.getX(), arg0.getY());
+            if(clickedButton != null){
+                this.model.setGameState(GameState.LOADING);
 
-            for(int i = 0; i < levelMenuButtons.size(); i++){
-                if(levelMenuButtons.get(i).isClicked(x, y)){
-                    this.model.setGameState(GameState.LOADING);
+                ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                final int levelNr = this.view.getButtons().getLevelMenuButtons().indexOf(clickedButton);
+                Runnable task = () -> {
+                    model.loadMap(this.view.getButtons().getLevels().get(levelNr));
+                    model.setGameState(GameState.ACTIVE);
+                };
 
-                    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-                    final int levelNr = i;
-                    Runnable task = () -> {
-                        model.loadMap(this.view.getButtons().getLevels().get(levelNr));
-                        model.setGameState(GameState.ACTIVE);
-                    };
-                    executor.schedule(task, 30, TimeUnit.MILLISECONDS);
+                // Setting a delay on this so that the loading screen gets displayed 
+                // while the game is being loaded and rendering the first frame
+                executor.schedule(task, 30, TimeUnit.MILLISECONDS);
+            }
+        } else if(this.model.getGameState() == GameState.SETTINGS_MENU){   
+            Button clickedButton = clickedButton(this.view.getButtons().getSettingsMenuButtons(), arg0.getX(), arg0.getY());
+
+            if(clickedButton != null){
+                if(clickedButton.getText().equals("Back")){
+                    this.model.setGameState(GameState.MAIN_MENU);
+                } else {
+                    clickedSettingsButton(clickedButton);
                 }
             }
         } else if(this.model.getGameState() == GameState.PAUSED){
-            ArrayList<Button> pauseMenuButtons = this.view.getButtons().getPauseMenuButtons();
-            int x = arg0.getX();
-            int y = arg0.getY();
-
-            if(pauseMenuButtons.get(0).isClicked(x, y)){
-                this.model.setGameState(GameState.ACTIVE);
-            } else if(pauseMenuButtons.get(1).isClicked(x, y)){
-                //TODO: Add settings menu
-            } else if(pauseMenuButtons.get(2).isClicked(x, y)){
-                this.model.setGameState(GameState.MAIN_MENU);
+            Button clickedButton = clickedButton(this.view.getButtons().getPauseMenuButtons(), arg0.getX(), arg0.getY());
+            if(clickedButton != null){
+                if(clickedButton.getText().equals("Resume")){
+                    this.model.setGameState(GameState.ACTIVE);
+                } else if(clickedButton.getText().equals("Settings")){
+                    this.model.setGameState(GameState.SETTINGS_GAME);
+                } else if(clickedButton.getText().equals("Main menu")){
+                    this.model.setGameState(GameState.MAIN_MENU);
+                }
+            }
+        } else if(this.model.getGameState() == GameState.SETTINGS_GAME){
+            Button clickedButton = clickedButton(this.view.getButtons().getSettingsMenuButtons(), arg0.getX(), arg0.getY());
+            if(clickedButton != null){
+                if(clickedButton.getText().equals("Back")){
+                    this.model.setGameState(GameState.PAUSED);
+                } else {
+                    clickedSettingsButton(clickedButton);
+                }
             }
         }
+    }
+
+    private void clickedSettingsButton(Button button){
+        if(button.getText().equals("Noclip: OFF")){
+            button.setText("Noclip: ON");
+            this.settings.setNoclip(true);
+        } else if(button.getText().equals("Noclip: ON")){
+            button.setText("Noclip: OFF");
+            this.settings.setNoclip(false);
+        } else if(button.getText().equals("Render Distance: SHORT")){
+            button.setText("Render Distance: MEDIUM");
+            this.settings.setRenderDistance(DefaultSettings.renderDistanceMEDIUM);
+        } else if(button.getText().equals("Render Distance: MEDIUM")){
+            button.setText("Render Distance: FAR");
+            this.settings.setRenderDistance(DefaultSettings.renderDistanceFAR);
+        } else if(button.getText().equals("Render Distance: FAR")){
+            button.setText("Render Distance: SHORT");
+            this.settings.setRenderDistance(DefaultSettings.renderDistanceSHORT);
+        } else if(button.getText().equals("Move Speed: SLOW")){
+            button.setText("Move Speed: MEDIUM");
+            this.settings.setWalkingSpeed(DefaultSettings.walkingSpeedMEDIUM);
+            this.settings.setSprintSpeed(DefaultSettings.sprintSpeedMEDIUM);
+        } else if(button.getText().equals("Move Speed: MEDIUM")){
+            button.setText("Move Speed: FAST");
+            this.settings.setWalkingSpeed(DefaultSettings.walkingSpeedFAST);
+            this.settings.setSprintSpeed(DefaultSettings.sprintSpeedFAST);
+        } else if(button.getText().equals("Move Speed: FAST")){
+            button.setText("Move Speed: SLOW");
+            this.settings.setWalkingSpeed(DefaultSettings.walkingSpeedSLOW);
+            this.settings.setSprintSpeed(DefaultSettings.sprintSpeedSLOW);
+        }
+    }
+
+    private static Button clickedButton(ArrayList<Button> buttons, int x, int y){
+        for(int i = 0; i < buttons.size(); i++){
+            if(buttons.get(i).isClicked(x, y)){
+                return buttons.get(i);
+            }
+        }
+        return null;
     }
 
     @Override

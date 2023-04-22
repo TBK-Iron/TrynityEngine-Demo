@@ -17,6 +17,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 public class TheBeast implements Enemy{
     public static final float START_HEALTH = 200;
     private static final float MOVE_SPEED = 0.03f;
+    //TODO: add textures for the beast
     private static final File BEAST_MODEL = new File("src/main/resources/shapes/the_beast.trym");
     private static final CollisionBox BEAST_COLLISION_BOX = new CollisionBox(new Position3D(5, 10, 5), new Position3D(-5, 0, -5));
     private static final float damageRadius = 6;

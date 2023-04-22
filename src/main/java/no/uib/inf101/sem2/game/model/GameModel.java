@@ -68,7 +68,6 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     public void loadMap(Level map){
         this.engineModel.resetModel();
 
-
         ArrayList<ShapeData> shapesData = map.loadShapes();
         for(ShapeData shapeData : shapesData){
             this.engineModel.addShape(new Shape3D(shapeData));
@@ -96,6 +95,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
         this.player = map.getPlayer();
         this.engineModel.setCamera(this.player.getCamera());
+
+        this.soundPlayer.startSoundLoop(map.getLevelMusic(), 3.5f);
     }
 
     /**
@@ -124,16 +125,15 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
                     float randomVal = (float) Math.random();
                     if(randomVal < 0.005){
                         float volume = enemy.getNoiseVolumeRelativeTo(playerPos);
-                        System.out.println(enemy.getAmbientSound() + " " + volume);
                         this.soundPlayer.playSoundOnce(enemy.getAmbientSound(), volume);
                     }
                 } 
             }
-            if(this.killDetector.getCollidingBox(this.player.getCamera().getCollisionBox(), this.player.getCamera().getPos()) != null){
+            if(!player.isAlive() || this.killDetector.getCollidingBox(this.player.getCamera().getCollisionBox(), this.player.getCamera().getPos()) != null){
                 this.player.resetPlayer();
-            } else if(!player.isAlive()){
-                this.player.resetPlayer();
+                this.soundPlayer.playSoundOnce(Player.PLAYER_DEATH_SOUND, 5);
             }
+          
         }
 
         for(EnemySpawner spawner : this.enemySpawners){
@@ -150,6 +150,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
      */
     @Override
     public void shoot(){
+        soundPlayer.playSoundOnce(Player.PLAYER_SHOOT_SOUND, 4.5f);
+
         Enemy closestHitEnemy = null;
         float distToClosestHitEnemy = Float.MAX_VALUE;
         for(Enemy enemy : this.enemies){

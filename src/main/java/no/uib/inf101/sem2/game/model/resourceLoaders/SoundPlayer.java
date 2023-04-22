@@ -1,8 +1,12 @@
 package no.uib.inf101.sem2.game.model.resourceLoaders;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
@@ -13,43 +17,55 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
 public class SoundPlayer {
-    Map<String, Clip> sounds = new HashMap<String, Clip>();
+    Map<String, File> clonableSounds = new HashMap<String, File>();
+    Map<String, Clip> loopSounds = new HashMap<String, Clip>();
 
     public SoundPlayer(){
-        sounds.put("zombie_ambient", loadClip("src/main/resources/sounds/zombie_ambient.wav"));
-        sounds.put("zombie_hurt", loadClip("src/main/resources/sounds/zombie_hurt.wav"));
-        /* sounds.put("final_boss_ambient", loadClip("src/main/resources/sounds/final_boss_ambient.wav"));
-        sounds.put("final_boss_death", loadClip("src/main/resources/sounds/final_boss_hurt.wav"));
+        initSound("zombie_ambient", "src/main/resources/sounds/zombie_ambient.wav");
+        initSound("zombie_hurt", "src/main/resources/sounds/zombie_hurt.wav");
+        /* initSound("final_boss_hurt", "src/main/resources/sounds/final_boss_hurt.wav"));
+        initSound("final_boss_death", "src/main/resources/sounds/final_boss_death.wav"));*/
 
-        sounds.put("music1", loadClip("src/main/resources/sounds/music1.wav"));
+        initSound("player_death", "src/main/resources/sounds/player_death.wav");
+        initSound("player_shoot", "src/main/resources/sounds/gun_sound.wav");
+        //initSound("player_walk", "src/main/resources/sounds/player_walk.wav"));
 
-        sounds.put("player_hurt", loadClip("src/main/resources/sounds/player_hurt.wav"));
-        sounds.put("player_death", loadClip("src/main/resources/sounds/player_death.wav"));
-        sounds.put("player_shoot", loadClip("src/main/resources/sounds/player_shoot.wav"));
-        sounds.put("player_walk", loadClip("src/main/resources/sounds/player_walk.wav")); */
+        /**
+         * Credit to Valve Software
+         * https://store.steampowered.com/app/323140/HalfLife_2_Soundtrack/
+         * Composer - Kelly Bailey
+         */
+        initSound("triage_at_dawn", "src/main/resources/sounds/triage_at_dawn.wav");
+        initSound("ravenholm_reprise", "src/main/resources/sounds/ravenholm_reprise.wav");
     }
 
-    private Clip loadClip(String path){
-        try {
-            File soundFile = new File(path);
-            AudioInputStream audioIn = AudioSystem.getAudioInputStream(soundFile);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioIn);
-            return clip;
+    private void initSound(String soundName, String filename){
+        File soundFile = new File(filename);
+        
+        loopSounds.put(soundName, loadSound(soundFile));
+        clonableSounds.put(soundName, soundFile);
+       
+    }
 
+    private Clip loadSound(File file){
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            return clip;
         } catch (UnsupportedAudioFileException | IOException | LineUnavailableException e) {
             e.printStackTrace();
         }
         return null;
     }
 
-    public void playSoundOnce(String soundKey, float volume){
-        if(soundKey != null && volume > 0){
+    public void playSoundOnce(String soundKey, float volume) {
+        if (soundKey != null && volume > 0) {
+            System.out.println(
+                    "Playing sound " + soundKey + " with volume " + volume
+            );
             try {
-                Clip clip = sounds.get(soundKey);
-                clip.stop();
-                clip.setFramePosition(0);
-                clip.flush();
+                Clip clip = loadSound(clonableSounds.get(soundKey));
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 gainControl.setValue(volume);
                 clip.start();
@@ -59,13 +75,12 @@ public class SoundPlayer {
         }
     }
 
-    public void startSoundLoop(String soundKey, float volume){
-        if(soundKey != null && volume > 0){
+    public void startSoundLoop(String soundKey, float volume) {
+        if (soundKey != null && volume > 0) {
+            System.out.println(soundKey);
             try {
-                Clip clip = sounds.get(soundKey);
-                clip.stop();
-                clip.setFramePosition(0);
-                clip.flush();
+                System.out.println(loopSounds.get(soundKey));
+                Clip clip = loopSounds.get(soundKey);
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 gainControl.setValue(volume);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
@@ -75,12 +90,10 @@ public class SoundPlayer {
         }
     }
 
-    public void endSoundLoop(String soundKey, float volume){
-        if(soundKey != null && volume > 0){
+    public void endSoundLoop(String soundKey) {
+        if (soundKey != null) {
             try {
-                Clip clip = sounds.get(soundKey);
-                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                gainControl.setValue(volume);
+                Clip clip = loopSounds.get(soundKey);
                 clip.stop();
             } catch (Exception e) {
                 e.printStackTrace();
@@ -88,5 +101,6 @@ public class SoundPlayer {
         }
     }
 }
+
 
 

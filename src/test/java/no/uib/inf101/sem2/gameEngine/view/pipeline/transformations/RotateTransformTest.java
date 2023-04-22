@@ -60,4 +60,6 @@ public class RotateTransformTest {
         assertEquals(expectedMatrix4, rotTrans4.getMatrix());
         assertEquals(expectedMatrix4.multiply(testV), rotTrans4.getMatrix().multiply(testV));
     }
+
+    //TODO make test for transformation
 }

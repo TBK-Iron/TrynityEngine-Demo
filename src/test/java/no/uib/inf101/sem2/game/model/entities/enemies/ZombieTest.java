@@ -14,7 +14,7 @@ public class ZombieTest {
     public void testIsAlive() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
 
         assertTrue(zombie.isAlive());
         zombie.damage(Zombie.START_HEALTH);
@@ -25,8 +25,8 @@ public class ZombieTest {
     public void testClone() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie originalZombie = new Zombie(startPosition, startRotation);
-        Zombie clonedZombie = (Zombie) originalZombie.clone();
+        Enemy originalZombie = new Zombie(startPosition, startRotation, 7);
+        Enemy clonedZombie = (Enemy) originalZombie.clone();
 
         assertNotNull(clonedZombie);
         assertNotSame(originalZombie, clonedZombie);
@@ -38,7 +38,7 @@ public class ZombieTest {
     public void testIsWithinRadius() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
 
         GridPosition camPosInsideRadius = new Position3D(3, 0, 0);
         GridPosition camPosOutsideRadius = new Position3D(10, 0, 0);
@@ -51,7 +51,7 @@ public class ZombieTest {
     public void testDamage() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
 
         zombie.damage(10);
         assertTrue(zombie.isAlive());
@@ -64,7 +64,7 @@ public class ZombieTest {
     public void testDamageTo() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
 
         GridPosition entityPosInsideRadius = new Position3D(0, 0, 0.5f);
         GridPosition entityPosOutsideRadius = new Position3D(0, 0, 1);
@@ -77,7 +77,7 @@ public class ZombieTest {
     public void testSetTargetPosition() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
 
         GridPosition targetPos = new Position3D(5, 0, 5);
         zombie.setTargetPosition(targetPos);

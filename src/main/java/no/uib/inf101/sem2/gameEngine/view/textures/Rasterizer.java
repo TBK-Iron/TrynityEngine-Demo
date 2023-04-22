@@ -1,15 +1,13 @@
 package no.uib.inf101.sem2.gameEngine.view.textures;
 
-import java.awt.AlphaComposite;
 import java.awt.Color;
-import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 
-import com.aparapi.Kernel;
 import com.aparapi.Range;
+import com.aparapi.Kernel.EXECUTION_MODE;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
@@ -29,6 +27,8 @@ public class Rasterizer {
 
     private static int KERNEL_POOL_SIZE = 256; 
     private final RasterizerKernel[] kernelPool = new RasterizerKernel[KERNEL_POOL_SIZE];
+    private static EXECUTION_MODE MODE = EXECUTION_MODE.JTP;
+    private static int LOCAL_SIZE = 256;
     Mipmapper mipmapper;
     Config config;
 
@@ -147,8 +147,9 @@ public class Rasterizer {
                 kernel.setTexture(textureData, textureWidth, textureHeight);
                 kernel.setVertices(vertices, face.getTexture().uvMap());
         
-                int localSize = 256;
+                kernel.setExecutionMode(Rasterizer.MODE);
 
+                int localSize = Rasterizer.LOCAL_SIZE;
                 //Taking the closest multiple of localSize to the number of pixels to process, this avoids an error which makes the kernel not run on the gpu.
                 int globalSize = (int) Math.ceil((double) faceWidth * faceHeight / localSize) * localSize;
                 Range range = Range.create(Math.max(globalSize, localSize), localSize);

@@ -17,13 +17,14 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 
 public class LegendOfTheBeast implements Level{
 
-    public LegendOfTheBeast(){
-        
-    }
-
     @Override
     public String getLevelName() {
         return "Legend of The Beast";
+    }
+
+    @Override
+    public String getLevelMusic(){
+        return "triage_at_dawn";
     }
 
     @Override

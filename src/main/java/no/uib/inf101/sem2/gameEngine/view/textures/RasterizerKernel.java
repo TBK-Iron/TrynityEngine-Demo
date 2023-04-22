@@ -47,10 +47,6 @@ public class RasterizerKernel extends Kernel{
         float beta  = ((yC - yA) * (xP - xC) + (xA - xC) * (yP - yC)) / areaABC;
         float gamma = 1 - alpha - beta;
 
-        /* float alpha = ((xP * yB + xB * yC + xC * yP) - (yP * xB + yB * xC + yC * xP)) / ((xA * yB + xB * yC + xC * yA) - (yA * xB + yB * xC + yC * xA));
-        float beta =  ((xP * yC + xC * yA + xA * yP) - (yP * xC + yC * xA + yA * xP)) / ((xA * yB + xB * yC + xC * yA) - (yA * xB + yB * xC + yC * xA));
-        float gamma = 1 - alpha - beta; */
-
         // Check if point is inside triangle
         if (alpha >= 0 && beta >= 0 && gamma >= 0) {
 
@@ -72,12 +68,10 @@ public class RasterizerKernel extends Kernel{
 
                 //Calculate texture at the point, these are the barycentric coordinates for the texture in normalized space
                 float u = alpha * this.texCoords[0] + beta * this.texCoords[2] + gamma * this.texCoords[4];
-                u = u % 1;
-                //u = u - (int) u;
+                u = u - (int) u;
 
                 float v = alpha * this.texCoords[1] + beta * this.texCoords[3] + gamma * this.texCoords[5];
-                v = v % 1;
-                //v = v - (int) v;
+                v = v - (int) v;
 
                 //Get the color that corresponds to the texture coordinates
                 int textureX = (int) (u * (this.textureWidth - 1));

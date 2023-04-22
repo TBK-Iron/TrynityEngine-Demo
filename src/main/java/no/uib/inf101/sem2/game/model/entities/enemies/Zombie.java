@@ -139,7 +139,7 @@ public class Zombie implements Enemy{
             return 0;
         } else {
             float minVolume = 0; // Minimum volume in decibels when at max distance
-            float maxVolume = 6.0206f; // Maximum volume in decibels when at zero distance
+            float maxVolume = 3.5f; // Maximum volume in decibels when at zero distance
 
             float volume = minVolume + (1 - (dist / maxDistance)) * (maxVolume - minVolume);
             return volume;

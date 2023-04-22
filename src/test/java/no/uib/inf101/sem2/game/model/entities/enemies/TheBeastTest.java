@@ -14,7 +14,7 @@ public class TheBeastTest {
     public void testIsWithinRadius() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        TheBeast beast = new TheBeast(startPosition, startRotation);
+        Enemy beast = new TheBeast(startPosition, startRotation, 10);
 
         GridPosition posInsideRadius = new Position3D(5, 0, 5);
         GridPosition posOutsideRadius = new Position3D(20, 0, 20);
@@ -27,7 +27,7 @@ public class TheBeastTest {
     public void testIsAliveAndDamage() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        TheBeast beast = new TheBeast(startPosition, startRotation);
+        Enemy beast = new TheBeast(startPosition, startRotation, 10);
 
         assertTrue(beast.isAlive());
         beast.damage(10);
@@ -41,7 +41,7 @@ public class TheBeastTest {
     public void testDamageTo() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        TheBeast beast = new TheBeast(startPosition, startRotation);
+        Enemy beast = new TheBeast(startPosition, startRotation, 10);
 
         GridPosition entityPosInsideRadius = new Position3D(0, 0, 5);
         GridPosition entityPosOutsideRadius = new Position3D(0, 0, 10);
@@ -54,7 +54,7 @@ public class TheBeastTest {
     public void testSetTargetPosition() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        TheBeast beast = new TheBeast(startPosition, startRotation);
+        Enemy beast = new TheBeast(startPosition, startRotation, 10);
 
         GridPosition targetPos = new Position3D(5, 0, 5);
         beast.setTargetPosition(targetPos);

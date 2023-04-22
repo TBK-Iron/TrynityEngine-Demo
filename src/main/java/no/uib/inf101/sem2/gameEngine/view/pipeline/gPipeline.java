@@ -31,6 +31,12 @@ public class gPipeline implements IPipeline {
     private Frustum frustum;
     private final Rasterizer rasterizer;
 
+    private float usedFOV;
+    private float usedWidth;
+    private float usedHeight;
+    private float usedNearPlane;
+    private float usedFarPlane;
+
     /**
      * Constructs a new gPipeline instance with the specified configuration and texture map.
      * @param config The configuration containing information about the screen dimensions and other rendering settings.
@@ -39,10 +45,29 @@ public class gPipeline implements IPipeline {
     public gPipeline(Config config, Map<String, BufferedImage> textures){
         this.config = config;
 
-        this.projectTransformation = new Projection(config.verticalFOV(), ((float) config.screenWidth())/ ((float) config.screenHeight()), config.nearPlane(), config.farPlane());
-        this.frustum = new Frustum(this.projectTransformation.getMatrix(), this.config.nearPlane(), this.config.farPlane());
+        initFrustum();
+        
+        
 
         this.rasterizer = new Rasterizer(textures, config);
+    }
+
+    private void initFrustum(){
+        this.projectTransformation = new Projection(this.config.verticalFOV(), ((float) this.config.screenWidth())/ ((float) this.config.screenHeight()), this.config.nearPlane(), this.config.farPlane());
+        this.frustum = new Frustum(this.projectTransformation.getMatrix(), this.config.nearPlane(), this.config.farPlane());
+    }
+
+    private boolean configChanged(Config config){
+        if(this.usedFOV != config.verticalFOV() || this.usedWidth != config.screenWidth() || this.usedHeight != config.screenHeight() || this.usedNearPlane != config.nearPlane() || this.usedFarPlane != config.farPlane()){
+            this.usedFOV = config.verticalFOV();
+            this.usedWidth = config.screenWidth();
+            this.usedHeight = config.screenHeight();
+            this.usedNearPlane = config.nearPlane();
+            this.usedFarPlane = config.farPlane();
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -98,6 +123,10 @@ public class gPipeline implements IPipeline {
      */
     @Override
     public ArrayList<Shape3D> cull(ArrayList<Shape3D> shapes){
+
+        if(configChanged(this.config)){
+            initFrustum();
+        }
 
         shapes = Culling.backfaceCull(shapes);
         shapes = Culling.viewfrustrumCull(shapes, this.frustum);

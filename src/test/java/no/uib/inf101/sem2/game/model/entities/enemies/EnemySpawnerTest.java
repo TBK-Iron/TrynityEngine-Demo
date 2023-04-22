@@ -14,10 +14,11 @@ public class EnemySpawnerTest {
     public void testCanSpawn() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation ,7);
         EnemySpawner spawner = new EnemySpawner(10, 5, zombie);
 
         assertTrue(spawner.canSpawn());
+        spawner.getNextEnemy();
         assertEquals(4, spawner.getSpawnAmount());
     }
 
@@ -25,7 +26,7 @@ public class EnemySpawnerTest {
     public void testGetNextEnemy() {
         GridPosition startPosition = new Position3D(0, 0, 0);
         RelativeRotation startRotation = new RelativeRotation(0, 0);
-        Zombie zombie = new Zombie(startPosition, startRotation);
+        Enemy zombie = new Zombie(startPosition, startRotation, 7);
         EnemySpawner spawner = new EnemySpawner(10, 1, zombie);
 
         Enemy nextEnemy = spawner.getNextEnemy();

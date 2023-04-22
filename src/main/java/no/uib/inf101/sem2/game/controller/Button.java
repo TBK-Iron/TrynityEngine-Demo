@@ -7,7 +7,7 @@ public final class Button{
     private final int y0;
     private final int width;
     private final int height;
-    private final String text;
+    private String text;
 
     public Button(int centerX, int centerY, int width, int height, String text){
         this.x0 = centerX - width/2;
@@ -43,8 +43,12 @@ public final class Button{
         return this.y0 + this.height/2;
     }
 
-    public String getName(){
+    public String getText(){
         return this.text;
+    }
+
+    public void setText(String text){
+        this.text = text;
     }
 
 }

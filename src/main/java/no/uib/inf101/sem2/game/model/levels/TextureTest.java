@@ -21,6 +21,11 @@ public class TextureTest implements Level {
     }
 
     @Override
+    public String getLevelMusic(){
+        return null;
+    }
+
+    @Override
     public Player getPlayer(){
         GridPosition startPos = new Position3D(0, 0, 0);
         RelativeRotation startRot = new RelativeRotation(0, 0);

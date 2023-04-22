@@ -39,4 +39,6 @@ public class TranslateTransformTest {
         assertEquals(face.getTexture(), transformedFace.getTexture());
     }
 
+    //TODO make test for get matrix
+
 }
