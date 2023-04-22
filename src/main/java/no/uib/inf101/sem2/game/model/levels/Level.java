@@ -7,6 +7,7 @@ import no.uib.inf101.sem2.game.model.entities.Player;
 import no.uib.inf101.sem2.game.model.entities.enemies.Enemy;
 import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 
 /**
@@ -22,9 +23,9 @@ public interface Level {
     public String getLevelName();
 
     /**
-     * Returns the name of the music for the level.
+     * Returns the sound key to the music for the level.
      * 
-     * @return the name of the music for the level.
+     * @return the sound key to the music for the level.
      */
     public String getLevelMusic();
 
@@ -43,11 +44,11 @@ public interface Level {
     public ArrayList<ShapeData> loadShapes();
 
     /**
-     * Loads and returns a list of ShapeData objects that define the entities in the level.
+     * Loads and returns a list of Entity objects that define the entities in the level.
      *
-     * @return an ArrayList of ShapeData objects.
+     * @return an ArrayList of Entity objects.
      */
-    public ArrayList<ShapeData> loadEntities();
+    public ArrayList<Entity> loadEntities();
 
     /**
      * Loads and returns a list of CollisionBox objects that define the collision boundaries in the level.

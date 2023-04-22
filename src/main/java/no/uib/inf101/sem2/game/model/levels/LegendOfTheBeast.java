@@ -10,6 +10,7 @@ import no.uib.inf101.sem2.game.model.entities.enemies.EnemySpawner;
 import no.uib.inf101.sem2.game.model.entities.enemies.TheBeast;
 import no.uib.inf101.sem2.game.model.entities.enemies.Zombie;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
+import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
@@ -205,8 +206,8 @@ public class LegendOfTheBeast implements Level{
     }
 
     @Override
-    public ArrayList<ShapeData> loadEntities() {
-        ArrayList<ShapeData> entities = new ArrayList<>();
+    public ArrayList<Entity> loadEntities() {
+        ArrayList<Entity> entities = new ArrayList<>();
 
         return entities;
     }

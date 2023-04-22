@@ -11,16 +11,26 @@ import no.uib.inf101.sem2.game.model.GameState;
 import no.uib.inf101.sem2.game.settings.DefaultSettings;
 import no.uib.inf101.sem2.game.settings.Settings;
 import no.uib.inf101.sem2.game.view.GameView;
-import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.controller.EngineController;
 
+/**
+ * GameController is responsible for handling user input and managing game state transitions.
+ * It listens to mouse and keyboard events and reacts to user input accordingly.
+ */
 public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener, java.awt.event.MouseListener{
     ControllableGameModel model;
     GameView view;
     Settings settings;
     EngineController engineController;
 
-
+    /**
+     * Constructs a GameController object and adds listeners to the GameView.
+     *
+     * @param model The game model to be controlled.
+     * @param view The game view to listen to user input events.
+     * @param settings The game settings object.
+     * @param engineController The game engine controller object.
+     */
     public GameController(ControllableGameModel model, GameView view, Settings settings, EngineController engineController) {
         this.model = model;
         this.settings = settings;
@@ -38,6 +48,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         //Do nothing
     }
 
+    /**
+     * Handles the mouseMoved event. This method is called when the mouse pointer is moved within the game view.
+     * If the game state is active, it calls the engineController's mouseMoved method.
+     *
+     * @param arg0 MouseEvent object containing event information.
+     */
     @Override
     public void mouseMoved(MouseEvent arg0) {
         if(this.model.getGameState() == GameState.ACTIVE){
@@ -45,6 +61,13 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         }
     }
 
+    /**
+     * Handles the keyPressed event. This method is called when a key is pressed within the game view.
+     * Depending on the game state, it performs actions such as pausing or unpausing the game,
+     * navigating between menus or calling the engineController's keyPressed method when the escape key is pressed.
+     *
+     * @param arg0 KeyEvent object containing event information.
+     */
     @Override
     public void keyPressed(KeyEvent arg0) {
         if (this.model.getGameState() == GameState.LEVEL_MENU){
@@ -71,6 +94,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         }
     }
 
+    /**
+     * Handles the keyReleased event. This method is called when a key is released within the game view.
+     * It calls the engineController's keyReleased method.
+     *
+     * @param arg0 KeyEvent object containing event information.
+     */
     @Override
     public void keyReleased(KeyEvent arg0) {
         this.engineController.keyReleased(arg0);
@@ -81,6 +110,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         //Do nothing
     }
 
+    /**
+     * Handles the mouseClicked event. This method is called when a mouse button is clicked within the game view.
+     * Depending on the game state, it checks if a button on that game state has been clicked and performs actions accordingly.
+     *
+     * @param arg0 MouseEvent object containing event information.
+     */
     @Override
     public void mouseClicked(MouseEvent arg0) {
         if(this.model.getGameState() == GameState.MAIN_MENU){
@@ -127,7 +162,8 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
                     this.model.setGameState(GameState.ACTIVE);
                 } else if(clickedButton.getText().equals("Settings")){
                     this.model.setGameState(GameState.SETTINGS_GAME);
-                } else if(clickedButton.getText().equals("Main menu")){
+                } else if(clickedButton.getText().equals("Main Menu")){
+                    this.model.stopMusic();
                     this.model.setGameState(GameState.MAIN_MENU);
                 }
             }
@@ -143,6 +179,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         }
     }
 
+    /**
+     * Handles actions when a settings button is clicked.
+     * Updates the settings object and the button's text according to the clicked button.
+     *
+     * @param button The clicked settings button.
+     */
     private void clickedSettingsButton(Button button){
         if(button.getText().equals("Noclip: OFF")){
             button.setText("Noclip: ON");
@@ -174,6 +216,14 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         }
     }
 
+    /**
+     * Returns the clicked button from a list of buttons, given x and y coordinates.
+     *
+     * @param buttons An ArrayList of Button objects to check for clicks.
+     * @param x The x coordinate of the click.
+     * @param y The y coordinate of the click.
+     * @return The clicked Button object, or null if no button was clicked.
+     */
     private static Button clickedButton(ArrayList<Button> buttons, int x, int y){
         for(int i = 0; i < buttons.size(); i++){
             if(buttons.get(i).isClicked(x, y)){
@@ -193,6 +243,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         //Do nothing
     }
 
+    /**
+     * Handles the mousePressed event. This method is called when a mouse button is pressed within the game view.
+     * If the game state is active, it calls the model's shoot method.
+     *
+     * @param arg0 MouseEvent object containing event information.
+     */
     @Override
     public void mousePressed(MouseEvent arg0) {
         if(this.model.getGameState() == GameState.ACTIVE){

@@ -15,6 +15,7 @@ import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.ConfigurableEngineModel;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionBox;
 import no.uib.inf101.sem2.gameEngine.model.collision.CollisionDetector;
+import no.uib.inf101.sem2.gameEngine.model.shape.Entity;
 import no.uib.inf101.sem2.gameEngine.model.shape.Shape3D;
 import no.uib.inf101.sem2.gameEngine.model.shape.ShapeData;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
@@ -40,6 +41,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     ArrayList<Door> doors;
 
     Config config;
+
+    String music;
 
     /**
      * Constructs a new GameModel.
@@ -87,6 +90,10 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             this.engineModel.addEntity(enemy.getEntity());
         }
 
+        for(Entity entity : map.loadEntities()){
+            this.engineModel.addEntity(entity);
+        }
+
         this.enemySpawners = map.loadEnemySpawners();
 
         for(CollisionBox killbox : map.loadKillBoxes()){
@@ -96,7 +103,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
         this.player = map.getPlayer();
         this.engineModel.setCamera(this.player.getCamera());
 
-        this.soundPlayer.startSoundLoop(map.getLevelMusic(), 3.5f);
+        this.music = map.getLevelMusic();
+        this.soundPlayer.startSoundLoop(this.music, 3.5f);
     }
 
     /**
@@ -210,6 +218,14 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     @Override
     public void setGameState(GameState state){
         this.currentState = state;
+    }
+
+    /**
+     * Stops the music that is playing on the currently active map.
+     */
+    @Override
+    public void stopMusic(){
+        this.soundPlayer.endSoundLoop(this.music);
     }
 
 

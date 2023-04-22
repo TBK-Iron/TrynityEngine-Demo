@@ -6,15 +6,15 @@ public class DefaultSettings extends DefaultConfig implements Settings {
 
     public static final float renderDistanceSHORT = 15;
     public static final float renderDistanceMEDIUM = 50;
-    public static final float renderDistanceFAR = 120;
+    public static final float renderDistanceFAR = 150;
 
     public static final float walkingSpeedSLOW = 0.06f;
     public static final float walkingSpeedMEDIUM = 0.09f;
-    public static final float walkingSpeedFAST = 0.12f;
+    public static final float walkingSpeedFAST = 0.20f;
 
     public static final float sprintSpeedSLOW = 0.12f;
     public static final float sprintSpeedMEDIUM = 0.17f;
-    public static final float sprintSpeedFAST = 0.23f;
+    public static final float sprintSpeedFAST = 0.55f;
 
     public DefaultSettings(){
         super();

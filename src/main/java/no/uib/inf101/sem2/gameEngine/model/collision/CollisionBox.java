@@ -120,7 +120,10 @@ public final class CollisionBox {
      * @param rayDirection The normalized direction of the ray, represented as a Vector3f (x, y, z).
      * @param aabbMin      The minimum corner point of the AABB, represented as a Vector3f (minX, minY, minZ).
      * @param aabbMax      The maximum corner point of the AABB, represented as a Vector3f (maxX, maxY, maxZ).
-     * @return The distance from the ray's origin to the intersection point with the AABB, or -1 if the ray does not intersect the AABB.
+     * @return The distance from the ray's origin to the intersection point with the AABB except:
+     * 
+     * @returns Float.MAX_VALUE if the ray does not intersect the AABB.
+     * @returns a negative value if the rayOrigin is inside the collisionBox
      */
     public float rayIntersection(GridPosition rayOrigin, Vector normalizedDirectionVector){
         Vector minVectorBox = new Vector((Position3D) minPos);

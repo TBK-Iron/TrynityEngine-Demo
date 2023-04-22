@@ -1,52 +1,55 @@
-/* package no.uib.inf101.sem2.gameEngine.controller;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-
-import java.awt.Canvas;
-import java.awt.event.KeyEvent;
+package no.uib.inf101.sem2.gameEngine.controller;
 
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.config.DefaultConfig;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.LinearMath.Vector;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
+import java.awt.Component;
+import java.awt.event.KeyEvent;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class MoveHandlerTest {
+
     private MoveHandler moveHandler;
+    private Config config;
+    private Component dummyComponent;
 
     @BeforeEach
     public void setUp() {
-        Config config = new DefaultConfig();
+        // Initialize a Config object with default values
+        config = new DefaultConfig();
         moveHandler = new MoveHandler(config);
+        dummyComponent = new Component() {};
     }
 
     @Test
-    public void testKeyPressed() {
-        Canvas source = new Canvas();
-        KeyEvent press = new KeyEvent(source, KeyEvent.KEY_PRESSED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
-        assertTrue(moveHandler.keyPressed(press));
-        assertTrue(moveHandler.wKeyPressed);
-    }
+    public void testKeyPressedAndKeyReleased() {
+        KeyEvent wKey = new KeyEvent(dummyComponent,  KeyEvent.KEY_PRESSED, (long) 0, 0, KeyEvent.VK_W, 'W');
 
-    @Test
-    public void testKeyReleased() {
-        Canvas source = new Canvas();
-        KeyEvent release = new KeyEvent(source, KeyEvent.KEY_RELEASED, System.currentTimeMillis(), 0, KeyEvent.VK_W, 'W');
-        moveHandler.wKeyPressed = true;
-        assertTrue(moveHandler.keyReleased(release));
-        assertFalse(moveHandler.wKeyPressed);
+        assertTrue(moveHandler.keyPressed(wKey));
+        assertFalse(moveHandler.keyPressed(wKey));
+        assertTrue(moveHandler.keyReleased(wKey));
     }
 
     @Test
     public void testGetMovementDelta() {
-        moveHandler.wKeyPressed = true;
-        moveHandler.aKeyPressed = true;
-        Vector movementDelta = moveHandler.getMovementDelta();
-        assertEquals(0.0636396f, movementDelta.get(0), 0.0001);
-        assertEquals(0, movementDelta.get(1), 0.0001);
-        assertEquals(0.0636396f, movementDelta.get(2), 0.0001);
+        KeyEvent pressW = new KeyEvent(dummyComponent, KeyEvent.KEY_PRESSED, (long) 0, 0, KeyEvent.VK_W, 'W');
+        KeyEvent pressD = new KeyEvent(dummyComponent, KeyEvent.KEY_PRESSED, (long) 0, 0, KeyEvent.VK_D, 'D');
+
+        moveHandler.keyPressed(pressW);
+
+        //Test straight movement
+        Vector expected = new Vector(new float[]{0, 0, config.cameraMoveSpeed()});
+        assertEquals(expected, moveHandler.getMovementDelta());
+
+        moveHandler.keyPressed(pressD);
+
+        float diagonalSpeedComponent = (float) (config.cameraMoveSpeed() / Math.sqrt(2));
+
+        //Test diagonal movement
+        expected = new Vector(new float[]{-diagonalSpeedComponent, 0, diagonalSpeedComponent});
+        assertEquals(expected, moveHandler.getMovementDelta());
     }
-} */
+}

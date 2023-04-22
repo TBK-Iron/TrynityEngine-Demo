@@ -1,62 +1,153 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 public class MatrixTest {
 
+    private Matrix matrix1;
+    private Matrix matrix2;
+    private Matrix matrix4;
+    private Matrix matrix5;
+
+    @BeforeEach
+    public void setUp() {
+        float[][] values1 = {
+                {1, 2},
+                {3, 4}
+        };
+        float[][] values2 = {
+                {5, 6},
+                {7, 8}
+        };
+        float[][] values4 = {
+                {1, 2, 3},
+                {4, 5, 6},
+                {7, 8, 9}
+        };
+        float[][] values5 = {
+                {9, 8, 7},
+                {6, 5, 4},
+                {3, 2, 1}
+        };
+
+        matrix1 = new Matrix(values1);
+        matrix2 = new Matrix(values2);
+        matrix4 = new Matrix(values4);
+        matrix5 = new Matrix(values5);
+    }
+
+    @Test
+    public void testGet() {
+        assertEquals(1, matrix1.get(0, 0));
+        assertEquals(2, matrix1.get(0, 1));
+        assertEquals(3, matrix1.get(1, 0));
+        assertEquals(4, matrix1.get(1, 1));
+
+        assertEquals(1, matrix4.get(0, 0));
+        assertEquals(2, matrix4.get(0, 1));
+        assertEquals(3, matrix4.get(0, 2));
+        assertEquals(4, matrix4.get(1, 0));
+        assertEquals(5, matrix4.get(1, 1));
+        assertEquals(6, matrix4.get(1, 2));
+        assertEquals(7, matrix4.get(2, 0));
+        assertEquals(8, matrix4.get(2, 1));
+        assertEquals(9, matrix4.get(2, 2));
+    }
+
     @Test
     public void testMultiply() {
-        Matrix m1 = new Matrix(new float[][] {{1, 2}, {3, 4}});
-        Matrix m2 = new Matrix(new float[][] {{5, 6}, {7, 8}});
-        Matrix result1 = Matrix.multiply(m1, m2);
-        assertEquals(new Matrix(new float[][] {{19, 22}, {43, 50}}), result1);
+        Matrix result1 = Matrix.multiply(matrix1, matrix2);
+        float[][] expectedValues1 = {
+                {19, 22},
+                {43, 50}
+        };
+        Matrix expected1 = new Matrix(expectedValues1);
+        assertEquals(expected1, result1);
 
-        Matrix m3 = new Matrix(new float[][] {
-            {5, 2, 7},
-            {1, -8, 0.5f},
-            {4, -1, 7}
-        });
-        Matrix m4 = new Matrix(new float[][] {
-            {-1, -5, 3.68f},
-            {1.5f, 5, -8},
-            {4.5f, 2, -1}
-        });
-
-        Matrix result2 = new Matrix(new float[][] {
-            {29.5f, -1, -4.6f},
-            {-10.75f, -44, 67.18f},
-            {26, -11, 15.72f}
-        });
-
-        assertEquals(Matrix.multiply(m3, m4), result2);
+        Matrix result2 = Matrix.multiply(matrix4, matrix5);
+        float[][] expectedValues2 = {
+                {30, 24, 18},
+                {84, 69, 54},
+                {138, 114, 90}
+        };
+        Matrix expected2 = new Matrix(expectedValues2);
+        assertEquals(expected2, result2);
     }
 
     @Test
-    public void testMatrixVectorMultiplication() {
-        Matrix m = new Matrix(new float[][] {{1, 2, 3}, {4, 5, 6}});
-        Vector v = new Vector(new float[] {7, 8, 9});
-        Vector result = m.multiply(v);
-        assertEquals(new Vector(new float[] {50, 122}), result);
+    public void testMultiplyWithVector() {
+        Vector vector1 = new Vector(new float[]{2, 3});
+        Vector result1 = matrix1.multiply(vector1);
+        Vector expected1 = new Vector(new float[]{8, 18});
+        assertEquals(expected1, result1);
+
+        Vector vector2 = new Vector(new float[]{1, 2, 3});
+        Vector result2 = matrix4.multiply(vector2);
+        Vector expected2 = new Vector(new float[]{14, 32, 50});
+        assertEquals(expected2, result2);
     }
 
-    /*@Test
-    public void testGetRotationMatrix() {
-        Rotation rot = new Rotation((float) Math.PI/2, 0, (float) Math.PI);
-        Matrix rotMatrix = Matrix.getRotationMatrix(rot);
-        Matrix expected = new Matrix(new float[][] {
-            {-1, 0, 0},
-            {0, 0, -1},
-            {0, -1, 0}
-        });
-        assertEquals(expected, rotMatrix);
-    }*/
+    @Test
+    public void testAdd() {
+        Matrix result1 = Matrix.add(matrix1,matrix2);
+        float[][] expectedValues1 = {
+                {6, 8},
+                {10, 12}
+        };
+        Matrix expected1 = new Matrix(expectedValues1);
+        assertEquals(expected1, result1);
+
+        Matrix result2 = Matrix.add(matrix4, matrix5);
+        float[][] expectedValues2 = {
+                {10, 10, 10},
+                {10, 10, 10},
+                {10, 10, 10}
+        };
+        Matrix expected2 = new Matrix(expectedValues2);
+        assertEquals(expected2, result2);
+    }
 
     @Test
-    public void testEquals() {
-        Matrix m1 = new Matrix(new float[][] {{1, 2, 3}, {4, 5, 6}});
-        Matrix m2 = new Matrix(new float[][] {{1, 2, 3}, {4, 5, 6}});
-        assertEquals(m1, m2);
+    public void testScaledBy() {
+        Matrix result1 = matrix1.scaledBy(2);
+        float[][] expectedValues1 = {
+                {2, 4},
+                {6, 8}
+        };
+        Matrix expected1 = new Matrix(expectedValues1);
+        assertEquals(expected1, result1);
+
+        Matrix result2 = matrix4.scaledBy(3);
+        float[][] expectedValues2 = {
+                {3, 6, 9},
+                {12, 15, 18},
+                {21, 24, 27}
+        };
+        Matrix expected2 = new Matrix(expectedValues2);
+        assertEquals(expected2, result2);
+    }
+
+    @Test
+    public void testIdentityMatrix() {
+        Matrix identity2 = Matrix.identityMatrix(2);
+        float[][] expectedValues1 = {
+                {1, 0},
+                {0, 1}
+        };
+        Matrix expected1 = new Matrix(expectedValues1);
+        assertEquals(expected1, identity2);
+
+        Matrix identity3 = Matrix.identityMatrix(3);
+        float[][] expectedValues2 = {
+                {1, 0, 0},
+                {0, 1, 0},
+                {0, 0, 1}
+        };
+        Matrix expected2 = new Matrix(expectedValues2);
+        assertEquals(expected2, identity3);
     }
 }
+

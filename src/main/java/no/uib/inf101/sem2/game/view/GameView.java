@@ -4,6 +4,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -24,6 +25,10 @@ import no.uib.inf101.sem2.game.view.ColorThemes.DefaultColorTheme;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.view.SceneMaker;
 
+/**
+ * This class represents the game view, handling various game states and
+ * rendering the game interface.
+ */
 public class GameView extends JPanel {
 
     private final SceneMaker engineView;
@@ -36,7 +41,15 @@ public class GameView extends JPanel {
     
     private ButtonsHandler buttons;
 
-
+    /**
+     * Creates a new GameView with the specified game model, buttons handler, configuration, scene maker, and texture loader.
+     *
+     * @param model       The game model to be viewed.
+     * @param buttons     The buttons handler for the game view.
+     * @param config      The configuration settings for the game.
+     * @param engineView  The scene maker for rendering game scenes.
+     * @param images      The texture loader for loading game images.
+     */
     public GameView(ViewableGameModel model, ButtonsHandler buttons, Config config, SceneMaker engineView, TextureLoader images) {
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.WHITE);
@@ -51,6 +64,11 @@ public class GameView extends JPanel {
         this.CTheme = new DefaultColorTheme();
     }
 
+    /**
+     * Returns the buttons handler for this game view.
+     *
+     * @return The buttons handler.
+     */
     public ButtonsHandler getButtons(){
         return this.buttons;
     }
@@ -75,6 +93,8 @@ public class GameView extends JPanel {
             drawSettingsGame(g2);
         }
     }
+
+    // Helper methods for drawing different game states
 
     private void drawLoadingScreen(Graphics2D g2){
         Rectangle2D rect = new Rectangle2D.Double(0, 0, this.config.screenWidth(), this.config.screenHeight());
@@ -174,6 +194,13 @@ public class GameView extends JPanel {
         drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme);
     }
 
+    /**
+     * Draws the provided buttons on the game view using the specified color theme.
+     *
+     * @param g2      The Graphics2D object to draw the buttons with.
+     * @param buttons An ArrayList of Button objects to be drawn.
+     * @param CTheme  The ColorTheme to be applied to the buttons.
+     */
     private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme){
         for(Button b : buttons){
             g2.setColor(CTheme.getButtonColor());
@@ -184,6 +211,7 @@ public class GameView extends JPanel {
             g2.draw(b.getRect());
 
             g2.setColor(CTheme.getTextColor());
+            g2.setFont(new Font("Arial", Font.PLAIN, 30));
             Inf101Graphics.drawCenteredString(g2, b.getText(), b.getCenterX(), b.getCenterY());
         }
     }

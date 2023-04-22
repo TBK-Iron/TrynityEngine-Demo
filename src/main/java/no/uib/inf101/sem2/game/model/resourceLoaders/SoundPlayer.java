@@ -1,12 +1,8 @@
 package no.uib.inf101.sem2.game.model.resourceLoaders;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 
 import javax.sound.sampled.AudioInputStream;
@@ -16,10 +12,29 @@ import javax.sound.sampled.FloatControl;
 import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.UnsupportedAudioFileException;
 
+/**
+ * This class handles the loading and playing of sound files.
+ */
 public class SoundPlayer {
+    /**
+     * A map of sounds that are cloned each time a sound is played once,
+     * this means a sound can be played multiple times at the same time
+     * and overlap
+     */
     Map<String, File> clonableSounds = new HashMap<String, File>();
+
+    /**
+     * A map of sounds that are looped when they are played.
+     * When they start playing they start from the beginning,
+     * and when they stop they reset to the beginning.
+     * 
+     * Sounds in this map cannot overlap with themselves.
+     */
     Map<String, Clip> loopSounds = new HashMap<String, Clip>();
 
+    /**
+     * Initializes the SoundPlayer by loading various sound files.
+     */
     public SoundPlayer(){
         initSound("zombie_ambient", "src/main/resources/sounds/zombie_ambient.wav");
         initSound("zombie_hurt", "src/main/resources/sounds/zombie_hurt.wav");
@@ -39,14 +54,26 @@ public class SoundPlayer {
         initSound("ravenholm_reprise", "src/main/resources/sounds/ravenholm_reprise.wav");
     }
 
-    private void initSound(String soundName, String filename){
+    /**
+     * Initializes a sound and adds it to the clonableSounds and loopSounds maps.
+     *
+     * @param soundKey  The key to associate with the sound.
+     * @param filename  The filename of the sound file.
+     */
+    private void initSound(String soundKey, String filename){
         File soundFile = new File(filename);
         
-        loopSounds.put(soundName, loadSound(soundFile));
-        clonableSounds.put(soundName, soundFile);
+        loopSounds.put(soundKey, loadSound(soundFile));
+        clonableSounds.put(soundKey, soundFile);
        
     }
 
+    /**
+     * Loads a sound file into a Clip object.
+     *
+     * @param file  The file to load the sound from.
+     * @return      A Clip object containing the loaded sound.
+     */
     private Clip loadSound(File file){
         try {
             AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(file);
@@ -59,11 +86,14 @@ public class SoundPlayer {
         return null;
     }
 
+    /**
+     * Plays a sound once with the specified volume.
+     *
+     * @param soundKey  The key associated with the sound.
+     * @param volume    The volume level to play the sound at.
+     */
     public void playSoundOnce(String soundKey, float volume) {
         if (soundKey != null && volume > 0) {
-            System.out.println(
-                    "Playing sound " + soundKey + " with volume " + volume
-            );
             try {
                 Clip clip = loadSound(clonableSounds.get(soundKey));
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
@@ -75,11 +105,15 @@ public class SoundPlayer {
         }
     }
 
+    /**
+     * Starts a sound loop with the specified volume.
+     *
+     * @param soundKey  The key associated with the sound.
+     * @param volume    The volume level to play the sound at.
+     */
     public void startSoundLoop(String soundKey, float volume) {
         if (soundKey != null && volume > 0) {
-            System.out.println(soundKey);
             try {
-                System.out.println(loopSounds.get(soundKey));
                 Clip clip = loopSounds.get(soundKey);
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
                 gainControl.setValue(volume);
@@ -90,11 +124,17 @@ public class SoundPlayer {
         }
     }
 
+    /**
+     * Ends a sound loop associated with the specified soundKey.
+     *
+     * @param soundKey  The key associated with the sound loop.
+     */
     public void endSoundLoop(String soundKey) {
         if (soundKey != null) {
             try {
                 Clip clip = loopSounds.get(soundKey);
                 clip.stop();
+                clip.setFramePosition(0);
             } catch (Exception e) {
                 e.printStackTrace();
             }

@@ -8,6 +8,9 @@ import no.uib.inf101.sem2.game.model.levels.LegendOfTheBeast;
 import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 
+/**
+ * Handles the creation and management of menu buttons in the game.
+ */
 public class ButtonsHandler {
 
     private ArrayList<Button> mainMenuButtons;
@@ -18,6 +21,11 @@ public class ButtonsHandler {
     private Config config;
     private ArrayList<Level> levels;
 
+    /**
+     * Constructs a ButtonsHandler using the provided configuration.
+     * 
+     * @param config The game configuration.
+     */
     public ButtonsHandler(Config config) {
         this.config = config;
         
@@ -30,6 +38,10 @@ public class ButtonsHandler {
         resetButtonHandler();
     }
 
+    /**
+     * Resets the button handler and re-creates all menu buttons.
+     * This should be run when the screen size changes so that the buttons are correctly positioned and scaled.
+     */
     public void resetButtonHandler(){
         createMainMenuButtons();
         createLevelMenuButtons();
@@ -37,6 +49,9 @@ public class ButtonsHandler {
         createSettingsMenuButtons();
     }
 
+    /**
+     * Creates the main menu buttons.
+     */
     private void createMainMenuButtons(){
         
         int sWidth = this.config.screenWidth();
@@ -52,6 +67,9 @@ public class ButtonsHandler {
         this.mainMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Quit"));
     }
 
+    /**
+     * Creates the level menu buttons.
+     */
     private void createLevelMenuButtons(){
         
         int sWidth = this.config.screenWidth();
@@ -68,6 +86,9 @@ public class ButtonsHandler {
         }
     }
     
+    /**
+     * Creates the pause menu buttons.
+     */
     private void createPauseMenuButtons(){
         
         int sWidth = this.config.screenWidth();
@@ -84,6 +105,9 @@ public class ButtonsHandler {
         this.pauseMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Main Menu"));    
     }
 
+    /**
+     * Creates the settings menu buttons.
+     */
     private void createSettingsMenuButtons(){
         
         int sWidth = this.config.screenWidth();
@@ -105,22 +129,47 @@ public class ButtonsHandler {
         }
     }
 
+    /**
+     * Returns the main menu buttons.
+     * 
+     * @return The main menu buttons.
+     */
     public ArrayList<Button> getMainMenuButtons(){
         return this.mainMenuButtons;
     }
 
+    /**
+     * Returns the level menu buttons.
+     * 
+     * @return The level menu buttons.
+     */
     public ArrayList<Button> getLevelMenuButtons(){
         return this.levelMenuButtons;
     }
 
+    /**
+     * Returns the pause menu buttons.
+     * 
+     * @return The pause menu buttons.
+     */
     public ArrayList<Button> getPauseMenuButtons(){
         return this.pauseMenuButtons;
     }
 
+    /**
+     * Returns the settings menu buttons.
+     * 
+     * @return The settings menu buttons.
+     */
     public ArrayList<Button> getSettingsMenuButtons(){
         return this.settingsMenuButtons;
     }
 
+    /**
+     * Returns the available levels.
+     * 
+     * @return The available levels.
+     */
     public ArrayList<Level> getLevels(){
         return this.levels;
     }

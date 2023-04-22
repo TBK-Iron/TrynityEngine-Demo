@@ -1,44 +1,62 @@
 package no.uib.inf101.sem2.gameEngine.view.pipeline.transformations;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.util.ArrayList;
-import java.util.List;
-
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Matrix;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
 import no.uib.inf101.sem2.gameEngine.model.shape.Face;
 import no.uib.inf101.sem2.gameEngine.model.shape.FaceTexture;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
 import no.uib.inf101.sem2.gameEngine.model.shape.positionData.Position3D;
-import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class TranslateTransformTest {
 
-    @Test
-    public void testTransform() {
-        // Prepare test data
-        List<GridPosition> vertices = new ArrayList<>();
-        vertices.add(new Position3D(0, 0, 0));
-        vertices.add(new Position3D(1, 0, 0));
-        vertices.add(new Position3D(0, 1, 0));
-        FaceTexture texture = new FaceTexture("testTexture", new float[]{0, 0, 1, 0, 0, 1});
-        Face face = new Face(vertices, texture);
+    private TranslateTransform translateTransform;
+    private Vector position;
 
-        // Translate by (2, 3, 4)
-        Vector translationVector = new Vector(new float[]{2, 3, 4});
-        TranslateTransform transform = new TranslateTransform(translationVector);
-        Face transformedFace = transform.transform(face);
-
-        // Check if the vertices of the transformed face are correct
-        List<GridPosition> transformedVertices = transformedFace.getPoints();
-        assertEquals(new Position3D(2, 3, 4), transformedVertices.get(0));
-        assertEquals(new Position3D(3, 3, 4), transformedVertices.get(1));
-        assertEquals(new Position3D(2, 4, 4), transformedVertices.get(2));
-
-        // Check if the texture of the transformed face is the same as the original face
-        assertEquals(face.getTexture(), transformedFace.getTexture());
+    @BeforeEach
+    public void setUp() {
+        position = new Vector(new float[] {2, 3, 4});
+        translateTransform = new TranslateTransform(position);
     }
 
-    //TODO make test for get matrix
+    @Test
+    public void testTranslationMatrix() {
+        Matrix expectedTranslationMatrix = new Matrix(new float[][]{
+            {1, 0, 0, position.get(0)},
+            {0, 1, 0, position.get(1)},
+            {0, 0, 1, position.get(2)},
+            {0, 0, 0, 1}
+        });
+        assertEquals(expectedTranslationMatrix, translateTransform.getMatrix());
+    }
 
+    @Test
+    public void testTransform() {
+        GridPosition p1 = new Position3D(1, 1, 1);
+        GridPosition p2 = new Position3D(1, -1, 1);
+        GridPosition p3 = new Position3D(-1, -1, 1);
+        GridPosition p4 = new Position3D(-1, 1, 1);
+
+        ArrayList<GridPosition> vertices = new ArrayList<>(Arrays.asList(p1, p2, p3, p4));
+        FaceTexture texture = new FaceTexture("testTexture", new float[]{0, 0, 0, 1, 1, 1, 1, 0});
+        Face face = new Face(vertices, texture);
+
+        Face transformedFace = translateTransform.transform(face);
+
+        GridPosition t1 = new Position3D(3, 4, 5);
+        GridPosition t2 = new Position3D(3, 2, 5);
+        GridPosition t3 = new Position3D(1, 2, 5);
+        GridPosition t4 = new Position3D(1, 4, 5);
+
+        ArrayList<GridPosition> transformedVertices = new ArrayList<>(Arrays.asList(t1, t2, t3, t4));
+
+        Face expectedTransformedFace = new Face(transformedVertices, face.getTexture());
+        assertEquals(expectedTransformedFace, transformedFace);
+    }
 }
