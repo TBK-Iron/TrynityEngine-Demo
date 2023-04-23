@@ -203,7 +203,7 @@ public final class Matrix {
         if (this == obj) {
             return true;
         }
-        if (obj == null || getClass() != obj.getClass()) {
+        if (obj == null || !(obj instanceof Matrix)) {
             return false;
         }
 

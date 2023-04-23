@@ -8,6 +8,9 @@ import no.uib.inf101.sem2.game.model.levels.Level;
 import no.uib.inf101.sem2.game.model.resourceLoaders.SoundPlayer;
 
 import java.util.ArrayList;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import no.uib.inf101.sem2.game.controller.ControllableGameModel;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
@@ -44,6 +47,8 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
     private String music;
 
+    private boolean isShooting;
+
     /**
      * Constructs a new GameModel.
      *
@@ -60,6 +65,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
 
         this.killDetector = new CollisionDetector();
         this.config = config;
+        this.isShooting = false;
     }
 
     /**
@@ -159,6 +165,13 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
     @Override
     public void shoot(){
         soundPlayer.playSoundOnce(Player.PLAYER_SHOOT_SOUND, 1.0f);
+        this.isShooting = true;
+
+        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+        Runnable task = () -> {
+            this.isShooting = false;
+        };
+        executor.schedule(task, 250, TimeUnit.MILLISECONDS);
 
         Enemy closestHitEnemy = null;
         float distToClosestHitEnemy = Float.MAX_VALUE;
@@ -228,5 +241,14 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
         this.soundPlayer.endSoundLoop(this.music);
     }
 
+    /**
+     * Returns a boolean that determines if the player just shot the gun
+     * 
+     * @return true if the player just shot the gun, false otherwise
+     */
+    @Override
+    public boolean getGunState(){
+        return this.isShooting;
+    }
 
 }

@@ -40,7 +40,7 @@ public class Main {
     ButtonsHandler buttonsHandler = new ButtonsHandler(config);
 
     GameModel model = new GameModel((ConfigurableEngineModel) engine.model(), engine.collisionDetector(), soundPlayer, config);
-    GameView view = new GameView((ViewableGameModel) model, buttonsHandler, config, engine.sceneMaker(), textureLoader);
+    GameView view = new GameView((ViewableGameModel) model, buttonsHandler, config, engine.sceneMaker(), textureLoader.getImages());
     GameController controller = new GameController((ControllableGameModel) model, view, settings, engine.controller(), soundPlayer);
 
     JFrame frame = new JFrame();

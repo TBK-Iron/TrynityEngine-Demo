@@ -39,9 +39,9 @@ public class ButtonsHandlerTest {
         ArrayList<Button> levelMenuButtons = buttonsHandler.getLevelMenuButtons();
         
         assertEquals(3, levelMenuButtons.size());
-        assertEquals("Legend of The Beast", levelMenuButtons.get(0).getText());
+        assertEquals("The Legend of The Beast", levelMenuButtons.get(0).getText());
         assertEquals("HordeZ", levelMenuButtons.get(1).getText());
-        assertEquals("Grass World", levelMenuButtons.get(2).getText());
+        assertEquals("Grass World (WIP)", levelMenuButtons.get(2).getText());
     }
 
     @Test
@@ -58,11 +58,12 @@ public class ButtonsHandlerTest {
     public void testSettingsMenuButtons() {
         ArrayList<Button> settingsMenuButtons = buttonsHandler.getSettingsMenuButtons();
         
-        assertEquals(4, settingsMenuButtons.size());
+        assertEquals(5, settingsMenuButtons.size());
         assertEquals("Noclip: OFF", settingsMenuButtons.get(0).getText());
         assertEquals("Render Distance: MEDIUM", settingsMenuButtons.get(1).getText());
         assertEquals("Move Speed: MEDIUM", settingsMenuButtons.get(2).getText());
-        assertEquals("Back", settingsMenuButtons.get(3).getText());
+        assertEquals("FPS Counter: OFF", settingsMenuButtons.get(3).getText());
+        assertEquals("Back", settingsMenuButtons.get(4).getText());
     }
 
     @Test

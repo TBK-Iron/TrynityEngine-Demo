@@ -13,6 +13,7 @@ import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -34,7 +35,7 @@ public class GameView extends JPanel {
     private final SceneMaker engineView;
     private final ViewableGameModel model;
     private BufferedImage sceneImage;
-    private final TextureLoader images;
+    private final Map<String, BufferedImage> images;
     private Config config;
     private final ColorTheme CTheme;
 
@@ -50,7 +51,7 @@ public class GameView extends JPanel {
      * @param engineView  The scene maker for rendering game scenes.
      * @param images      The texture loader for loading game images.
      */
-    public GameView(ViewableGameModel model, ButtonsHandler buttons, Config config, SceneMaker engineView, TextureLoader images) {
+    public GameView(ViewableGameModel model, ButtonsHandler buttons, Config config, SceneMaker engineView, Map<String, BufferedImage> images) {
         this.setPreferredSize(new Dimension(config.screenWidth(), config.screenHeight()));
         this.setBackground(Color.WHITE);
         this.setFocusable(true);
@@ -102,13 +103,13 @@ public class GameView extends JPanel {
         g2.fill(rect);
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
-        Inf101Graphics.drawCenteredImage(g2, this.images.getLogo(), x, y, 0.45);
+        Inf101Graphics.drawCenteredImage(g2, this.images.get("trynity_logo"), x, y, 0.45);
     }
 
     private void drawMainMenu(Graphics2D g2){
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
-        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
+        Inf101Graphics.drawCenteredImage(g2, this.images.get("menu_background"), x, y, 0.5);
 
         drawButtons(g2, this.buttons.getMainMenuButtons(), this.CTheme, this.config.screenWidth());
     }
@@ -116,7 +117,7 @@ public class GameView extends JPanel {
     private void drawLevelMenu(Graphics2D g2){
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
-        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
+        Inf101Graphics.drawCenteredImage(g2, this.images.get("menu_background"), x, y, 0.5);
 
         drawButtons(g2, this.buttons.getLevelMenuButtons(), this.CTheme, this.config.screenWidth());
     }
@@ -124,7 +125,7 @@ public class GameView extends JPanel {
     private void drawSettingsMenu(Graphics2D g2){
         double x = this.config.screenWidth() / 2;
         double y = this.config.screenHeight() / 2;
-        Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
+        Inf101Graphics.drawCenteredImage(g2, this.images.get("menu_background"), x, y, 0.5);
 
         drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme, this.config.screenWidth());
     }
@@ -138,6 +139,7 @@ public class GameView extends JPanel {
 
         drawCrosshair(g2, CTheme, config.screenWidth()/2, config.screenHeight()/2, 15);
         drawHealthBar(g2, this.model.getPlayerHealthPercent(), CTheme, config.screenHeight(), config.screenHeight()/20);
+        drawHeldGun(g2, config.screenWidth(), config.screenHeight(), this.images, this.model.getGunState());
 
         long endTime = System.nanoTime();
         long fps = 1000000000/(endTime - startTime);
@@ -178,6 +180,23 @@ public class GameView extends JPanel {
         g2.setColor(CTheme.getTextColor());
         g2.setFont(new Font("Arial", Font.BOLD, 20));
         g2.drawString("FPS: " + fps, 10, 20);
+    }
+
+    private static void drawHeldGun(Graphics2D g2, int screenWidth, int screenHeight, Map<String, BufferedImage> images, boolean isFiring){
+        BufferedImage gun;
+        if(isFiring){
+            gun = images.get("gun_firing");
+        } else {
+            gun = images.get("gun");
+        } 
+        double gunWidth = screenWidth/3;
+        double gunHeight = gunWidth*gun.getHeight()/gun.getWidth();
+        double gunX = screenWidth - gunWidth - screenWidth/10;
+        double gunY = screenHeight - gunHeight;
+
+        g2.drawImage(gun,(int) gunX,(int) gunY,(int) gunWidth,(int) gunHeight, null);
+
+        
     }
 
     private void drawPausedGame(Graphics2D g2){

@@ -44,11 +44,15 @@ public final class Vector {
      * @return A new Vector representing the difference between p1 and p2.
      */
     public static Vector getVector(GridPosition p1, GridPosition p2){
-        float x = p2.x() - p1.x();
-        float y = p2.y() - p1.y();
-        float z = p2.z() - p1.z();
+        if(!(p1 instanceof Position3D) || !(p2 instanceof Position3D)){
+            throw new IllegalArgumentException("Both GridPositions must be 3D");
+        } else {
+            float x = p2.x() - p1.x();
+            float y = p2.y() - p1.y();
+            float z = p2.z() - p1.z();
 
-        return new Vector(new float[] {x, y, z});
+            return new Vector(new float[] {x, y, z});
+        }
     }
 
     /**
@@ -324,6 +328,11 @@ public final class Vector {
      */
     @Override
     public boolean equals(Object o2){
+        if(!(o2 instanceof Vector)){
+            return false;
+        } else if (o2 == this){
+            return true;
+        }
         Vector v2 = (Vector) o2;
         if(this.getDims() != v2.getDims()){
             return false;

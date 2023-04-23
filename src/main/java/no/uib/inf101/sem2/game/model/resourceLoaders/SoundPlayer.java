@@ -37,7 +37,7 @@ public class SoundPlayer {
     private Map<String, Clip> loopSounds = new HashMap<String, Clip>();
 
     /**
-     * Initializes the SoundPlayer by loading various sound files.
+     * Initializes the SoundPlayer by loading the soundfiles to be used in the game.
      */
     public SoundPlayer(){
         initSound("button_click", "src/main/resources/sounds/button_click.wav");
@@ -103,29 +103,29 @@ public class SoundPlayer {
     }
 
     /**
- * Plays a sound once with the specified volume.
- *
- * @param soundKey  The key associated with the sound.
- * @param volume    The volume level to play the sound at (between 0 and 1).
- */
-public void playSoundOnce(String soundKey, float volume) {
-    if (soundKey != null && volume > 0) {
-        try {
-            Clip clip = loadSound(clonableSounds.get(soundKey));
-            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+     * Plays a sound once with the specified volume.
+     *
+     * @param soundKey  The key associated with the sound.
+     * @param volume    The volume level to play the sound at (between 0 and 1).
+     */
+    public void playSoundOnce(String soundKey, float volume) {
+        if (soundKey != null && volume > 0) {
+            try {
+                Clip clip = loadSound(clonableSounds.get(soundKey));
+                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
 
-            float minDecibels = 0;
-            float maxDecibels = gainControl.getMaximum() * SoundPlayer.soundEffect_volume;
-            float decibels = minDecibels + volume * (maxDecibels - minDecibels);
+                float minDecibels = 0;
+                float maxDecibels = gainControl.getMaximum() * SoundPlayer.soundEffect_volume;
+                float decibels = minDecibels + volume * (maxDecibels - minDecibels);
 
-            // Set the gain control value in decibels
-            gainControl.setValue(decibels);
-            clip.start();
-        } catch (Exception e) {
-            e.printStackTrace();
+                // Set the gain control value in decibels
+                gainControl.setValue(decibels);
+                clip.start();
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
         }
     }
-}
 
     /**
      * Starts a sound loop with the specified volume.

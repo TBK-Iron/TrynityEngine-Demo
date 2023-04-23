@@ -46,7 +46,7 @@ There is currently 3 implented gamemodes/maps in the game:
 - a: move left
 - s: move backwards
 - d: move right
-- space: jump
+- space: jump (move up if noclip is enabled)
 - ctrl: move down (only applies when noclip is enabled)  
 
 - esc: pause the game and go back in menus  

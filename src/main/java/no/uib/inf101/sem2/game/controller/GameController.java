@@ -135,18 +135,27 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
         } else if(this.model.getGameState() == GameState.LEVEL_MENU){
             Button clickedButton = clickedButton(this.view.getButtons().getLevelMenuButtons(), arg0.getX(), arg0.getY());
             if(clickedButton != null){
-                this.model.setGameState(GameState.LOADING);
+                if(clickedButton.getText().equals("Back")){
+                    this.model.setGameState(GameState.MAIN_MENU);
+                } else {
+                    this.model.setGameState(GameState.LOADING);
 
-                ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-                final int levelNr = this.view.getButtons().getLevelMenuButtons().indexOf(clickedButton);
-                Runnable task = () -> {
-                    model.loadMap(this.view.getButtons().getLevels().get(levelNr));
-                    model.setGameState(GameState.ACTIVE);
-                };
-
-                // Setting a delay on this so that the loading screen gets displayed 
-                // while the game is being loaded and rendering the first frame
-                executor.schedule(task, 30, TimeUnit.MILLISECONDS);
+                    ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
+                    final int levelNr = this.view.getButtons().getLevelMenuButtons().indexOf(clickedButton);
+                    if(levelNr != -1){
+                        Runnable task = () -> {
+                            model.loadMap(this.view.getButtons().getLevels().get(levelNr));
+                            model.setGameState(GameState.ACTIVE);
+                        };
+    
+                        // Setting a delay on this so that the loading screen gets displayed 
+                        // while the game is being loaded and rendering the first frame
+                        executor.schedule(task, 30, TimeUnit.MILLISECONDS);
+                    } else {
+                        throw new IllegalArgumentException("Level number not found");
+                    }
+                    
+                }
             }
         } else if(this.model.getGameState() == GameState.SETTINGS_MENU){   
             Button clickedButton = clickedButton(this.view.getButtons().getSettingsMenuButtons(), arg0.getX(), arg0.getY());

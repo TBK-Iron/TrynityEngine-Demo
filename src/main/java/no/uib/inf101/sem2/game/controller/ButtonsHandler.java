@@ -84,9 +84,16 @@ public class ButtonsHandler {
             this.levelMenuButtons = new ArrayList<>();
         }
 
-        for(int i = 0; i < this.levels.size(); i++){
-            this.levelMenuButtons.add(new Button(sWidth/2, sHeight*(i+1)/4, sWidth/2, sHeight/8, this.levels.get(i).getLevelName()));
+        for(int i = 0; i < Math.min(this.levels.size(), 6); i++){
+            if(i >= 3){
+                this.levelMenuButtons.add(new Button(sWidth*3/4, sHeight*(i-2)/4, sWidth/2, sHeight/8, this.levels.get(i).getLevelName()));
+            } else {
+                this.levelMenuButtons.add(new Button(sWidth/4, sHeight*(i+1)/4, sWidth*3/7, sHeight/8, this.levels.get(i).getLevelName()));
+            }
+            
         }
+
+        this.levelMenuButtons.add(new Button(sWidth/2, sHeight*29/32, sWidth*3/7, sHeight/8, "Back"));
     }
     
     /**

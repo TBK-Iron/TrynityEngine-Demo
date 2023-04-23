@@ -20,7 +20,7 @@ public class LegendOfTheBeast implements Level{
 
     @Override
     public String getLevelName() {
-        return "Legend of The Beast";
+        return "The Legend of The Beast";
     }
 
     @Override

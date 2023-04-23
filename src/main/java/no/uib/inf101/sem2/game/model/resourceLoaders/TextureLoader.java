@@ -14,9 +14,7 @@ import javax.imageio.ImageIO;
  */
 public class TextureLoader {
     private Map<String, BufferedImage> textures = new HashMap<String, BufferedImage>();
-
-    private BufferedImage logoImage;
-    private BufferedImage menuBackgroundImage;
+    private Map<String, BufferedImage> images = new HashMap<String, BufferedImage>();
 
     /**
      * Constructs a new TextureLoader and initializes the map with the available textures.
@@ -44,8 +42,12 @@ public class TextureLoader {
         textures.put("gravel", readFile("src/main/resources/textures/gravel.jpg"));
         textures.put("arena_wall", readFile("src/main/resources/textures/arena_wall.jpg"));
 
-        logoImage = readFile("src/main/resources/Trynity_Logo.png");
-        menuBackgroundImage = readFile("src/main/resources/background.png");
+
+        images.put("trynity_logo", readFile("src/main/resources/images/Trynity_Logo.png"));
+        images.put("menu_background", readFile("src/main/resources/images/background.png"));
+        images.put("gun", readFile("src/main/resources/images/gun.png"));
+        images.put("gun_firing", readFile("src/main/resources/images/shooting_gun.png"));
+        
     }
 
     /**
@@ -73,20 +75,11 @@ public class TextureLoader {
     }
 
     /**
-     * Returns the logo image.
-     *
-     * @return The logo image as a BufferedImage.
+     * Returns the map containing all the loaded images.
+     * 
+     * @return the images map
      */
-    public BufferedImage getLogo(){
-        return this.logoImage;
-    }
-
-    /**
-     * Returns the menu background image.
-     *
-     * @return The menu background image as a BufferedImage.
-     */
-    public BufferedImage getMenuBackground(){
-        return this.menuBackgroundImage;
+    public Map<String, BufferedImage> getImages(){
+        return images;
     }
 }

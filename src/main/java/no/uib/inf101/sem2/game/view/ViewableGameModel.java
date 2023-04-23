@@ -21,4 +21,11 @@ public interface ViewableGameModel {
      * @return The player's health as a percentage of their maximum health.
      */
     public float getPlayerHealthPercent();
+
+    /**
+     * Returns a boolean that determines if the player just shot the gun
+     * 
+     * @return true if the player just shot the gun, false otherwise
+     */
+    public boolean getGunState();
 }
