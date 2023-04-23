@@ -10,7 +10,7 @@ import no.uib.inf101.sem2.gameEngine.model.shape.positionData.GridPosition;
  */
 public class CollisionDetector {
 
-    ArrayList<CollisionBox> fixedCollisionBoxes;
+    private ArrayList<CollisionBox> fixedCollisionBoxes;
 
     /**
      * Initializes a new CollisionDetector instance.

@@ -13,10 +13,10 @@ import javax.imageio.ImageIO;
  * Textures can be used in the game by accessing the map using the appropriate key.
  */
 public class TextureLoader {
-    Map<String, BufferedImage> textures = new HashMap<String, BufferedImage>();
+    private Map<String, BufferedImage> textures = new HashMap<String, BufferedImage>();
 
-    BufferedImage logoImage;
-    BufferedImage menuBackgroundImage;
+    private BufferedImage logoImage;
+    private BufferedImage menuBackgroundImage;
 
     /**
      * Constructs a new TextureLoader and initializes the map with the available textures.

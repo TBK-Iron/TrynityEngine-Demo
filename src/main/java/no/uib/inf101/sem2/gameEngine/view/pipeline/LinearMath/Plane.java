@@ -15,7 +15,7 @@ public class Plane {
     /**
      * The distance of the plane from the origin.
      */
-    protected float dist;
+    protected final float dist;
 
     /**
      * Constructs a new Plane with the specified normal vector and distance.

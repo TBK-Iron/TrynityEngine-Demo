@@ -22,12 +22,12 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransfo
  */
 public class EngineModel implements ViewableEngineModel, ControllableEngineModel, ConfigurableEngineModel {
     
-    ArrayList<Shape3D> shapes;
-    ArrayList<Entity> entities;
-    Camera camera;
-    CollisionDetector collisionDetector;
-    Vector cameraMoveSpeed;
-    Config config;
+    private ArrayList<Shape3D> shapes;
+    private ArrayList<Entity> entities;
+    private Camera camera;
+    private CollisionDetector collisionDetector;
+    protected Vector cameraMoveSpeed;
+    private Config config;
     
     /**
      * Constructs an EngineModel with the provided configuration and collision detector.

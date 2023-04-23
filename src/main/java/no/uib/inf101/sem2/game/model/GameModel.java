@@ -28,21 +28,21 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
  */
 public class GameModel implements ViewableGameModel, ControllableGameModel{
     
-    GameState currentState;
-    ConfigurableEngineModel engineModel;
-    CollisionDetector collisionDetector;
-    CollisionDetector killDetector;
-    SoundPlayer soundPlayer;
+    private GameState currentState;
+    private ConfigurableEngineModel engineModel;
+    private CollisionDetector collisionDetector;
+    private CollisionDetector killDetector;
+    private SoundPlayer soundPlayer;
 
-    Player player;
+    private Player player;
 
-    ArrayList<Enemy> enemies;
-    ArrayList<EnemySpawner> enemySpawners;
-    ArrayList<Door> doors;
+    private ArrayList<Enemy> enemies;
+    private ArrayList<EnemySpawner> enemySpawners;
+    private ArrayList<Door> doors;
 
-    Config config;
+    private Config config;
 
-    String music;
+    private String music;
 
     /**
      * Constructs a new GameModel.
@@ -104,7 +104,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
         this.engineModel.setCamera(this.player.getCamera());
 
         this.music = map.getLevelMusic();
-        this.soundPlayer.startSoundLoop(this.music, 3.5f);
+        this.soundPlayer.startSoundLoop(this.music, 1.0f);
     }
 
     /**
@@ -139,7 +139,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
             }
             if(!player.isAlive() || this.killDetector.getCollidingBox(this.player.getCamera().getCollisionBox(), this.player.getCamera().getPos()) != null){
                 this.player.resetPlayer();
-                this.soundPlayer.playSoundOnce(Player.PLAYER_DEATH_SOUND, 5);
+                this.soundPlayer.playSoundOnce(Player.PLAYER_DEATH_SOUND, 1.0f);
             }
           
         }
@@ -158,7 +158,7 @@ public class GameModel implements ViewableGameModel, ControllableGameModel{
      */
     @Override
     public void shoot(){
-        soundPlayer.playSoundOnce(Player.PLAYER_SHOOT_SOUND, 4.5f);
+        soundPlayer.playSoundOnce(Player.PLAYER_SHOOT_SOUND, 1.0f);
 
         Enemy closestHitEnemy = null;
         float distToClosestHitEnemy = Float.MAX_VALUE;

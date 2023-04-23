@@ -17,6 +17,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.RotateTransfo
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.Transformation;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.TranslateTransform;
 import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.View;
+import no.uib.inf101.sem2.gameEngine.view.pipeline.transformations.WorldTransform;
 import no.uib.inf101.sem2.gameEngine.view.textures.Rasterizer;
 
 /**
@@ -79,7 +80,7 @@ public class gPipeline implements IPipeline {
     public ArrayList<Shape3D> worldTransform(ArrayList<Shape3D> shapes){
         ArrayList<Shape3D> worldSpaceShapes = new ArrayList<>();
         for(Shape3D shape : shapes){
-            Transformation rTrans = new RotateTransform(shape.getRotation(), false);
+            /* Transformation rTrans = new RotateTransform(shape.getRotation(), false);
             Transformation posTrans = new TranslateTransform(new Vector((Position3D) shape.getPosition()));
             ArrayList<Face> worldSpaceFaces = new ArrayList<>();
 
@@ -87,7 +88,14 @@ public class gPipeline implements IPipeline {
                 Face transformedFace =  posTrans.transform(rTrans.transform(face));
                 worldSpaceFaces.add(transformedFace);
             }
-            worldSpaceShapes.add(new Shape3D(worldSpaceFaces));
+            worldSpaceShapes.add(new Shape3D(worldSpaceFaces)); */
+            Transformation worldTransform = new WorldTransform(shape.getPosition(), shape.getRotation());
+
+            ArrayList<Face> transformedFaces = new ArrayList<>();
+            for(Face face : shape.getFaces()){
+                transformedFaces.add(worldTransform.transform(face));
+            }
+            worldSpaceShapes.add(new Shape3D(transformedFaces));
         }
 
         return worldSpaceShapes;

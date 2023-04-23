@@ -6,6 +6,7 @@ import no.uib.inf101.sem2.game.model.levels.GrassWorld;
 import no.uib.inf101.sem2.game.model.levels.HordeZ;
 import no.uib.inf101.sem2.game.model.levels.LegendOfTheBeast;
 import no.uib.inf101.sem2.game.model.levels.Level;
+import no.uib.inf101.sem2.game.model.resourceLoaders.SoundPlayer;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 
 /**
@@ -36,6 +37,8 @@ public class ButtonsHandler {
         this.levels.add(new GrassWorld());
 
         resetButtonHandler();
+
+  
     }
 
     /**

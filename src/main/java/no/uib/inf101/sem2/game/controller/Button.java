@@ -13,6 +13,8 @@ public final class Button{
     private final int height;
     private String text;
 
+    public static final String SOUND = "button_click";
+
     /**
      * Constructs a Button object centered at the given xy position, dimensions, and text.
      *

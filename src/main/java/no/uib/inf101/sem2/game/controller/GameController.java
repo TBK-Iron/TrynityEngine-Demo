@@ -8,6 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 import no.uib.inf101.sem2.game.model.GameState;
+import no.uib.inf101.sem2.game.model.resourceLoaders.SoundPlayer;
 import no.uib.inf101.sem2.game.settings.DefaultSettings;
 import no.uib.inf101.sem2.game.settings.Settings;
 import no.uib.inf101.sem2.game.view.GameView;
@@ -18,10 +19,11 @@ import no.uib.inf101.sem2.gameEngine.controller.EngineController;
  * It listens to mouse and keyboard events and reacts to user input accordingly.
  */
 public class GameController implements java.awt.event.MouseMotionListener, java.awt.event.KeyListener, java.awt.event.MouseListener{
-    ControllableGameModel model;
-    GameView view;
-    Settings settings;
-    EngineController engineController;
+    private ControllableGameModel model;
+    private GameView view;
+    private Settings settings;
+    private EngineController engineController;
+    private SoundPlayer soundPlayer;
 
     /**
      * Constructs a GameController object and adds listeners to the GameView.
@@ -31,11 +33,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
      * @param settings The game settings object.
      * @param engineController The game engine controller object.
      */
-    public GameController(ControllableGameModel model, GameView view, Settings settings, EngineController engineController) {
+    public GameController(ControllableGameModel model, GameView view, Settings settings, EngineController engineController, SoundPlayer soundPlayer) {
         this.model = model;
         this.settings = settings;
         this.view = view;
         this.engineController = engineController;
+        this.soundPlayer = soundPlayer;
 
         this.view.addMouseMotionListener(this);
         this.view.addMouseListener(this);
@@ -125,7 +128,7 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
                     this.model.setGameState(GameState.LEVEL_MENU);
                 } else if(clickedButton.getText().equals("Settings")){
                     this.model.setGameState(GameState.SETTINGS_MENU);
-                } else if(clickedButton.getText().equals("Exit")){
+                } else if(clickedButton.getText().equals("Quit")){
                     System.exit(0);
                 }
             }
@@ -224,13 +227,17 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
      * @param y The y coordinate of the click.
      * @return The clicked Button object, or null if no button was clicked.
      */
-    private static Button clickedButton(ArrayList<Button> buttons, int x, int y){
+    private Button clickedButton(ArrayList<Button> buttons, int x, int y){
+        Button clickedButton = null;
         for(int i = 0; i < buttons.size(); i++){
             if(buttons.get(i).isClicked(x, y)){
-                return buttons.get(i);
+                clickedButton = buttons.get(i);
             }
         }
-        return null;
+        if(clickedButton != null){
+            this.soundPlayer.playSoundOnce(Button.SOUND, 0.75f);
+        }
+        return clickedButton;
     }
 
     @Override

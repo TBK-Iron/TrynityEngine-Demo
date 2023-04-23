@@ -24,8 +24,8 @@ public class TheBeast implements Enemy{
     private static final float damage = 1f; //Damage per tick
 
     private static final String ambientSound = null;
-    private static final String hurtSound = null;
-    private static final String deathSound = null;
+    private static final String hurtSound = "boss_hurt";
+    private static final String deathSound = "boss_death";
 
     private Entity beastEntity;
     private float health;
@@ -143,14 +143,23 @@ public class TheBeast implements Enemy{
     }
 
     @Override
-    public float getNoiseVolumeRelativeTo(GridPosition pos){
+    public float getNoiseVolumeRelativeTo(GridPosition pos) {
         Vector distanceVector = Vector.getVector(pos, this.beastEntity.getPosition());
         float dist = distanceVector.magnitude();
-        if(dist > 20){
+        float maxDistance = 40;
+
+        if (dist > maxDistance) {
             return 0;
         } else {
-            float attenuationFactor = 1 - (dist/20);
-            float volume = (float) (Math.log10(attenuationFactor) * 20);
+            float minVolume = 0; // Minimum volume when at max distance
+            float maxVolume = 1.0f; // Maximum volume when at zero distance
+            float referenceDistance = 9; // The distance at which the sound has the max volume
+
+            // Calculate volume using the inverse square law
+            float volume = maxVolume * (float) Math.pow(referenceDistance / dist, 2);
+
+            // Clamp the volume between minVolume and maxVolume
+            volume = Math.max(minVolume, Math.min(maxVolume, volume));
 
             return volume;
         }

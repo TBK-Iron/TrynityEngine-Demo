@@ -130,18 +130,24 @@ public class Zombie implements Enemy{
     }
 
     @Override
-    public float getNoiseVolumeRelativeTo(GridPosition pos){
+    public float getNoiseVolumeRelativeTo(GridPosition pos) {
         Vector distanceVector = Vector.getVector(pos, this.zombieEntity.getPosition());
         float dist = distanceVector.magnitude();
-        float maxDistance = 15;
+        float maxDistance = 20;
 
-        if(dist > maxDistance){
+        if (dist > maxDistance) {
             return 0;
         } else {
-            float minVolume = 0; // Minimum volume in decibels when at max distance
-            float maxVolume = 3.5f; // Maximum volume in decibels when at zero distance
+            float minVolume = 0; // Minimum volume when at max distance
+            float maxVolume = 1.0f; // Maximum volume when at zero distance
+            float referenceDistance = 3; // The distance at which the sound has the max volume
 
-            float volume = minVolume + (1 - (dist / maxDistance)) * (maxVolume - minVolume);
+            // Calculate volume using the inverse square law
+            float volume = maxVolume * (float) Math.pow(referenceDistance / dist, 2);
+
+            // Clamp the volume between minVolume and maxVolume
+            volume = Math.max(minVolume, Math.min(maxVolume, volume));
+
             return volume;
         }
     }

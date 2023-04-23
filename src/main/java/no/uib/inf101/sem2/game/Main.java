@@ -12,7 +12,6 @@ import no.uib.inf101.sem2.game.settings.Settings;
 import no.uib.inf101.sem2.game.view.GameView;
 import no.uib.inf101.sem2.game.view.ViewableGameModel;
 import no.uib.inf101.sem2.gameEngine.TrynityEngine;
-import no.uib.inf101.sem2.gameEngine.gameEngine;
 import no.uib.inf101.sem2.gameEngine.config.Config;
 import no.uib.inf101.sem2.gameEngine.model.ConfigurableEngineModel;
 
@@ -36,13 +35,13 @@ public class Main {
     TextureLoader textureLoader = new TextureLoader();
 
 
-    gameEngine engine = new TrynityEngine(config, textureLoader.getTextures());
+    TrynityEngine engine = new TrynityEngine(config, textureLoader.getTextures());
 
     ButtonsHandler buttonsHandler = new ButtonsHandler(config);
 
     GameModel model = new GameModel((ConfigurableEngineModel) engine.model(), engine.collisionDetector(), soundPlayer, config);
     GameView view = new GameView((ViewableGameModel) model, buttonsHandler, config, engine.sceneMaker(), textureLoader);
-    GameController controller = new GameController((ControllableGameModel) model, view, settings, engine.controller());
+    GameController controller = new GameController((ControllableGameModel) model, view, settings, engine.controller(), soundPlayer);
 
     JFrame frame = new JFrame();
     frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

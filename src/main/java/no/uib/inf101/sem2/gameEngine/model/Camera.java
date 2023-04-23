@@ -11,9 +11,9 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
  * for rendering from the camera's perspective.
  */
 public class Camera {
-    GridPosition position;
-    RelativeRotation rotation;
-    CollisionBox collisionBox;
+    private GridPosition position;
+    private RelativeRotation rotation;
+    private CollisionBox collisionBox;
 
     /**
      * Creates a new Camera with the given starting position and rotation.

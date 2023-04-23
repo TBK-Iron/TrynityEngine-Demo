@@ -9,9 +9,9 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.linearMath.Vector;
  * The collision box is defined by two opposite corners, minPos and maxPos.
  */
 public final class CollisionBox {
-    final GridPosition minPos;
-    final GridPosition maxPos;
-    static final float MARGIN = 0.001f;
+    protected final GridPosition minPos;
+    protected GridPosition maxPos;
+    protected static final float MARGIN = 0.001f;
 
     public CollisionBox(GridPosition pos1, GridPosition pos2){
         this.minPos = new Position3D(Math.min(pos1.x(), pos2.x()), Math.min(pos1.y(), pos2.y()), Math.min(pos1.z(), pos2.z()));

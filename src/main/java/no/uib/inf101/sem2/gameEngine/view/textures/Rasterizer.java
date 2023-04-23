@@ -25,12 +25,13 @@ import java.util.concurrent.TimeUnit;
  */
 public class Rasterizer {
 
-    private static int KERNEL_POOL_SIZE = 256; 
+    private static final int KERNEL_POOL_SIZE = 256; 
+    private static final int LOCAL_SIZE = 256;
+    private static final EXECUTION_MODE MODE = EXECUTION_MODE.JTP;
+
     private final RasterizerKernel[] kernelPool = new RasterizerKernel[KERNEL_POOL_SIZE];
-    private static EXECUTION_MODE MODE = EXECUTION_MODE.JTP;
-    private static int LOCAL_SIZE = 256;
-    Mipmapper mipmapper;
-    Config config;
+    private final Mipmapper mipmapper;
+    private Config config;
 
     /**
      * Constructs a Rasterizer with a map of textures and a configuration object.

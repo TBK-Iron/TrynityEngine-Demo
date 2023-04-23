@@ -14,7 +14,7 @@ import no.uib.inf101.sem2.gameEngine.view.pipeline.RelativeRotation;
 public class SpinningCube {
     private static final File CUBE_MODEL = new File("src/main/resources/shapes/brick_cube.trym");
 
-    Entity spinningCubeEntity;
+    private Entity spinningCubeEntity;
 
     /**
      * Constructs a new SpinningCube with the given position, initial rotation, and rotation delta.

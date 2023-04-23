@@ -16,12 +16,16 @@ import javax.sound.sampled.UnsupportedAudioFileException;
  * This class handles the loading and playing of sound files.
  */
 public class SoundPlayer {
+
+    public static float soundEffect_volume = 1.0f;
+    public static float music_volume = 1.0f;
+
     /**
      * A map of sounds that are cloned each time a sound is played once,
      * this means a sound can be played multiple times at the same time
      * and overlap
      */
-    Map<String, File> clonableSounds = new HashMap<String, File>();
+    private Map<String, File> clonableSounds = new HashMap<String, File>();
 
     /**
      * A map of sounds that are looped when they are played.
@@ -30,20 +34,21 @@ public class SoundPlayer {
      * 
      * Sounds in this map cannot overlap with themselves.
      */
-    Map<String, Clip> loopSounds = new HashMap<String, Clip>();
+    private Map<String, Clip> loopSounds = new HashMap<String, Clip>();
 
     /**
      * Initializes the SoundPlayer by loading various sound files.
      */
     public SoundPlayer(){
+        initSound("button_click", "src/main/resources/sounds/button_click.wav");
+
         initSound("zombie_ambient", "src/main/resources/sounds/zombie_ambient.wav");
         initSound("zombie_hurt", "src/main/resources/sounds/zombie_hurt.wav");
-        /* initSound("final_boss_hurt", "src/main/resources/sounds/final_boss_hurt.wav"));
-        initSound("final_boss_death", "src/main/resources/sounds/final_boss_death.wav"));*/
+        initSound("boss_hurt", "src/main/resources/sounds/boss_hurt.wav");
+        initSound("boss_death", "src/main/resources/sounds/boss_death.wav");
 
         initSound("player_death", "src/main/resources/sounds/player_death.wav");
         initSound("player_shoot", "src/main/resources/sounds/gun_sound.wav");
-        //initSound("player_walk", "src/main/resources/sounds/player_walk.wav"));
 
         /**
          * Credit to Valve Software
@@ -51,7 +56,14 @@ public class SoundPlayer {
          * Composer - Kelly Bailey
          */
         initSound("triage_at_dawn", "src/main/resources/sounds/triage_at_dawn.wav");
-        initSound("ravenholm_reprise", "src/main/resources/sounds/ravenholm_reprise.wav");
+        initSound("ravenholm_reprise", "src/main/resources/sounds/ravenholm_reprise_quieter.wav");
+
+        /**
+         * Credit to C418
+         * https://www.youtube.com/watch?v=KOIEo_74L-Q&ab_channel=C418-Topic
+         * Minecraft - Volume Beta
+         */
+        initSound("aria_math", "src/main/resources/sounds/aria_math.wav");
     }
 
     /**
@@ -87,23 +99,30 @@ public class SoundPlayer {
     }
 
     /**
-     * Plays a sound once with the specified volume.
-     *
-     * @param soundKey  The key associated with the sound.
-     * @param volume    The volume level to play the sound at.
-     */
-    public void playSoundOnce(String soundKey, float volume) {
-        if (soundKey != null && volume > 0) {
-            try {
-                Clip clip = loadSound(clonableSounds.get(soundKey));
-                FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                gainControl.setValue(volume);
-                clip.start();
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
+ * Plays a sound once with the specified volume.
+ *
+ * @param soundKey  The key associated with the sound.
+ * @param volume    The volume level to play the sound at (between 0 and 1).
+ */
+public void playSoundOnce(String soundKey, float volume) {
+    System.out.println("Playing sound: " + soundKey + " at volume: " + volume);
+    if (soundKey != null && volume > 0) {
+        try {
+            Clip clip = loadSound(clonableSounds.get(soundKey));
+            FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+
+            float minDecibels = 0;
+            float maxDecibels = gainControl.getMaximum() * SoundPlayer.soundEffect_volume;
+            float decibels = minDecibels + volume * (maxDecibels - minDecibels);
+
+            // Set the gain control value in decibels
+            gainControl.setValue(decibels);
+            clip.start();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
+}
 
     /**
      * Starts a sound loop with the specified volume.
@@ -116,7 +135,12 @@ public class SoundPlayer {
             try {
                 Clip clip = loopSounds.get(soundKey);
                 FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                gainControl.setValue(volume);
+
+                float minDecibels = 0;
+                float maxDecibels = gainControl.getMaximum() * SoundPlayer.music_volume;
+                float decibels = minDecibels + volume * (maxDecibels - minDecibels);
+
+                gainControl.setValue(decibels);
                 clip.loop(Clip.LOOP_CONTINUOUSLY);
             } catch (Exception e) {
                 e.printStackTrace();

@@ -75,12 +75,35 @@ public interface Enemy {
      */
     public Enemy clone();
 
+    /**
+     * Retrieves the sound to be played randomly while the enemy is alive.
+     * 
+     * @return The ambient sound to be played.
+     */
     public String getAmbientSound();
 
+    /**
+     * Retrieves the sound to be played when the enemy is damaged.
+     * 
+     * @return The hurt sound to be played.
+     */
     public String getHurtSound();
 
+    /**
+     * Retrieves the sound to be played when the enemy is killed.
+     * 
+     * @return The death sound to be played.
+     */
     public String getDeathSound();
 
+    /**
+     * Retrieves the volume of the ambient sound relative to the inverse square of the distance between the 
+     * given position and the enemy's position.
+     * 
+     * @param pos The position to calculate the volume relative to.
+     * @return The volume of the ambient sound relative to the inverse square of the distance between the 
+     * given position and the enemy's position.
+     */
     public float getNoiseVolumeRelativeTo(GridPosition pos);
 
 }

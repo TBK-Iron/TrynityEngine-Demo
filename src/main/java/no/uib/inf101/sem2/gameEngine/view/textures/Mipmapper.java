@@ -11,8 +11,8 @@ import java.util.Map;
  * Mipmapper class generates a mipmapping of textures, which are
  * lower-resolution versions of input images, for efficient rendering and memory usage.
  */
-public class Mipmapper {
-    private Map<String, ArrayList<BufferedImage>> mipmappedTextures;
+public final class Mipmapper {
+    private final Map<String, ArrayList<BufferedImage>> mipmappedTextures;
 
     /**
      * Constructs a new Mipmapper instance and generates mipmaps for the given textures.
