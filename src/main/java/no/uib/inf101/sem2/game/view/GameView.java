@@ -110,7 +110,7 @@ public class GameView extends JPanel {
         double y = this.config.screenHeight() / 2;
         Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
 
-        drawButtons(g2, this.buttons.getMainMenuButtons(), this.CTheme);
+        drawButtons(g2, this.buttons.getMainMenuButtons(), this.CTheme, this.config.screenWidth());
     }
 
     private void drawLevelMenu(Graphics2D g2){
@@ -118,7 +118,7 @@ public class GameView extends JPanel {
         double y = this.config.screenHeight() / 2;
         Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
 
-        drawButtons(g2, this.buttons.getLevelMenuButtons(), this.CTheme);
+        drawButtons(g2, this.buttons.getLevelMenuButtons(), this.CTheme, this.config.screenWidth());
     }
 
     private void drawSettingsMenu(Graphics2D g2){
@@ -126,16 +126,24 @@ public class GameView extends JPanel {
         double y = this.config.screenHeight() / 2;
         Inf101Graphics.drawCenteredImage(g2, this.images.getMenuBackground(), x, y, 0.5);
 
-        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme);
+        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme, this.config.screenWidth());
     }
 
     //TODO: add more GUI elements
     private void drawActiveGame(Graphics2D g2){
+        long startTime = System.nanoTime();
+
         this.sceneImage = this.engineView.getNextSceneImage();
         g2.drawImage(this.sceneImage, 0, 0, null);
 
         drawCrosshair(g2, CTheme, config.screenWidth()/2, config.screenHeight()/2, 15);
         drawHealthBar(g2, this.model.getPlayerHealthPercent(), CTheme, config.screenHeight(), config.screenHeight()/20);
+
+        long endTime = System.nanoTime();
+        long fps = 1000000000/(endTime - startTime);
+        if(this.config.displayFPS()){
+            drawFPS(g2, CTheme, fps);
+        }
 
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
@@ -166,6 +174,12 @@ public class GameView extends JPanel {
         g2.draw(healthBarBackground);
     }
 
+    private static void drawFPS(Graphics2D g2, ColorTheme CTheme, long fps){
+        g2.setColor(CTheme.getTextColor());
+        g2.setFont(new Font("Arial", Font.BOLD, 20));
+        g2.drawString("FPS: " + fps, 10, 20);
+    }
+
     private void drawPausedGame(Graphics2D g2){
         g2.drawImage(this.sceneImage, 0, 0, null);
 
@@ -178,7 +192,7 @@ public class GameView extends JPanel {
         g2.setColor(this.CTheme.getPauseMenuHue());
         g2.fill(transparentMesh);
 
-        drawButtons(g2, this.buttons.getPauseMenuButtons(), this.CTheme);
+        drawButtons(g2, this.buttons.getPauseMenuButtons(), this.CTheme, this.config.screenWidth());
     }
 
     private void drawSettingsGame(Graphics2D g2){
@@ -191,7 +205,7 @@ public class GameView extends JPanel {
         g2.setColor(this.CTheme.getPauseMenuHue());
         g2.fill(transparentMesh);
 
-        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme);
+        drawButtons(g2, this.buttons.getSettingsMenuButtons(), this.CTheme, this.config.screenWidth());
     }
 
     /**
@@ -201,7 +215,7 @@ public class GameView extends JPanel {
      * @param buttons An ArrayList of Button objects to be drawn.
      * @param CTheme  The ColorTheme to be applied to the buttons.
      */
-    private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme){
+    private static void drawButtons(Graphics2D g2, ArrayList<Button> buttons, ColorTheme CTheme, float screenWidth){
         for(Button b : buttons){
             g2.setColor(CTheme.getButtonColor());
             g2.fill(b.getRect());
@@ -211,7 +225,7 @@ public class GameView extends JPanel {
             g2.draw(b.getRect());
 
             g2.setColor(CTheme.getTextColor());
-            g2.setFont(new Font("Arial", Font.PLAIN, 30));
+            g2.setFont(new Font("Arial", Font.PLAIN, (int) (screenWidth/28.4666666667f)));
             Inf101Graphics.drawCenteredString(g2, b.getText(), b.getCenterX(), b.getCenterY());
         }
     }

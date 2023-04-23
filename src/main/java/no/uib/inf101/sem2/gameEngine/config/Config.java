@@ -66,4 +66,11 @@ public interface Config {
      * @return True if noclip mode is enabled, false otherwise.
      */
     boolean noclip();
+
+    /**
+     * Gets the boolean value indicating whether or not to display the FPS counter.
+     * 
+     * @return A boolean value indicating whether or not to display the FPS counter.
+     */
+    public boolean displayFPS();
 }

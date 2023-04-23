@@ -3,6 +3,7 @@ package no.uib.inf101.sem2.game.settings;
 /**
  * Interface for managing game settings.
  * Provides methods for setting various game settings such as screen size, noclip, walking speed, sprint speed, and render distance.
+ * 
  */
 public interface Settings {
     /**
@@ -40,4 +41,11 @@ public interface Settings {
      * @param distance The desired render distance.
      */
     public void setRenderDistance(float distance);
+
+    /**
+     * Sets whether or not to display the FPS counter.
+     * 
+     * @param displayFPS A boolean value indicating whether or not to display the FPS counter.
+     */
+    public void setDisplayFPS(boolean displayFPS);
 }

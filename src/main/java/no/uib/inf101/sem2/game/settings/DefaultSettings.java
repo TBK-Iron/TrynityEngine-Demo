@@ -45,4 +45,9 @@ public class DefaultSettings extends DefaultConfig implements Settings {
     public void setRenderDistance(float distance){
         this.farPlane = distance;
     }
+
+    @Override
+    public void setDisplayFPS(boolean displayFPS){
+        this.displayFPS = displayFPS;
+    }
 }

@@ -119,16 +119,20 @@ public class ButtonsHandler {
         if(this.settingsMenuButtons == null){
             this.settingsMenuButtons = new ArrayList<>();
 
-            this.settingsMenuButtons.add(new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, "Noclip: OFF"));
-            this.settingsMenuButtons.add(new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, "Render Distance: MEDIUM"));
-            this.settingsMenuButtons.add(new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, "Move Speed: MEDIUM"));
-            this.settingsMenuButtons.add(new Button(sWidth/2, sHeight*7/8, sWidth/2, sHeight/8, "Back"));
+            this.settingsMenuButtons.add(new Button(sWidth/4, sHeight/4, sWidth*3/7, sHeight/8, "Noclip: OFF"));
+            this.settingsMenuButtons.add(new Button(sWidth/4, sHeight/2, sWidth*3/7, sHeight/8, "Render Distance: MEDIUM"));
+            this.settingsMenuButtons.add(new Button(sWidth/4, sHeight*3/4, sWidth*3/7, sHeight/8, "Move Speed: MEDIUM"));
+            this.settingsMenuButtons.add(new Button(sWidth*3/4, sHeight/4, sWidth*3/7, sHeight/8, "FPS Counter: OFF"));
+
+            this.settingsMenuButtons.add(new Button(sWidth/2, sHeight*29/32, sWidth*3/7, sHeight/8, "Back"));
 
         } else {
-            this.settingsMenuButtons.set(0, new Button(sWidth/2, sHeight/4, sWidth/2, sHeight/8, this.settingsMenuButtons.get(0).getText()));
-            this.settingsMenuButtons.set(1, new Button(sWidth/2, sHeight/2, sWidth/2, sHeight/8, this.settingsMenuButtons.get(1).getText()));
-            this.settingsMenuButtons.set(2, new Button(sWidth/2, sHeight*3/4, sWidth/2, sHeight/8, this.settingsMenuButtons.get(2).getText()));
-            this.settingsMenuButtons.set(3, new Button(sWidth/2, sHeight*7/8, sWidth/2, sHeight/8, this.settingsMenuButtons.get(3).getText()));
+            this.settingsMenuButtons.set(0, new Button(sWidth/4, sHeight/4, sWidth*3/7, sHeight/8, this.settingsMenuButtons.get(0).getText()));
+            this.settingsMenuButtons.set(1, new Button(sWidth/4, sHeight/2, sWidth*3/7, sHeight/8, this.settingsMenuButtons.get(1).getText()));
+            this.settingsMenuButtons.set(2, new Button(sWidth/4, sHeight*3/4, sWidth*3/7, sHeight/8, this.settingsMenuButtons.get(2).getText()));
+            this.settingsMenuButtons.set(3, new Button(sWidth*3/4, sHeight/4, sWidth*3/7, sHeight/8, this.settingsMenuButtons.get(3).getText()));
+
+            this.settingsMenuButtons.set(4, new Button(sWidth/2, sHeight*29/32, sWidth*3/7, sHeight/8, "Back"));
         }
     }
 

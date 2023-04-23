@@ -16,6 +16,7 @@ public class DefaultConfig implements Config {
     protected final float gravity = (float) (25 / Math.pow(fps, 2));
     protected final float jumpBurst = (float) Math.sqrt(2 * gravity * 1.25);
     protected boolean noclip = false;
+    protected boolean displayFPS = false;
 
     @Override
     public float verticalFOV() {
@@ -72,5 +73,11 @@ public class DefaultConfig implements Config {
     public boolean noclip() {
         return this.noclip;
     }
+
+    @Override
+    public boolean displayFPS(){
+        return this.displayFPS;
+    }
+
     
 }

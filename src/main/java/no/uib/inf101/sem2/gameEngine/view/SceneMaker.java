@@ -42,7 +42,7 @@ public class SceneMaker{
      * @return A BufferedImage representing the next frame in the scene.
      */
     public BufferedImage getNextSceneImage(){
-        long startTime = System.nanoTime();
+        
         ArrayList<Shape3D> worldSpaceShapes = pipeline.worldTransform(this.model.getRenderShapes());
         ArrayList<Shape3D> cameraSpaceShapes = pipeline.cameraTransform(worldSpaceShapes, this.model.getCamera());
         ArrayList<Shape3D> notCulledShapes = pipeline.cull(cameraSpaceShapes);
@@ -52,10 +52,6 @@ public class SceneMaker{
         ArrayList<Face> castedFaces = pipeline.castTo2D(NDCTransformedFaces);
 
         BufferedImage nextScene = pipeline.rastarizeFaces(castedFaces);
-
-        long endTime = System.nanoTime();
-        long duration = (endTime - startTime);
-        //System.out.println("FPS:" + 1000000000/duration + " ms per frame: " + (float)duration/1000000);
         
         return nextScene;
     }

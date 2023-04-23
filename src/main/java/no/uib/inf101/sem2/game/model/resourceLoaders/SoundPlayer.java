@@ -54,6 +54,8 @@ public class SoundPlayer {
          * Credit to Valve Software
          * https://store.steampowered.com/app/323140/HalfLife_2_Soundtrack/
          * Composer - Kelly Bailey
+         * 
+         * Half-Life 2 Soundtrack
          */
         initSound("triage_at_dawn", "src/main/resources/sounds/triage_at_dawn.wav");
         initSound("ravenholm_reprise", "src/main/resources/sounds/ravenholm_reprise_quieter.wav");
@@ -61,6 +63,8 @@ public class SoundPlayer {
         /**
          * Credit to C418
          * https://www.youtube.com/watch?v=KOIEo_74L-Q&ab_channel=C418-Topic
+         * Composer - C418
+         * 
          * Minecraft - Volume Beta
          */
         initSound("aria_math", "src/main/resources/sounds/aria_math.wav");
@@ -105,7 +109,6 @@ public class SoundPlayer {
  * @param volume    The volume level to play the sound at (between 0 and 1).
  */
 public void playSoundOnce(String soundKey, float volume) {
-    System.out.println("Playing sound: " + soundKey + " at volume: " + volume);
     if (soundKey != null && volume > 0) {
         try {
             Clip clip = loadSound(clonableSounds.get(soundKey));

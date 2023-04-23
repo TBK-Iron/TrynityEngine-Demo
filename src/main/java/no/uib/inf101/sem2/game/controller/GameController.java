@@ -216,6 +216,12 @@ public class GameController implements java.awt.event.MouseMotionListener, java.
             button.setText("Move Speed: SLOW");
             this.settings.setWalkingSpeed(DefaultSettings.walkingSpeedSLOW);
             this.settings.setSprintSpeed(DefaultSettings.sprintSpeedSLOW);
+        } else if(button.getText().equals("FPS Counter: OFF")){
+            button.setText("FPS Counter: ON");
+            this.settings.setDisplayFPS(true);
+        } else if(button.getText().equals("FPS Counter: ON")){
+            button.setText("FPS Counter: OFF");
+            this.settings.setDisplayFPS(false);
         }
     }
 
