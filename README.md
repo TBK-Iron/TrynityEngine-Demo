@@ -1,14 +1,15 @@
 # Trynity Engine
 
 [Oppgavetekst](./OPPGAVETEKST.md)
+[Website](https://www.trynity.no)
 
 Trynity Engine is a basic 3D game engine that supports textures, along with a game built using this engine.
 
 There is currently 3 implented gamemodes/maps in the game:
 
-The Legend of The Beast - a 3d platformer / first person shooter inspired by the original DOOM.
-HordeZ - An arena battle mode where waves of zombies constantly attack you.
-GrassWorld - A world with a basic grass plane and a couple of various shapes.
+The Legend of The Beast - a 3d platformer / first person shooter inspired by the original DOOM.\n
+HordeZ - An arena battle mode where waves of zombies constantly attack you.\n
+GrassWorld - A world with a basic grass plane and a couple of various shapes.\n
 
 ## Table of Contents
 
@@ -20,6 +21,7 @@ GrassWorld - A world with a basic grass plane and a couple of various shapes.
 ## Features
 
 - Custom 3D game engine with support for textures
+- Custom .trym filetype and parser for making 3D shapes
 - Support for movable entities, static shapes, and collisions.
 - Game built using the engine
 - Implementation for sounds and music unique to each map
