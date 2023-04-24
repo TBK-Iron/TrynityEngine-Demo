@@ -38,7 +38,7 @@ public class ButtonsHandlerTest {
     public void testLevelMenuButtons() {
         ArrayList<Button> levelMenuButtons = buttonsHandler.getLevelMenuButtons();
         
-        assertEquals(3, levelMenuButtons.size());
+        assertEquals(4, levelMenuButtons.size());
         assertEquals("The Legend of The Beast", levelMenuButtons.get(0).getText());
         assertEquals("HordeZ", levelMenuButtons.get(1).getText());
         assertEquals("Grass World (WIP)", levelMenuButtons.get(2).getText());

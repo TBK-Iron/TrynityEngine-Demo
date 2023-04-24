@@ -2,6 +2,7 @@
 
 [Oppgavetekst](./OPPGAVETEKST.md)  
 [Website](https://www.trynity.no)  
+[Video Demo](https://youtu.be/WDV4Mg0n-ek)
 
 Trynity Engine is a basic 3D game engine that supports textures, along with a game built using this engine.  
 
